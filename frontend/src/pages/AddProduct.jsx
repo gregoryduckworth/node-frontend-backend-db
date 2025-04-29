@@ -8,8 +8,9 @@ import {
   Stack,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { addProduct } from "../api/product";
+import { refreshToken } from "../api/auth";
 
 const AddProduct = () => {
   const [name, setName] = useState("");
@@ -21,60 +22,23 @@ const AddProduct = () => {
   const params = useParams();
 
   useEffect(() => {
-    refreshToken();
-  }, []);
-
-  const refreshToken = async () => {
-    try {
-      const response = await axios.get("/api/token");
-      setToken(response.data.accessToken);
-
-      const decoded = jwt_decode(response.data.accessToken);
-      setExpire(decoded.exp);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const axiosJWT = axios.create();
-
-  axiosJWT.interceptors.request.use(
-    async (config) => {
-      const currentDate = new Date();
-
-      if (expire * 1000 < currentDate.getTime()) {
-        const response = await axios.get("/api/token");
-        config.headers.Authorization = `Bearer ${response.data.accessToken}`;
-        setToken(response.data.accessToken);
-
-        const decoded = jwt_decode(response.data.accessToken);
+    const fetchToken = async () => {
+      try {
+        const data = await refreshToken();
+        setToken(data.accessToken);
+        const decoded = jwt_decode(data.accessToken);
         setExpire(decoded.exp);
+      } catch (error) {
+        console.log(error);
       }
-
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
+    };
+    fetchToken();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      await axiosJWT.post(
-        `http://localhost:5000/${params.userId}/products`,
-        {
-          name,
-          price,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      await addProduct(params.userId, name, price, token);
       navigate(`/dashboard/${params.userId}`);
     } catch (error) {
       console.log(error);

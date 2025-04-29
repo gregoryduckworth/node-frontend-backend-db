@@ -8,8 +8,9 @@ import {
   Stack,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { getProductById, updateProduct } from "../api/product";
+import { refreshToken } from "../api/auth";
 
 const EditProduct = () => {
   const [name, setName] = useState("");
@@ -21,50 +22,27 @@ const EditProduct = () => {
   const params = useParams();
 
   useEffect(() => {
-    refreshToken();
-    getProductById();
+    const fetchTokenAndProduct = async () => {
+      await fetchToken();
+      await fetchProduct();
+    };
+    fetchTokenAndProduct();
   }, []);
 
-  const refreshToken = async () => {
+  const fetchToken = async () => {
     try {
-      const response = await axios.get("/api/token");
-      setToken(response.data.accessToken);
-
-      const decoded = jwt_decode(response.data.accessToken);
+      const data = await refreshToken();
+      setToken(data.accessToken);
+      const decoded = jwt_decode(data.accessToken);
       setExpire(decoded.exp);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const axiosJWT = axios.create();
-
-  axiosJWT.interceptors.request.use(
-    async (config) => {
-      const currentDate = new Date();
-
-      if (expire * 1000 < currentDate.getTime()) {
-        const response = await axios.get("/api/token");
-        config.headers.Authorization = `Bearer ${response.data.accessToken}`;
-        setToken(response.data.accessToken);
-
-        const decoded = jwt_decode(response.data.accessToken);
-        setExpire(decoded.exp);
-      }
-
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
-
-  const getProductById = async () => {
+  const fetchProduct = async () => {
     try {
-      const response = await axios.get(
-        `/api/${params.userId}/products/${params.productId}`
-      );
-
+      const response = await getProductById(params.userId, params.productId);
       setName(response.data.name);
       setPrice(response.data.price);
     } catch (error) {
@@ -74,21 +52,8 @@ const EditProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      await axiosJWT.put(
-        `http://localhost:5000/${params.userId}/products/${params.productId}`,
-        {
-          name,
-          price,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      await updateProduct(params.userId, params.productId, name, price, token);
       navigate(`/dashboard/${params.userId}`);
     } catch (error) {
       console.log(error);

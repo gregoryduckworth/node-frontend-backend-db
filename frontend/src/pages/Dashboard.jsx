@@ -23,6 +23,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 
 import Navbar from "../components/Navbar";
+import { getUserProducts, deleteProduct } from "../api/product";
+import { refreshToken } from "../api/auth";
 
 const Dashboard = () => {
   const [name, setName] = useState("");
@@ -40,19 +42,14 @@ const Dashboard = () => {
   const params = useParams();
 
   useEffect(() => {
-    refreshToken();
+    fetchToken();
   }, []);
 
-  useEffect(() => {
-    getProductsById();
-  }, [keyword, page]);
-
-  const refreshToken = async () => {
+  const fetchToken = async () => {
     try {
-      const response = await axios.get("/api/token");
-      setToken(response.data.accessToken);
-
-      const decoded = jwt_decode(response.data.accessToken);
+      const data = await refreshToken();
+      setToken(data.accessToken);
+      const decoded = jwt_decode(data.accessToken);
       setName(decoded.name);
       setExpire(decoded.exp);
     } catch (error) {
@@ -60,12 +57,18 @@ const Dashboard = () => {
     }
   };
 
-  const getProductsById = async () => {
-    try {
-      const response = await axios.get(
-        `/api/${params.userId}/products?search_query=${keyword}&page=${page}&limit=${limit}`
-      );
+  useEffect(() => {
+    fetchProducts();
+  }, [keyword, page]);
 
+  const fetchProducts = async () => {
+    try {
+      const response = await getUserProducts(
+        params.userId,
+        keyword,
+        page,
+        limit
+      );
       setProducts(response.data.result);
       setRows(response.data.totalRows);
       setTotalPage(response.data.totalPage);
@@ -84,43 +87,12 @@ const Dashboard = () => {
     setKeyword(query);
   };
 
-  const axiosJWT = axios.create();
-
-  axiosJWT.interceptors.request.use(
-    async (config) => {
-      const currentDate = new Date();
-
-      if (expire * 1000 < currentDate.getTime()) {
-        const response = await axios.get("/api/token");
-        config.headers.Authorization = `Bearer ${response.data.accessToken}`;
-        setToken(response.data.accessToken);
-
-        const decoded = jwt_decode(response.data.accessToken);
-        setExpire(decoded.exp);
-      }
-
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
-
   const handleDelete = async (productId) => {
     try {
       if (confirm("Are you sure want to delete this product?") === false) {
         return;
       }
-
-      await axiosJWT.delete(
-        `http://localhost:5000/${params.userId}/products/${productId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      await deleteProduct(params.userId, productId, token);
       location.reload();
     } catch (error) {
       console.log(error);

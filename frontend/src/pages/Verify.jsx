@@ -1,17 +1,15 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { refreshToken } from "../api/auth";
 
 const Verify = () => {
   const navigate = useNavigate();
 
-  const refreshToken = async () => {
+  const handleVerify = async () => {
     try {
-      const response = await axios.get("/api/token");
-
-      const decoded = jwt_decode(response.data.accessToken);
-
+      const data = await refreshToken();
+      const decoded = jwt_decode(data.accessToken);
       navigate(`/dashboard/${decoded.userId}`);
     } catch (error) {
       navigate("/login");
@@ -19,8 +17,8 @@ const Verify = () => {
   };
 
   useEffect(() => {
-    refreshToken();
-  });
+    handleVerify();
+  }, []);
 };
 
 export default Verify;

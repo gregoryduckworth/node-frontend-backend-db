@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, TextField, Container, Typography, Box } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import { login as loginApi } from "../api/auth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,11 +14,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      await axios.post(
-        "/api/auth/login",
-        { email, password },
-        { withCredentials: true }
-      );
+      await loginApi(email, password);
 
       navigate("/");
     } catch (error) {

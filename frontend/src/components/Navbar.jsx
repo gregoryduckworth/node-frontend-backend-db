@@ -1,5 +1,5 @@
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
-import axios from "axios";
+import { logout as logoutApi } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
@@ -9,7 +9,7 @@ const Navbar = () => {
     e.preventDefault();
 
     try {
-      await axios.delete("/api/auth/logout");
+      await logoutApi();
 
       navigate("/login");
     } catch (error) {
