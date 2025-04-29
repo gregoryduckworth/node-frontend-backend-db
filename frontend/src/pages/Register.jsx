@@ -1,52 +1,58 @@
-import React, { useState } from 'react';
-import { Button, TextField, Container, Typography, Box } from '@mui/material';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from "axios"
+import React, { useState } from "react";
+import { Button, TextField, Container, Typography, Box } from "@mui/material";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState('')
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5000/auth/register", {
+      await axios.post("/api/auth/register", {
         name,
         email,
         password,
-        confirmPassword
-      })
+        confirmPassword,
+      });
 
-      navigate("/")
+      navigate("/");
     } catch (error) {
-      setMessage(error.response.data.message)
+      setMessage(error.response.data.message);
     }
   };
 
   return (
-    <Container maxWidth="sm" >
-      <Box sx={{
-        boxShadow: 3,
-        p: 4,
-        mt: 10,
-        borderRadius: "16px"
-      }}>
-        <Typography variant="h4" gutterBottom sx={{
-          fontWeight: 500
-        }}>
+    <Container maxWidth="sm">
+      <Box
+        sx={{
+          boxShadow: 3,
+          p: 4,
+          mt: 10,
+          borderRadius: "16px",
+        }}
+      >
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            fontWeight: 500,
+          }}
+        >
           Register
         </Typography>
         <form onSubmit={handleRegister}>
           <Typography
-            variant='subtitle1'
+            variant="subtitle1"
             sx={{
-              color: "red"
+              color: "red",
             }}
           >
             {message}
@@ -62,7 +68,7 @@ const Register = () => {
           <TextField
             required
             label="Email"
-            type='email'
+            type="email"
             fullWidth
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -87,21 +93,24 @@ const Register = () => {
             margin="normal"
           />
           <Button
-            type='submit'
+            type="submit"
             variant="contained"
             color="primary"
             fullWidth
             sx={{
               mt: 3,
-          }}>
+            }}
+          >
             Register
           </Button>
         </form>
 
-        <Typography sx={{
-          mt: 2
-        }}>
-          Already have an account? <Link to="/login" >Login</Link>
+        <Typography
+          sx={{
+            mt: 2,
+          }}
+        >
+          Already have an account? <Link to="/login">Login</Link>
         </Typography>
       </Box>
     </Container>

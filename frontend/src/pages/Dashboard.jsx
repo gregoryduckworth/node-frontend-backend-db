@@ -14,13 +14,13 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import AddIcon from "@mui/icons-material/Add";
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SearchIcon from '@mui/icons-material/Search';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SearchIcon from "@mui/icons-material/Search";
 
 import Navbar from "../components/Navbar";
 
@@ -29,19 +29,19 @@ const Dashboard = () => {
   const [products, setProducts] = useState([]);
   const [token, setToken] = useState("");
   const [expire, setExpire] = useState("");
-  const [keyword, setKeyword] = useState("")
-  const [query, setQuery] = useState("")
-  const [page, setPage] = useState(0)
-  const [limit, setLimit] = useState(5)
-  const [rows, setRows] = useState(0)
-  const [totalPage, setTotalPage] = useState(0)
+  const [keyword, setKeyword] = useState("");
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(5);
+  const [rows, setRows] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
 
   const navigate = useNavigate();
   const params = useParams();
 
   useEffect(() => {
     refreshToken();
-  }, [])
+  }, []);
 
   useEffect(() => {
     getProductsById();
@@ -49,8 +49,8 @@ const Dashboard = () => {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/token");
-      setToken(response.data.accessToken)
+      const response = await axios.get("/api/token");
+      setToken(response.data.accessToken);
 
       const decoded = jwt_decode(response.data.accessToken);
       setName(decoded.name);
@@ -63,7 +63,7 @@ const Dashboard = () => {
   const getProductsById = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/${params.userId}/products?search_query=${keyword}&page=${page}&limit=${limit}`
+        `/api/${params.userId}/products?search_query=${keyword}&page=${page}&limit=${limit}`
       );
 
       setProducts(response.data.result);
@@ -75,56 +75,62 @@ const Dashboard = () => {
   };
 
   const changePage = (event, page) => {
-    setPage(page - 1)
-  } 
+    setPage(page - 1);
+  };
 
   const onSearch = (e) => {
-    e.preventDefault()
-    setPage(0)
-    setKeyword(query)
-  }
+    e.preventDefault();
+    setPage(0);
+    setKeyword(query);
+  };
 
-  const axiosJWT = axios.create()
+  const axiosJWT = axios.create();
 
-  axiosJWT.interceptors.request.use(async (config) => {
-    const currentDate = new Date()
+  axiosJWT.interceptors.request.use(
+    async (config) => {
+      const currentDate = new Date();
 
-    if (expire * 1000 < currentDate.getTime()) {
-      const response = await axios.get("http://localhost:5000/token")
-      config.headers.Authorization = `Bearer ${response.data.accessToken}`
-      setToken(response.data.accessToken)
+      if (expire * 1000 < currentDate.getTime()) {
+        const response = await axios.get("/api/token");
+        config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+        setToken(response.data.accessToken);
 
-      const decoded = jwt_decode(response.data.accessToken)
-      setExpire(decoded.exp)
+        const decoded = jwt_decode(response.data.accessToken);
+        setExpire(decoded.exp);
+      }
+
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
     }
-
-    return config
-  }, (error) => {
-    return Promise.reject(error)
-  })
+  );
 
   const handleDelete = async (productId) => {
     try {
       if (confirm("Are you sure want to delete this product?") === false) {
-        return
+        return;
       }
 
-      await axiosJWT.delete(`http://localhost:5000/${params.userId}/products/${productId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      await axiosJWT.delete(
+        `http://localhost:5000/${params.userId}/products/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
+      );
 
-      location.reload()
+      location.reload();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   return (
     <div>
       <Navbar />
-      <Container sx={{ mt: 8}}>
+      <Container sx={{ mt: 8 }}>
         <Typography
           variant="h4"
           gutterBottom
@@ -137,7 +143,12 @@ const Dashboard = () => {
         </Typography>
 
         <Link to={`/dashboard/${params.userId}/new`}>
-          <Button variant="contained" color="success" startIcon={<AddIcon />} sx={{ mb: 2 }}>
+          <Button
+            variant="contained"
+            color="success"
+            startIcon={<AddIcon />}
+            sx={{ mb: 2 }}
+          >
             Add Product
           </Button>
         </Link>
@@ -180,10 +191,25 @@ const Dashboard = () => {
                   <TableCell>${product.price}</TableCell>
                   <TableCell align="center">
                     <Stack direction="row" justifyContent="end" spacing={2}>
-                      <Button onClick={() => navigate(`/dashboard/${params.userId}/edit/${product.id}`)} variant="contained" startIcon={<EditIcon />} aria-label="edit product">
+                      <Button
+                        onClick={() =>
+                          navigate(
+                            `/dashboard/${params.userId}/edit/${product.id}`
+                          )
+                        }
+                        variant="contained"
+                        startIcon={<EditIcon />}
+                        aria-label="edit product"
+                      >
                         Edit
                       </Button>
-                      <Button onClick={() => handleDelete(product.id)} variant="contained" color="error" startIcon={<DeleteIcon />} aria-label="edit product">
+                      <Button
+                        onClick={() => handleDelete(product.id)}
+                        variant="contained"
+                        color="error"
+                        startIcon={<DeleteIcon />}
+                        aria-label="edit product"
+                      >
                         Delete
                       </Button>
                     </Stack>

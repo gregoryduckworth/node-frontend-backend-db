@@ -1,27 +1,21 @@
-import {
-  AppBar,
-  Box,
-  Button,
-  Toolbar,
-  Typography
-} from '@mui/material';
-import axios from "axios"
-import { useNavigate } from "react-router-dom"
+import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleLogout = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
-      await axios.delete("http://localhost:5000/auth/logout")
+      await axios.delete("/api/auth/logout");
 
-      navigate("/")
+      navigate("/login");
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -30,11 +24,13 @@ const Navbar = () => {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             Admin Dashboard
           </Typography>
-          <Button onClick={handleLogout} variant='contained' color="error">Logout</Button>
+          <Button onClick={handleLogout} variant="contained" color="error">
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
     </Box>
   );
-}
+};
 
-export default Navbar
+export default Navbar;
