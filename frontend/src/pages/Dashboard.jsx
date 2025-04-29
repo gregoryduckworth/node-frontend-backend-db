@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -23,7 +22,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 
 import Navbar from "../components/Navbar";
-import { getUserProducts, deleteProduct } from "../api/product";
+import { getProducts, deleteProduct } from "../api/product";
 import { refreshToken } from "../api/auth";
 
 const Dashboard = () => {
@@ -63,12 +62,7 @@ const Dashboard = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await getUserProducts(
-        params.userId,
-        keyword,
-        page,
-        limit
-      );
+      const response = await getProducts(params.userId, keyword, page, limit);
       setProducts(response.data.result);
       setRows(response.data.totalRows);
       setTotalPage(response.data.totalPage);

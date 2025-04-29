@@ -204,7 +204,7 @@ export const logout = async (req, res) => {
     });
 
     res.clearCookie("refreshToken");
-    res.sendStatus(200);
+    res.status(200).json({ message: "OK" });
   } catch (error) {
     console.log(error);
   }

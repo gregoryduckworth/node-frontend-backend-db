@@ -1,27 +1,33 @@
-import axios from "axios";
-
 export const register = async (name, email, password, confirmPassword) => {
-  return axios.post("/api/auth/register", {
-    name,
-    email,
-    password,
-    confirmPassword,
+  const response = await fetch("/api/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password, confirmPassword }),
   });
+  return response.json();
 };
 
 export const login = async (email, password) => {
-  return axios.post(
-    "/api/auth/login",
-    { email, password },
-    { withCredentials: true }
-  );
+  const response = await fetch("/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ email, password }),
+  });
+  return response.json();
 };
 
 export const logout = async () => {
-  return axios.delete("/api/auth/logout");
+  const response = await fetch("/api/auth/logout", {
+    method: "DELETE",
+    credentials: "include",
+  });
+  return response.json();
 };
 
 export const refreshToken = async () => {
-  const response = await axios.get("/api/token");
-  return response.data;
+  const response = await fetch("/api/token", {
+    credentials: "include",
+  });
+  return response.json();
 };

@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-import { addProduct } from "../api/product";
+import { createProduct } from "../api/product";
 import { refreshToken } from "../api/auth";
 
 const AddProduct = () => {
@@ -38,7 +38,7 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await addProduct(params.userId, name, price, token);
+      await createProduct(params.userId, name, price, token);
       navigate(`/dashboard/${params.userId}`);
     } catch (error) {
       console.log(error);
