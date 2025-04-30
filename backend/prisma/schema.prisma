@@ -16,17 +16,6 @@ model User {
   email         String
   password      String
   refresh_token String?   @db.Text
-  products      Product[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-}
-
-model Product {
-  id        Int      @id @default(autoincrement())
-  name      String
-  price     Int
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }

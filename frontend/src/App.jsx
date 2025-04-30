@@ -1,24 +1,34 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Register from "./pages/Register"
-import Login from "./pages/Login"
-import Dashboard from "./pages/Dashboard"
-import Verify from "./pages/Verify"
-import AddProduct from "./pages/AddProduct"
-import EditProduct from "./pages/EditProduct"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import { useAuth } from "./context/AuthContext";
+
+const ProtectedRoute = ({ children }) => {
+  const { token, loading } = useAuth();
+  if (loading) return null;
+  if (!token) return <Navigate to="/login" replace />;
+  return children;
+};
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Verify />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard/:userId" element={<Dashboard />} />
-        <Route path="/dashboard/:userId/new" element={<AddProduct />} />
-        <Route path="/dashboard/:userId/edit/:productId" element={<EditProduct />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
-  )
-}
+  );
+};
 
-export default App
+export default App;

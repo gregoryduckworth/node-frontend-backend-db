@@ -4,7 +4,6 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import UserRoute from "./routes/UserRoute.js";
-import ProductRoute from "./routes/ProductRoute.js";
 dotenv.config();
 
 const app = express();
@@ -39,6 +38,5 @@ app.get("/health", (_req, res) => res.sendStatus(200));
 
 // Routes
 app.use(UserRoute);
-app.use(ProductRoute);
 
 app.listen(process.env.PORT, () => console.log("Server is running..."));

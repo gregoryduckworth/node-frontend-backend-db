@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, TextField, Container, Typography, Box } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
-import { login as loginApi } from "../api/auth";
+import { login as loginApi, refreshToken } from "../api/auth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,10 +15,14 @@ const Login = () => {
 
     try {
       await loginApi(email, password);
-
-      navigate("/");
+      const data = await refreshToken();
+      if (data && data.accessToken) {
+        navigate("/dashboard");
+      } else {
+        setMessage("Login failed: No access token returned");
+      }
     } catch (error) {
-      setMessage(error.response.data.message);
+      setMessage(error?.response?.data?.message || "Login failed");
     }
   };
 

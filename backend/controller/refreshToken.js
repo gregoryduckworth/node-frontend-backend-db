@@ -7,7 +7,7 @@ export const refreshToken = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
 
-    if (!refreshToken) return res.sendStatus(401);
+    if (!refreshToken) return res.sendStatus(204);
 
     const user = await prisma.user.findFirst({
       where: {
@@ -40,5 +40,6 @@ export const refreshToken = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
+    res.sendStatus(500);
   }
 };

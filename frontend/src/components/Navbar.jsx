@@ -22,7 +22,7 @@ const Navbar = () => {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Admin Dashboard
+            Dashboard
           </Typography>
           <Button onClick={handleLogout} variant="contained" color="error">
             Logout
