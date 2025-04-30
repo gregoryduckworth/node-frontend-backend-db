@@ -1,26 +1,30 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { Button, TextField, Container, Typography, Box } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
-import { register as registerApi } from "../api/auth";
+import { login as loginApi, refreshToken } from "../api/auth";
+import { useAuth } from "../hooks/useAuth";
 
-const Register = () => {
-  const [name, setName] = useState("");
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
+  const { refresh } = useAuth();
 
-  const handleRegister = async (e) => {
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
-      await registerApi(name, email, password, confirmPassword);
-
-      navigate("/login");
-    } catch (error) {
-      setMessage(error.response.data.message);
+      await loginApi(email, password);
+      await refresh();
+      const data = await refreshToken();
+      if (data && (data as any).accessToken) {
+        navigate("/dashboard");
+      } else {
+        setMessage("Login failed: No access token returned");
+      }
+    } catch (error: any) {
+      setMessage(error?.response?.data?.message || "Login failed");
     }
   };
 
@@ -41,9 +45,9 @@ const Register = () => {
             fontWeight: 500,
           }}
         >
-          Register
+          Login
         </Typography>
-        <form onSubmit={handleRegister}>
+        <form onSubmit={handleLogin}>
           <Typography
             variant="subtitle1"
             sx={{
@@ -52,14 +56,6 @@ const Register = () => {
           >
             {message}
           </Typography>
-          <TextField
-            required
-            label="Username"
-            fullWidth
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            margin="normal"
-          />
           <TextField
             required
             label="Email"
@@ -78,15 +74,6 @@ const Register = () => {
             onChange={(e) => setPassword(e.target.value)}
             margin="normal"
           />
-          <TextField
-            required
-            label="Confirm Password"
-            type="password"
-            fullWidth
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            margin="normal"
-          />
           <Button
             type="submit"
             variant="contained"
@@ -96,20 +83,16 @@ const Register = () => {
               mt: 3,
             }}
           >
-            Register
+            Login
           </Button>
         </form>
 
-        <Typography
-          sx={{
-            mt: 2,
-          }}
-        >
-          Already have an account? <Link to="/login">Login</Link>
+        <Typography sx={{ mt: 2 }}>
+          Dont have any account? <Link to="/register">Register</Link>
         </Typography>
       </Box>
     </Container>
   );
 };
 
-export default Register;
+export default Login;

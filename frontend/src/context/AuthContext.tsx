@@ -1,11 +1,29 @@
-import { createContext, useState, useEffect, useCallback } from "react";
+import {
+  createContext,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from "react";
 import jwt_decode from "jwt-decode";
 import { refreshToken } from "../api/auth";
-import PropTypes from "prop-types";
 
-const AuthContext = createContext();
+type AuthContextType = {
+  token: string;
+  expire: string;
+  refresh: () => Promise<void>;
+  loading: boolean;
+};
 
-const AuthProvider = ({ children }) => {
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState("");
   const [expire, setExpire] = useState("");
   const [loading, setLoading] = useState(true);
@@ -19,7 +37,7 @@ const AuthProvider = ({ children }) => {
         return;
       }
       setToken(data.accessToken);
-      const decoded = jwt_decode(data.accessToken);
+      const decoded: any = jwt_decode(data.accessToken);
       setExpire(decoded.exp);
     } catch (error) {
       setToken("");
@@ -41,8 +59,3 @@ const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired,
-};
-
-export { AuthContext, AuthProvider };

@@ -1,4 +1,13 @@
-export const register = async (name, email, password, confirmPassword) => {
+export type AuthResponse = {
+  accessToken: string;
+};
+
+export const register = async (
+  name: string,
+  email: string,
+  password: string,
+  confirmPassword: string
+): Promise<AuthResponse> => {
   const response = await fetch("/api/auth/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -7,7 +16,10 @@ export const register = async (name, email, password, confirmPassword) => {
   return response.json();
 };
 
-export const login = async (email, password) => {
+export const login = async (
+  email: string,
+  password: string
+): Promise<AuthResponse> => {
   const response = await fetch("/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -17,7 +29,7 @@ export const login = async (email, password) => {
   return response.json();
 };
 
-export const logout = async () => {
+export const logout = async (): Promise<{ message: string }> => {
   const response = await fetch("/api/auth/logout", {
     method: "DELETE",
     credentials: "include",
@@ -25,7 +37,9 @@ export const logout = async () => {
   return response.json();
 };
 
-export const refreshToken = async () => {
+export const refreshToken = async (): Promise<
+  AuthResponse | { accessToken?: string }
+> => {
   const response = await fetch("/api/token", {
     credentials: "include",
   });

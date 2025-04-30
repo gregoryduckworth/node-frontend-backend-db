@@ -5,6 +5,11 @@ import { Container, Typography } from "@mui/material";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../hooks/useAuth";
 
+type JwtPayload = {
+  name: string;
+  [key: string]: any;
+};
+
 const Dashboard = () => {
   const [name, setName] = useState("");
 
@@ -14,7 +19,7 @@ const Dashboard = () => {
     if (!token && !loading) {
       refresh();
     } else if (token) {
-      const decoded = jwt_decode(token);
+      const decoded = jwt_decode<JwtPayload>(token);
       setName(decoded.name);
     }
   }, [token, loading, refresh]);

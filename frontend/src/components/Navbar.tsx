@@ -1,18 +1,18 @@
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { logout as logoutApi } from "../api/auth";
 import { useNavigate } from "react-router-dom";
+import { MouseEvent } from "react";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const handleLogout = async (e) => {
+  const handleLogout = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
     try {
       await logoutApi();
-
       navigate("/login");
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log(error);
     }
   };
