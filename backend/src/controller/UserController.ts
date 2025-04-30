@@ -146,3 +146,100 @@ export const logout = async (req: Request, res: Response) => {
     res.sendStatus(400);
   }
 };
+
+export const forgotPassword = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: "Email is required" });
+
+    const user = await prisma.user.findFirst({ where: { email } });
+    if (!user) {
+      return res
+        .status(200)
+        .json({ message: "Password reset instructions sent to your email" });
+    }
+
+    const resetToken = jwt.sign({ userId: user.id, email }, accessTokenSecret, {
+      expiresIn: "1h",
+    });
+
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 1);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        reset_token: resetToken,
+        reset_token_expires: expiresAt,
+      },
+    });
+
+    // In a real application, you would send an email with a link containing the token
+    // For example: `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`
+    console.log(`Reset token for ${email}: ${resetToken}`);
+    console.log(
+      `Reset link would be: http://localhost:5173/reset-password?token=${resetToken}`
+    );
+
+    return res
+      .status(200)
+      .json({ message: "Password reset instructions sent to your email" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const { token, password, confirmPassword } = req.body;
+
+    if (!token) return res.status(400).json({ message: "Token is required" });
+    if (!password)
+      return res.status(400).json({ message: "Password is required" });
+    if (!confirmPassword)
+      return res.status(400).json({ message: "Confirm password is required" });
+    if (password !== confirmPassword)
+      return res.status(400).json({ message: "Passwords don't match" });
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, accessTokenSecret);
+    } catch (error) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+
+    const user = await prisma.user.findFirst({
+      where: {
+        id: (decoded as any).userId,
+        reset_token: token,
+        reset_token_expires: {
+          gt: new Date(),
+        },
+      },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        reset_token: null,
+        reset_token_expires: null,
+      },
+    });
+
+    return res
+      .status(200)
+      .json({ message: "Password has been reset successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};

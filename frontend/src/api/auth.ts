@@ -45,3 +45,27 @@ export const refreshToken = async (): Promise<
   });
   return response.json();
 };
+
+export const requestPasswordReset = async (
+  email: string
+): Promise<{ message: string }> => {
+  const response = await fetch("/api/auth/forgot-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  return response.json();
+};
+
+export const resetPassword = async (
+  token: string,
+  password: string,
+  confirmPassword: string
+): Promise<{ message: string }> => {
+  const response = await fetch("/api/auth/reset-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token, password, confirmPassword }),
+  });
+  return response.json();
+};

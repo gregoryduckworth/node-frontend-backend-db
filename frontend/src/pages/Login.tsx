@@ -1,4 +1,4 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { login as loginApi, refreshToken } from "../api/auth";
 import { useAuth } from "../hooks/useAuth";
@@ -12,11 +12,23 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
   const { refresh } = useAuth();
 
+  useEffect(() => {
+    const registrationSuccess = localStorage.getItem("registrationSuccess");
+    if (registrationSuccess === "true") {
+      setMessage("Registration successful! You can now log in.");
+      setIsSuccess(true);
+      localStorage.removeItem("registrationSuccess");
+    }
+  }, []);
+
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setMessage("");
+    setIsSuccess(false);
     try {
       await loginApi(email, password);
       await refresh();
@@ -45,11 +57,17 @@ const Login = () => {
                       Login to your Acme Inc account
                     </p>
                   </div>
+
                   {message && (
-                    <div className="text-red-600 text-sm text-center">
+                    <div
+                      className={`text-sm text-center ${
+                        isSuccess ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
                       {message}
                     </div>
                   )}
+
                   <div className="grid gap-3">
                     <Label htmlFor="email">Email</Label>
                     <Input
@@ -71,12 +89,12 @@ const Login = () => {
                       onChange={(e) => setPassword(e.target.value)}
                     />
                     <div className="flex justify-end">
-                      <a
-                        href="#"
+                      <Link
+                        to="/forgot-password"
                         className="text-sm underline-offset-2 hover:underline"
                       >
                         Forgot your password?
-                      </a>
+                      </Link>
                     </div>
                   </div>
                   <Button type="submit" className="w-full">

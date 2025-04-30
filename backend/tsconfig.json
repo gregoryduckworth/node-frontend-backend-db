@@ -10,8 +10,9 @@
     "sourceMap": true,
     "declaration": true,
     "resolveJsonModule": true,
-    "rootDir": "src"
+    "rootDir": ".",
+    "baseUrl": "."
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "prisma/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

@@ -20,6 +20,7 @@ const Register = () => {
     e.preventDefault();
     try {
       await registerApi(name, email, password, confirmPassword);
+      localStorage.setItem("registrationSuccess", "true");
       navigate("/login");
     } catch (error: any) {
       setMessage(error?.response?.data?.message || "Registration failed");
