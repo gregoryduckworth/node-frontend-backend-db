@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, TextField, Container, Typography, Box } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import { login as loginApi, refreshToken } from "../api/auth";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -9,12 +10,14 @@ const Login = () => {
   const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
+  const { refresh } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
       await loginApi(email, password);
+      await refresh();
       const data = await refreshToken();
       if (data && data.accessToken) {
         navigate("/dashboard");

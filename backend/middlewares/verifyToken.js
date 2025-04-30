@@ -1,18 +1,12 @@
-import jwt from "jsonwebtoken";
+import { expressjwt } from "express-jwt";
 
-export const verifyToken = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (authHeader) {
-    const token = authHeader.split(" ")[1];
-
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-      if (err) return res.sendStatus(403);
-
-      req.email = decoded.email;
-      next();
-    });
-  } else {
-    res.sendStatus(401);
-  }
-};
+export const verifyToken = expressjwt({
+  secret: process.env.ACCESS_TOKEN_SECRET,
+  algorithms: ["HS256"],
+  getToken: (req) => {
+    const authHeader = req.headers.authorization;
+    const match = authHeader?.match(/^Bearer\s+(.+)$/i);
+    return match?.[1] ?? null;
+  },
+  requestProperty: "auth",
+});
