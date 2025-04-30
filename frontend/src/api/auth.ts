@@ -40,10 +40,34 @@ export const logout = async (): Promise<{ message: string }> => {
 export const refreshToken = async (): Promise<
   AuthResponse | { accessToken?: string }
 > => {
-  const response = await fetch("/api/token", {
-    credentials: "include",
-  });
-  return response.json();
+  try {
+    const response = await fetch("/api/token", {
+      credentials: "include",
+    });
+    if (response.status === 204) {
+      return { accessToken: undefined };
+    }
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      console.warn("Refresh token response is not JSON:", contentType);
+      return { accessToken: undefined };
+    }
+    const text = await response.text();
+    if (!text) {
+      console.warn("Refresh token response is empty");
+      return { accessToken: undefined };
+    }
+
+    try {
+      return JSON.parse(text);
+    } catch (e) {
+      console.error("Failed to parse refresh token response:", e);
+      return { accessToken: undefined };
+    }
+  } catch (error) {
+    console.error("Network error during token refresh:", error);
+    return { accessToken: undefined };
+  }
 };
 
 export const requestPasswordReset = async (
