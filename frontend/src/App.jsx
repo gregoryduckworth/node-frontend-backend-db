@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./hooks/useAuth";
 
 const ProtectedRoute = ({ children }) => {
   const { token, loading } = useAuth();

@@ -1,17 +1,11 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
+import { createContext, useState, useEffect, useCallback } from "react";
 import jwt_decode from "jwt-decode";
 import { refreshToken } from "../api/auth";
 import PropTypes from "prop-types";
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const [token, setToken] = useState("");
   const [expire, setExpire] = useState("");
   const [loading, setLoading] = useState(true);
@@ -51,4 +45,4 @@ AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export const useAuth = () => useContext(AuthContext);
+export { AuthContext, AuthProvider };

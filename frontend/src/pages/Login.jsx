@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, TextField, Container, Typography, Box } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import { login as loginApi, refreshToken } from "../api/auth";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");

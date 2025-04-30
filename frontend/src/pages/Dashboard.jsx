@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 import { Container, Typography } from "@mui/material";
 
 import Navbar from "../components/Navbar";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 
 const Dashboard = () => {
   const [name, setName] = useState("");
