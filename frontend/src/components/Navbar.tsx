@@ -1,19 +1,23 @@
-import { logout as logoutApi } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import { MouseEvent } from "react";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "../store/useAuthStore";
+import { useNotificationStore } from "../store/useNotificationStore";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { logout } = useAuthStore();
+  const { addNotification } = useNotificationStore();
 
   const handleLogout = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      await logoutApi();
+      await logout();
+      addNotification("Logged out successfully", "success");
       navigate("/login");
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
+      console.error("Logout error:", error);
+      addNotification("Failed to log out", "error");
     }
   };
 

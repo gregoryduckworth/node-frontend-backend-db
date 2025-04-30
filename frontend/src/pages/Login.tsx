@@ -1,8 +1,7 @@
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { login as loginApi, refreshToken } from "../api/auth";
-import { useAuth } from "../hooks/useAuth";
-import { cn } from "@/lib/utils";
+import { useAuthStore } from "../store/useAuthStore";
+import { useNotificationStore } from "../store/useNotificationStore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,35 +10,24 @@ import { Label } from "@/components/ui/label";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
-  const navigate = useNavigate();
-  const { refresh } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    const registrationSuccess = localStorage.getItem("registrationSuccess");
-    if (registrationSuccess === "true") {
-      setMessage("Registration successful! You can now log in.");
-      setIsSuccess(true);
-      localStorage.removeItem("registrationSuccess");
-    }
-  }, []);
+  const navigate = useNavigate();
+  const { login } = useAuthStore();
+  const { addNotification } = useNotificationStore();
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setMessage("");
-    setIsSuccess(false);
+    setIsSubmitting(true);
+
     try {
-      await loginApi(email, password);
-      await refresh();
-      const data = await refreshToken();
-      if (data && (data as any).accessToken) {
-        navigate("/dashboard");
-      } else {
-        setMessage("Login failed: No access token returned");
-      }
+      await login(email, password);
+      navigate("/dashboard");
     } catch (error: any) {
-      setMessage(error?.response?.data?.message || "Login failed");
+      const errorMessage = error?.response?.data?.message || "Login failed";
+      addNotification(errorMessage, "error");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -57,16 +45,6 @@ const Login = () => {
                       Login to your Acme Inc account
                     </p>
                   </div>
-
-                  {message && (
-                    <div
-                      className={`text-sm text-center ${
-                        isSuccess ? "text-green-600" : "text-red-600"
-                      }`}
-                    >
-                      {message}
-                    </div>
-                  )}
 
                   <div className="grid gap-3">
                     <Label htmlFor="email">Email</Label>
@@ -97,8 +75,12 @@ const Login = () => {
                       </Link>
                     </div>
                   </div>
-                  <Button type="submit" className="w-full">
-                    Login
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Logging in..." : "Login"}
                   </Button>
                   <div className="text-center text-sm">
                     Don&apos;t have an account?{" "}

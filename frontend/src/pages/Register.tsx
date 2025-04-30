@@ -1,7 +1,7 @@
 import { useState, FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { register as registerApi } from "../api/auth";
-import { cn } from "@/lib/utils";
+import { useNotificationStore } from "../store/useNotificationStore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,18 +12,28 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
+  const { addNotification } = useNotificationStore();
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
     try {
       await registerApi(name, email, password, confirmPassword);
-      localStorage.setItem("registrationSuccess", "true");
+      addNotification(
+        "Registration successful! You can now log in.",
+        "success"
+      );
       navigate("/login");
     } catch (error: any) {
-      setMessage(error?.response?.data?.message || "Registration failed");
+      const errorMessage =
+        error?.response?.data?.message || "Registration failed";
+      addNotification(errorMessage, "error");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -41,11 +51,7 @@ const Register = () => {
                       Sign up for your Acme Inc account
                     </p>
                   </div>
-                  {message && (
-                    <div className="text-red-600 text-sm text-center">
-                      {message}
-                    </div>
-                  )}
+
                   <div className="grid gap-3">
                     <Label htmlFor="name">Username</Label>
                     <Input
@@ -87,8 +93,12 @@ const Register = () => {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                   </div>
-                  <Button type="submit" className="w-full">
-                    Register
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Registering..." : "Register"}
                   </Button>
                   <div className="text-center text-sm">
                     Already have an account?{" "}

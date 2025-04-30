@@ -1,26 +1,42 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import { useAuth } from "./hooks/useAuth";
-import { ReactNode } from "react";
+import Notifications from "./components/Notifications";
+import { useAuthStore } from "./store/useAuthStore";
 
 type ProtectedRouteProps = {
-  children: ReactNode;
+  children: React.ReactNode;
 };
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { token, loading } = useAuth();
-  if (loading) return null;
-  if (!token) return <Navigate to="/login" replace />;
-  return children;
+  const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    if (!isAuthenticated && !isLoading) {
+      checkAuth();
+    }
+  }, [isAuthenticated, isLoading, checkAuth]);
+
+  if (isLoading) return null;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+
+  return <>{children}</>;
 };
 
 const App = () => {
+  const { checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
   return (
     <BrowserRouter>
+      <Notifications />
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
