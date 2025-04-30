@@ -1,10 +1,15 @@
-import { PrismaClient } from "@prisma/client";
+import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { prisma } from "../../prisma/client";
 
-const prisma = new PrismaClient();
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+if (!accessTokenSecret || !refreshTokenSecret) {
+  throw new Error("JWT secrets are not defined in environment variables");
+}
 
-export const getAllUsers = async (req, res) => {
+export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await prisma.user.findMany({
       select: { id: true, name: true, email: true },
@@ -16,7 +21,7 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-export const getUserById = async (req, res) => {
+export const getUserById = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const user = await prisma.user.findUnique({
@@ -31,7 +36,7 @@ export const getUserById = async (req, res) => {
   }
 };
 
-export const register = async (req, res) => {
+export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password, confirmPassword } = req.body;
     if (!name) return res.status(400).json({ message: "Name is required" });
@@ -57,7 +62,7 @@ export const register = async (req, res) => {
   }
 };
 
-export const login = async (req, res) => {
+export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     if (!email) return res.status(400).json({ message: "Email is required" });
@@ -71,12 +76,12 @@ export const login = async (req, res) => {
     const { id: userId, email: userEmail, name: userName } = user;
     const accessToken = jwt.sign(
       { userId, userEmail, userName },
-      process.env.ACCESS_TOKEN_SECRET,
+      accessTokenSecret,
       { expiresIn: "15s" }
     );
     const refreshToken = jwt.sign(
       { userId, userEmail, userName },
-      process.env.REFRESH_TOKEN_SECRET,
+      refreshTokenSecret,
       { expiresIn: "1d" }
     );
     await prisma.user.update({
@@ -94,7 +99,7 @@ export const login = async (req, res) => {
   }
 };
 
-export const updateUser = async (req, res) => {
+export const updateUser = async (req: Request, res: Response) => {
   try {
     const { name, email } = req.body;
     const refreshToken = req.cookies.refreshToken;
@@ -102,7 +107,7 @@ export const updateUser = async (req, res) => {
     if (!name) return res.status(400).json({ message: "Name is required" });
     if (!email) return res.status(400).json({ message: "Email is required" });
     try {
-      jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+      jwt.verify(refreshToken, refreshTokenSecret);
     } catch (err) {
       return res.sendStatus(403);
     }
@@ -122,7 +127,7 @@ export const updateUser = async (req, res) => {
   }
 };
 
-export const logout = async (req, res) => {
+export const logout = async (req: Request, res: Response) => {
   try {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.sendStatus(204);
