@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
-
 import Navbar from "../components/Navbar";
 import { useAuth } from "../hooks/useAuth";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 type JwtPayload = {
   name: string;
@@ -26,9 +26,12 @@ const Dashboard = () => {
   return (
     <div>
       <Navbar />
-      <div className="max-w-2xl mx-auto mt-16">
-        <h2 className="text-2xl font-bold mb-4">Welcome Back: {name}</h2>
-      </div>
+      <Card className="max-w-2xl mx-auto mt-16">
+        <CardHeader>
+          <CardTitle>Welcome Back: {name}</CardTitle>
+        </CardHeader>
+        <CardContent>{/* Add dashboard content here */}</CardContent>
+      </Card>
     </div>
   );
 };

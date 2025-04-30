@@ -1,6 +1,7 @@
 import { logout as logoutApi } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import { MouseEvent } from "react";
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -19,12 +20,13 @@ const Navbar = () => {
   return (
     <nav className="bg-blue-700 px-4 py-3 flex items-center justify-between">
       <span className="text-white text-lg font-semibold">Dashboard</span>
-      <button
+      <Button
         onClick={handleLogout}
-        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+        variant="destructive"
+        className="px-4 py-2"
       >
         Logout
-      </button>
+      </Button>
     </nav>
   );
 };

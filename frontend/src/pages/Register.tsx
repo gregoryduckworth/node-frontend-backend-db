@@ -1,6 +1,9 @@
 import { useState, FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { register as registerApi } from "../api/auth";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -22,61 +25,66 @@ const Register = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-8 rounded-xl shadow bg-white">
-      <h2 className="text-2xl font-bold mb-6">Register</h2>
-      <form onSubmit={handleRegister}>
-        {message && <div className="text-red-600 text-sm mb-2">{message}</div>}
-        <div className="mb-4">
-          <label className="block mb-1 font-medium">Username</label>
-          <input
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-1 font-medium">Email</label>
-          <input
-            required
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-1 font-medium">Password</label>
-          <input
-            required
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-1 font-medium">Confirm Password</label>
-          <input
-            required
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition mt-4"
-        >
-          Register
-        </button>
-      </form>
-      <div className="mt-4 text-center">
-        Already have an account?{" "}
-        <Link to="/login" className="text-blue-600 underline">
-          Login
-        </Link>
+    <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
+      <div className="w-full max-w-sm md:max-w-3xl">
+        <Card className="max-w-md mx-auto mt-10">
+          <CardHeader>
+            <CardTitle>Register</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleRegister}>
+              {message && (
+                <div className="text-red-600 text-sm mb-2">{message}</div>
+              )}
+              <div className="mb-4">
+                <label className="block mb-1 font-medium">Username</label>
+                <Input
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block mb-1 font-medium">Email</label>
+                <Input
+                  required
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block mb-1 font-medium">Password</label>
+                <Input
+                  required
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block mb-1 font-medium">
+                  Confirm Password
+                </label>
+                <Input
+                  required
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </div>
+              <Button type="submit" className="w-full mt-4">
+                Register
+              </Button>
+            </form>
+            <div className="mt-4 text-center">
+              Already have an account?{" "}
+              <Link to="/login" className="text-blue-600 underline">
+                Login
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
