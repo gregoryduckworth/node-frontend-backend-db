@@ -1,5 +1,4 @@
 import { useState, FormEvent } from "react";
-import { Button, TextField, Container, Typography, Box } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import { login as loginApi, refreshToken } from "../api/auth";
 import { useAuth } from "../hooks/useAuth";
@@ -29,69 +28,44 @@ const Login = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box
-        sx={{
-          boxShadow: 3,
-          p: 4,
-          mt: 10,
-          borderRadius: "16px",
-        }}
-      >
-        <Typography
-          variant="h4"
-          gutterBottom
-          sx={{
-            fontWeight: 500,
-          }}
-        >
-          Login
-        </Typography>
-        <form onSubmit={handleLogin}>
-          <Typography
-            variant="subtitle1"
-            sx={{
-              color: "red",
-            }}
-          >
-            {message}
-          </Typography>
-          <TextField
+    <div className="max-w-md mx-auto mt-10 p-8 rounded-xl shadow bg-white">
+      <h2 className="text-2xl font-bold mb-6">Login</h2>
+      <form onSubmit={handleLogin}>
+        {message && <div className="text-red-600 text-sm mb-2">{message}</div>}
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Email</label>
+          <input
             required
-            label="Email"
             type="email"
-            fullWidth
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            margin="normal"
+            className="w-full border rounded px-3 py-2"
           />
-          <TextField
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Password</label>
+          <input
             required
-            label="Password"
             type="password"
-            fullWidth
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            margin="normal"
+            className="w-full border rounded px-3 py-2"
           />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{
-              mt: 3,
-            }}
-          >
-            Login
-          </Button>
-        </form>
-
-        <Typography sx={{ mt: 2 }}>
-          Dont have any account? <Link to="/register">Register</Link>
-        </Typography>
-      </Box>
-    </Container>
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition mt-4"
+        >
+          Login
+        </button>
+      </form>
+      <div className="mt-4 text-center">
+        Don't have any account?{" "}
+        <Link to="/register" className="text-blue-600 underline">
+          Register
+        </Link>
+      </div>
+    </div>
   );
 };
 

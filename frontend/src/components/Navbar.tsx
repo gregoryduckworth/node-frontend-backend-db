@@ -1,4 +1,3 @@
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { logout as logoutApi } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import { MouseEvent } from "react";
@@ -18,18 +17,15 @@ const Navbar = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Dashboard
-          </Typography>
-          <Button onClick={handleLogout} variant="contained" color="error">
-            Logout
-          </Button>
-        </Toolbar>
-      </AppBar>
-    </Box>
+    <nav className="bg-blue-700 px-4 py-3 flex items-center justify-between">
+      <span className="text-white text-lg font-semibold">Dashboard</span>
+      <button
+        onClick={handleLogout}
+        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+      >
+        Logout
+      </button>
+    </nav>
   );
 };
 

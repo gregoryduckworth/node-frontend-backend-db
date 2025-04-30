@@ -1,5 +1,4 @@
 import { useState, FormEvent } from "react";
-import { Button, TextField, Container, Typography, Box } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import { register as registerApi } from "../api/auth";
 
@@ -23,86 +22,63 @@ const Register = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box
-        sx={{
-          boxShadow: 3,
-          p: 4,
-          mt: 10,
-          borderRadius: "16px",
-        }}
-      >
-        <Typography
-          variant="h4"
-          gutterBottom
-          sx={{
-            fontWeight: 500,
-          }}
-        >
-          Register
-        </Typography>
-        <form onSubmit={handleRegister}>
-          <Typography
-            variant="subtitle1"
-            sx={{
-              color: "red",
-            }}
-          >
-            {message}
-          </Typography>
-          <TextField
+    <div className="max-w-md mx-auto mt-10 p-8 rounded-xl shadow bg-white">
+      <h2 className="text-2xl font-bold mb-6">Register</h2>
+      <form onSubmit={handleRegister}>
+        {message && <div className="text-red-600 text-sm mb-2">{message}</div>}
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Username</label>
+          <input
             required
-            label="Username"
-            fullWidth
             value={name}
             onChange={(e) => setName(e.target.value)}
-            margin="normal"
+            className="w-full border rounded px-3 py-2"
           />
-          <TextField
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Email</label>
+          <input
             required
-            label="Email"
             type="email"
-            fullWidth
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            margin="normal"
+            className="w-full border rounded px-3 py-2"
           />
-          <TextField
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Password</label>
+          <input
             required
-            label="Password"
             type="password"
-            fullWidth
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            margin="normal"
+            className="w-full border rounded px-3 py-2"
           />
-          <TextField
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Confirm Password</label>
+          <input
             required
-            label="Confirm Password"
             type="password"
-            fullWidth
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            margin="normal"
+            className="w-full border rounded px-3 py-2"
           />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{
-              mt: 3,
-            }}
-          >
-            Register
-          </Button>
-        </form>
-
-        <Typography sx={{ mt: 2 }}>
-          Already have an account? <Link to="/login">Login</Link>
-        </Typography>
-      </Box>
-    </Container>
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition mt-4"
+        >
+          Register
+        </button>
+      </form>
+      <div className="mt-4 text-center">
+        Already have an account?{" "}
+        <Link to="/login" className="text-blue-600 underline">
+          Login
+        </Link>
+      </div>
+    </div>
   );
 };
 

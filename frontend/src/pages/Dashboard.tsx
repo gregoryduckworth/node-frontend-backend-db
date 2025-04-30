@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
-import { Container, Typography } from "@mui/material";
 
 import Navbar from "../components/Navbar";
 import { useAuth } from "../hooks/useAuth";
@@ -27,18 +26,9 @@ const Dashboard = () => {
   return (
     <div>
       <Navbar />
-      <Container sx={{ mt: 8 }}>
-        <Typography
-          variant="h4"
-          gutterBottom
-          sx={{
-            fontWeight: "medium",
-            mb: 3,
-          }}
-        >
-          Welcome Back: {name}
-        </Typography>
-      </Container>
+      <div className="max-w-2xl mx-auto mt-16">
+        <h2 className="text-2xl font-bold mb-4">Welcome Back: {name}</h2>
+      </div>
     </div>
   );
 };
