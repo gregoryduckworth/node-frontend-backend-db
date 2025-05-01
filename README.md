@@ -1,58 +1,126 @@
-# Admin Dashboard
+# Full Stack Application
 
-![Promptopia](https://i.postimg.cc/pxq0Bg0T/Admin-dashboard.png)
+A full-stack application with user authentication, dashboard, and multi-language support.
 
-## Introduction
-Admin Dashboard is a fullstack application that you can use to manage your e-commerce store.
+## Project Structure
 
-In the application, I use JWT Auth to authenticate the users, it also includes the pagination for the product list 👍
+The project is divided into two main parts:
 
-### Tech Stack 💻 :
+### Backend
+
+- Built with Node.js and TypeScript
+- Uses Prisma ORM for database operations
+- JWT authentication with refresh tokens
+- RESTful API architecture
+
+### Frontend
+
+- React application built with Vite
+- TypeScript for type safety
+- Tailwind CSS for styling
+- i18n internationalization support (English and Spanish)
+- State management with custom stores
+
+## Prerequisites
+
+- Node.js (v22 or higher)
+- Docker and Docker Compose
+- npm or yarn
+
+## Getting Started
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/gregoryduckworth/node-frontend-backend-db.git
+cd node-frontend-backend-db
+```
+
+2. Install dependencies:
+
+```bash
+# Install backend dependencies
+cd backend
+npm install
+
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
+
+### Running the Application with Docker
+
+```bash
+# Start all services
+docker-compose up
+
+# Run in background
+docker-compose up -d
+```
+
+### Running the Application Locally
+
+1. Start the backend:
+
+```bash
+cd backend
+npm run dev
+```
+
+2. Start the frontend in another terminal:
+
+```bash
+cd frontend
+npm run dev
+```
+
+## Features
+
+- User authentication (Login, Register, Forgot Password)
+- Dashboard
+- Responsive design with mobile support
+- Multi-language support (English, Spanish)
+- Real-time notifications
+
+## Technology Stack
+
+### Backend
+
+- Node.js
+- Express.js
+- TypeScript
+- Prisma ORM
+- JWT Authentication
+
+### Frontend
+
 - React
-- ExpressJs
-- Material UI
-- Mysql
-- PrismaDB
-- JWT Auth
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router
+- i18n for internationalization
 
-### Cloning the repository
+## Database
 
-```shell
-git clone https://github.com/inifarhan/admin-dashboard.git
-```
+The application uses a relational database managed through Prisma ORM. The database schema can be found in `backend/prisma/schema.prisma`.
 
-### Install packages
+## API Endpoints
 
-```shell
-cd backend
-npm i
-cd frontend
-npm i
-```
+- Authentication routes (login, register, forgot password)
+- User management routes
+- (Other endpoints would be documented here)
 
-### Setup .env file for the backend application
+## Contributing
 
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a pull request
 
-```js
-PORT=
-REFRESH_TOKEN_SECRET=
-ACCESS_TOKEN_SECRET=
-DATABASE_URL=
-```
+## License
 
-### Start the app
-
-```shell
-cd backend
-npm run dev
-cd frontend
-npm run dev
-```
-
-## Available commands
-
-Running commands with npm `npm run [command]`
-
-| command         | description                              |
-| :-------------- | :--------------------------------------- |
-| `dev`           | Starts a development instance of the app |
+[MIT](LICENSE)
