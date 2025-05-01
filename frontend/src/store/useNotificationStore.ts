@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { toast } from "sonner";
+import { NotificationType } from "../types/notification";
 
-export type NotificationType = "success" | "error" | "info" | "warning";
+export type { NotificationType };
 
 export interface Notification {
   id: string;
@@ -23,16 +24,16 @@ export const useNotificationStore = create<NotificationState>((set) => ({
     const id = generateId();
     // Use sonner toast API directly
     switch (type) {
-      case "success":
+      case NotificationType.SUCCESS:
         toast.success(message);
         break;
-      case "error":
+      case NotificationType.ERROR:
         toast.error(message);
         break;
-      case "warning":
+      case NotificationType.WARNING:
         toast.warning(message);
         break;
-      case "info":
+      case NotificationType.INFO:
       default:
         toast.info(message);
         break;

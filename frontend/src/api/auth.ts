@@ -1,3 +1,5 @@
+import { API_ENDPOINTS } from "../config/auth";
+
 export type AuthResponse = {
   accessToken: string;
 };
@@ -8,7 +10,7 @@ export const register = async (
   password: string,
   confirmPassword: string
 ): Promise<AuthResponse> => {
-  const response = await fetch("/api/auth/register", {
+  const response = await fetch(API_ENDPOINTS.REGISTER, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, email, password, confirmPassword }),
@@ -20,7 +22,7 @@ export const login = async (
   email: string,
   password: string
 ): Promise<AuthResponse> => {
-  const response = await fetch("/api/auth/login", {
+  const response = await fetch(API_ENDPOINTS.LOGIN, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -30,7 +32,7 @@ export const login = async (
 };
 
 export const logout = async (): Promise<{ message: string }> => {
-  const response = await fetch("/api/auth/logout", {
+  const response = await fetch(API_ENDPOINTS.LOGOUT, {
     method: "DELETE",
     credentials: "include",
   });
@@ -41,7 +43,7 @@ export const refreshToken = async (): Promise<
   AuthResponse | { accessToken?: string }
 > => {
   try {
-    const response = await fetch("/api/token", {
+    const response = await fetch(API_ENDPOINTS.REFRESH_TOKEN, {
       credentials: "include",
     });
     if (response.status === 204) {
@@ -73,7 +75,7 @@ export const refreshToken = async (): Promise<
 export const requestPasswordReset = async (
   email: string
 ): Promise<{ message: string }> => {
-  const response = await fetch("/api/auth/forgot-password", {
+  const response = await fetch(API_ENDPOINTS.FORGOT_PASSWORD, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),
@@ -86,7 +88,7 @@ export const resetPassword = async (
   password: string,
   confirmPassword: string
 ): Promise<{ message: string }> => {
-  const response = await fetch("/api/auth/reset-password", {
+  const response = await fetch(API_ENDPOINTS.RESET_PASSWORD, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ token, password, confirmPassword }),

@@ -1,6 +1,8 @@
 import { useState, FormEvent, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { resetPassword } from "../api/auth";
+import { useNotificationStore } from "../store/useNotificationStore";
+import { NotificationType } from "../types/notification";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,11 +13,11 @@ const ResetPassword = () => {
   const [token, setToken] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { addNotification } = useNotificationStore();
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -28,10 +30,9 @@ const ResetPassword = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setMessage("");
 
     if (password !== confirmPassword) {
-      setMessage("Passwords don't match");
+      addNotification("Passwords don't match", NotificationType.ERROR);
       setIsSubmitting(false);
       return;
     }
@@ -39,11 +40,17 @@ const ResetPassword = () => {
     try {
       await resetPassword(token, password, confirmPassword);
       setIsSuccess(true);
-      setMessage("Password has been reset successfully");
+      addNotification(
+        "Password has been reset successfully",
+        NotificationType.SUCCESS
+      );
       navigate("/login");
     } catch (error: any) {
       setIsSuccess(false);
-      setMessage(error?.response?.data?.message || "Failed to reset password");
+      addNotification(
+        error?.response?.data?.message || "Failed to reset password",
+        NotificationType.ERROR
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -73,16 +80,6 @@ const ResetPassword = () => {
       subtitle="Enter your new password below"
     >
       <form onSubmit={handleSubmit}>
-        {message && (
-          <div
-            className={`text-sm text-center mb-6 ${
-              isSuccess ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {message}
-          </div>
-        )}
-
         {!isSuccess && (
           <>
             <div className="grid gap-3">

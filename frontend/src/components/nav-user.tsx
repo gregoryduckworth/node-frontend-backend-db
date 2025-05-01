@@ -9,7 +9,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import { NotificationType } from "../types/notification";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -46,11 +46,11 @@ export function NavUser({
   const handleLogout = async () => {
     try {
       await logout();
-      addNotification("Logged out successfully", "success");
+      addNotification("Logged out successfully", NotificationType.SUCCESS);
       navigate("/login");
     } catch (error) {
       console.error("Logout error:", error);
-      addNotification("Failed to log out", "error");
+      addNotification("Failed to log out", NotificationType.ERROR);
     }
   };
 

@@ -2,6 +2,7 @@ import { useState, FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNotificationStore } from "../store/useNotificationStore";
+import { NotificationType } from "../types/notification";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,11 +23,14 @@ const Login = () => {
 
     try {
       await login(email, password);
-      addNotification("Successfully signed in. Welcome back!", "success");
+      addNotification(
+        "Successfully signed in. Welcome back!",
+        NotificationType.SUCCESS
+      );
       navigate("/dashboard");
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || "Login failed";
-      addNotification(errorMessage, "error");
+      addNotification(errorMessage, NotificationType.ERROR);
     } finally {
       setIsSubmitting(false);
     }

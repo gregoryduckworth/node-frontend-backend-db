@@ -2,6 +2,7 @@ import { useState, FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { register as registerApi } from "../api/auth";
 import { useNotificationStore } from "../store/useNotificationStore";
+import { NotificationType } from "../types/notification";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,13 +26,13 @@ const Register = () => {
       await registerApi(name, email, password, confirmPassword);
       addNotification(
         "Registration successful! You can now log in.",
-        "success"
+        NotificationType.SUCCESS
       );
       navigate("/login");
     } catch (error: any) {
       const errorMessage =
         error?.response?.data?.message || "Registration failed";
-      addNotification(errorMessage, "error");
+      addNotification(errorMessage, NotificationType.ERROR);
     } finally {
       setIsSubmitting(false);
     }

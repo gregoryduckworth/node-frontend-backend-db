@@ -7,6 +7,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import { Toaster } from "./components/ui/sonner";
 import { useAuthStore } from "./store/useAuthStore";
+import { ROUTES } from "./config/auth";
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -22,7 +23,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }, [isAuthenticated, isLoading, checkAuth]);
 
   if (isLoading) return null;
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!isAuthenticated) return <Navigate to={ROUTES.LOGIN} replace />;
 
   return <>{children}</>;
 };
@@ -38,19 +39,19 @@ const App = () => {
     <BrowserRouter>
       <Toaster />
       <Routes>
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path={ROUTES.REGISTER} element={<Register />} />
+        <Route path={ROUTES.LOGIN} element={<Login />} />
+        <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+        <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
         <Route
-          path="/dashboard"
+          path={ROUTES.DASHBOARD}
           element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
           }
         />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,6 +1,8 @@
 import { useState, FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { requestPasswordReset } from "../api/auth";
+import { useNotificationStore } from "../store/useNotificationStore";
+import { NotificationType } from "../types/notification";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,23 +10,26 @@ import GenericLayout from "@/components/layouts/GenericLayout";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { addNotification } = useNotificationStore();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setMessage("");
 
     try {
       await requestPasswordReset(email);
       setIsSuccess(true);
-      setMessage("Password reset instructions have been sent to your email");
+      addNotification(
+        "Password reset instructions have been sent to your email",
+        NotificationType.SUCCESS
+      );
     } catch (error: any) {
       setIsSuccess(false);
-      setMessage(
-        error?.response?.data?.message || "Failed to process your request"
+      addNotification(
+        error?.response?.data?.message || "Failed to process your request",
+        NotificationType.ERROR
       );
     } finally {
       setIsSubmitting(false);
@@ -37,16 +42,6 @@ const ForgotPassword = () => {
       subtitle="Enter your email to reset your password"
     >
       <form onSubmit={handleSubmit}>
-        {message && (
-          <div
-            className={`text-sm text-center mb-6 ${
-              isSuccess ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {message}
-          </div>
-        )}
-
         {!isSuccess && (
           <div className="grid gap-3">
             <Label htmlFor="email">Email</Label>
