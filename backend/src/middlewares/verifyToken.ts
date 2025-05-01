@@ -9,15 +9,6 @@ export interface JwtAuthPayload {
   [key: string]: any;
 }
 
-// Extend Express Request to include auth property
-declare global {
-  namespace Express {
-    interface Request {
-      auth?: JwtAuthPayload;
-    }
-  }
-}
-
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 if (!accessTokenSecret) {
   throw new Error(
