@@ -22,6 +22,7 @@ const Login = () => {
 
     try {
       await login(email, password);
+      addNotification("Successfully signed in. Welcome back!", "success");
       navigate("/dashboard");
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || "Login failed";

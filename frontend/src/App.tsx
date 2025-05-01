@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import Notifications from "./components/Notifications";
+import { Toaster } from "./components/ui/sonner";
 import { useAuthStore } from "./store/useAuthStore";
 
 type ProtectedRouteProps = {
@@ -36,7 +36,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <Notifications />
+      <Toaster />
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
