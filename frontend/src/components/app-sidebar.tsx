@@ -11,6 +11,7 @@ import {
   Settings2,
   SquareTerminal,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
@@ -27,131 +28,136 @@ import {
 } from "@/components/ui/sidebar";
 import { COMPANY } from "@/config/settings";
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-};
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { t, i18n } = useTranslation();
+
+  const data = React.useMemo(
+    () => ({
+      user: {
+        name: "shadcn",
+        email: "m@example.com",
+        avatar: "/avatars/shadcn.jpg",
+      },
+      navMain: [
+        {
+          title: t("sidebar.playground"),
+          url: "#",
+          icon: SquareTerminal,
+          isActive: true,
+          items: [
+            {
+              title: t("sidebar.history"),
+              url: "#",
+            },
+            {
+              title: t("sidebar.starred"),
+              url: "#",
+            },
+            {
+              title: t("sidebar.settings"),
+              url: "#",
+            },
+          ],
+        },
+        {
+          title: t("sidebar.models"),
+          url: "#",
+          icon: Bot,
+          items: [
+            {
+              title: t("sidebar.genesis"),
+              url: "#",
+            },
+            {
+              title: t("sidebar.explorer"),
+              url: "#",
+            },
+            {
+              title: t("sidebar.quantum"),
+              url: "#",
+            },
+          ],
+        },
+        {
+          title: t("sidebar.documentation"),
+          url: "#",
+          icon: BookOpen,
+          items: [
+            {
+              title: t("sidebar.introduction"),
+              url: "#",
+            },
+            {
+              title: t("sidebar.getStarted"),
+              url: "#",
+            },
+            {
+              title: t("sidebar.tutorials"),
+              url: "#",
+            },
+            {
+              title: t("sidebar.changelog"),
+              url: "#",
+            },
+          ],
+        },
+        {
+          title: t("sidebar.settings"),
+          url: "#",
+          icon: Settings2,
+          items: [
+            {
+              title: t("sidebar.general"),
+              url: "#",
+            },
+            {
+              title: t("sidebar.team"),
+              url: "#",
+            },
+            {
+              title: t("sidebar.billing"),
+              url: "#",
+            },
+            {
+              title: t("sidebar.limits"),
+              url: "#",
+            },
+          ],
+        },
+      ],
+      navSecondary: [
+        {
+          title: t("sidebar.support"),
+          url: "#",
+          icon: LifeBuoy,
+        },
+        {
+          title: t("sidebar.feedback"),
+          url: "#",
+          icon: Send,
+        },
+      ],
+      projects: [
+        {
+          name: t("sidebar.projects.designEngineering"),
+          url: "#",
+          icon: Frame,
+        },
+        {
+          name: t("sidebar.projects.salesMarketing"),
+          url: "#",
+          icon: PieChart,
+        },
+        {
+          name: t("sidebar.projects.travel"),
+          url: "#",
+          icon: Map,
+        },
+      ],
+    }),
+    [t, i18n.language]
+  );
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
