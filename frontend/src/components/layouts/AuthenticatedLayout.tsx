@@ -16,12 +16,20 @@ import {
 } from "@/components/ui/sidebar";
 import { ReactNode } from "react";
 
+type BreadcrumbItem = {
+  label: string;
+  href?: string;
+  current?: boolean;
+};
+
 type AuthenticatedLayoutProps = {
   children: ReactNode;
+  breadcrumbs?: BreadcrumbItem[];
 };
 
 const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({
   children,
+  breadcrumbs,
 }) => {
   return (
     <SidebarProvider>
@@ -31,19 +39,34 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({
           <div className="flex items-center gap-2 px-4 w-full">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+            {breadcrumbs && breadcrumbs.length > 0 && (
+              <Breadcrumb>
+                <BreadcrumbList>
+                  {breadcrumbs.map((item, index) => (
+                    <>
+                      <BreadcrumbItem
+                        key={`item-${index}`}
+                        className={item.current ? "" : "hidden md:block"}
+                      >
+                        {item.href ? (
+                          <BreadcrumbLink href={item.href}>
+                            {item.label}
+                          </BreadcrumbLink>
+                        ) : (
+                          <BreadcrumbPage>{item.label}</BreadcrumbPage>
+                        )}
+                      </BreadcrumbItem>
+                      {index < breadcrumbs.length - 1 && (
+                        <BreadcrumbSeparator
+                          key={`sep-${index}`}
+                          className="hidden md:block"
+                        />
+                      )}
+                    </>
+                  ))}
+                </BreadcrumbList>
+              </Breadcrumb>
+            )}
             <div className="ml-auto">
               <LanguageSwitcher />
             </div>
