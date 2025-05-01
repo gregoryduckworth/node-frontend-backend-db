@@ -1,5 +1,6 @@
 import { useState, FormEvent, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { resetPassword } from "../api/auth";
 import { useNotificationStore } from "../store/useNotificationStore";
 import { NotificationType } from "../types/notification";
@@ -19,6 +20,7 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { addNotification } = useNotificationStore();
+  const { t } = useTranslation();
   useTitle("resetPassword.title");
 
   useEffect(() => {
@@ -34,7 +36,7 @@ const ResetPassword = () => {
     setIsSubmitting(true);
 
     if (password !== confirmPassword) {
-      addNotification("Passwords don't match", NotificationType.ERROR);
+      addNotification(t("validation.passwordMatch"), NotificationType.ERROR);
       setIsSubmitting(false);
       return;
     }
@@ -42,15 +44,12 @@ const ResetPassword = () => {
     try {
       await resetPassword(token, password, confirmPassword);
       setIsSuccess(true);
-      addNotification(
-        "Password has been reset successfully",
-        NotificationType.SUCCESS
-      );
+      addNotification(t("auth.passwordResetSuccess"), NotificationType.SUCCESS);
       navigate("/login");
     } catch (error: any) {
       setIsSuccess(false);
       addNotification(
-        error?.response?.data?.message || "Failed to reset password",
+        error?.response?.data?.message || t("auth.errors.serverError"),
         NotificationType.ERROR
       );
     } finally {
@@ -63,12 +62,10 @@ const ResetPassword = () => {
       <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
         <Card className="w-full max-w-sm p-6">
           <div className="flex flex-col gap-4 text-center">
-            <h1 className="text-2xl font-bold">Invalid Reset Link</h1>
-            <p className="text-muted-foreground">
-              The password reset link is invalid or expired.
-            </p>
+            <h1 className="text-2xl font-bold">{t("auth.invalidResetLink")}</h1>
+            <p className="text-muted-foreground">{t("auth.linkExpired")}</p>
             <Button onClick={() => navigate("/forgot-password")}>
-              Request a new reset link
+              {t("auth.requestNewLink")}
             </Button>
           </div>
         </Card>
@@ -78,18 +75,18 @@ const ResetPassword = () => {
 
   return (
     <GenericLayout
-      title="Reset Password"
-      subtitle="Enter your new password below"
+      title={t("auth.resetPassword")}
+      subtitle={t("auth.enterNewPassword")}
     >
       <form onSubmit={handleSubmit}>
         {!isSuccess && (
           <>
             <div className="grid gap-3">
-              <Label htmlFor="password">New Password</Label>
+              <Label htmlFor="password">{t("auth.newPassword")}</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Enter new password"
+                placeholder={t("auth.enterNewPassword")}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -97,11 +94,13 @@ const ResetPassword = () => {
             </div>
 
             <div className="grid gap-3 mt-6">
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <Label htmlFor="confirmPassword">
+                {t("auth.confirmNewPassword")}
+              </Label>
               <Input
                 id="confirmPassword"
                 type="password"
-                placeholder="Confirm new password"
+                placeholder={t("auth.confirmNewPasswordPlaceholder")}
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -112,7 +111,7 @@ const ResetPassword = () => {
 
         {!isSuccess ? (
           <Button type="submit" className="w-full mt-6" disabled={isSubmitting}>
-            {isSubmitting ? "Processing..." : "Reset Password"}
+            {isSubmitting ? t("common.loading") : t("auth.resetPassword")}
           </Button>
         ) : (
           <Button
@@ -120,7 +119,7 @@ const ResetPassword = () => {
             className="w-full mt-6"
             onClick={() => navigate("/login")}
           >
-            Back to Login
+            {t("auth.backToLogin")}
           </Button>
         )}
       </form>

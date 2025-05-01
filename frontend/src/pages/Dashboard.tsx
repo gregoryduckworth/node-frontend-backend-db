@@ -17,7 +17,7 @@ const Dashboard = () => {
     >
       <Card>
         <CardHeader>
-          <CardTitle>Welcome Back: {userName}</CardTitle>
+          <CardTitle>{t("dashboard.welcome", { name: userName })}</CardTitle>
         </CardHeader>
         <CardContent>Dashboard Content</CardContent>
       </Card>

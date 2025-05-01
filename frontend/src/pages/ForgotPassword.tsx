@@ -1,5 +1,6 @@
 import { useState, FormEvent } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { requestPasswordReset } from "../api/auth";
 import { useNotificationStore } from "../store/useNotificationStore";
 import { NotificationType } from "../types/notification";
@@ -14,8 +15,9 @@ const ForgotPassword = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const { addNotification } = useNotificationStore();
+  const { t } = useTranslation();
 
-  useTitle("forgottenPassword.title");
+  useTitle("forgotPassword.title");
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,14 +26,11 @@ const ForgotPassword = () => {
     try {
       await requestPasswordReset(email);
       setIsSuccess(true);
-      addNotification(
-        "Password reset instructions have been sent to your email",
-        NotificationType.SUCCESS
-      );
+      addNotification(t("auth.passwordResetRequest"), NotificationType.SUCCESS);
     } catch (error: any) {
       setIsSuccess(false);
       addNotification(
-        error?.response?.data?.message || "Failed to process your request",
+        error?.response?.data?.message || t("auth.errors.serverError"),
         NotificationType.ERROR
       );
     } finally {
@@ -47,13 +46,13 @@ const ForgotPassword = () => {
 
   return (
     <GenericLayout
-      title="Forgot Password"
-      subtitle="Enter your email to reset your password"
+      title={t("auth.forgotPassword")}
+      subtitle={t("auth.enterEmailReset")}
     >
       <form onSubmit={handleSubmit}>
         {!isSuccess && (
           <div className="grid gap-3">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("auth.email")}</Label>
             <Input
               id="email"
               type="email"
@@ -67,7 +66,7 @@ const ForgotPassword = () => {
 
         {!isSuccess ? (
           <Button type="submit" className="w-full mt-6" disabled={isSubmitting}>
-            {isSubmitting ? "Sending..." : "Reset Password"}
+            {isSubmitting ? t("common.loading") : t("auth.resetPassword")}
           </Button>
         ) : (
           <Button
@@ -75,14 +74,14 @@ const ForgotPassword = () => {
             className="w-full mt-6"
             onClick={handleSendAgain}
           >
-            Send Again
+            {t("auth.sendAgain")}
           </Button>
         )}
 
         <div className="text-center text-sm mt-6">
-          Remember your password?{" "}
+          {t("auth.rememberPassword")}{" "}
           <Link to="/login" className="underline underline-offset-4">
-            Back to Login
+            {t("auth.backToLogin")}
           </Link>
         </div>
       </form>

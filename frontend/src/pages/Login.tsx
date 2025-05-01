@@ -75,15 +75,15 @@ const Login = () => {
           {isSubmitting ? t("common.loading") : t("auth.login")}
         </Button>
         <div className="text-center text-sm mt-6">
-          Don&apos;t have an account?{" "}
+          {t("auth.dontHaveAccount")}{" "}
           <Link to="/register" className="underline underline-offset-4">
             {t("auth.register")}
           </Link>
         </div>
       </form>
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+        {t("auth.termsNotice")} <a href="#">{t("auth.termsOfService")}</a>{" "}
+        {t("common.and")} <a href="#">{t("auth.privacyPolicy")}</a>.
       </div>
     </GenericLayout>
   );

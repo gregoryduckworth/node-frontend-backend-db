@@ -37,6 +37,16 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Toast specific variables */
+  --toast-success: oklch(0.5 0.2 142.1);
+  --toast-success-foreground: white;
+  --toast-error: oklch(0.577 0.245 27.325);
+  --toast-error-foreground: white;
+  --toast-warning: oklch(0.7 0.2 80.1);
+  --toast-warning-foreground: white;
+  --toast-info: oklch(0.5 0.15 220.8);
+  --toast-info-foreground: white;
 }
 
 .dark {
@@ -72,6 +82,16 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+
+  /* Toast specific variables for dark mode */
+  --toast-success: oklch(0.5 0.2 142.1);
+  --toast-success-foreground: white;
+  --toast-error: oklch(0.577 0.245 27.325);
+  --toast-error-foreground: white;
+  --toast-warning: oklch(0.7 0.2 80.1);
+  --toast-warning-foreground: white;
+  --toast-info: oklch(0.5 0.15 220.8);
+  --toast-info-foreground: white;
 }
 
 @theme inline {
@@ -120,4 +140,35 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Sonner toast styling */
+[data-sonner-toast][data-type="success"] {
+  background-color: var(--toast-success);
+  color: var(--toast-success-foreground);
+}
+
+[data-sonner-toast][data-type="error"] {
+  background-color: var(--toast-error);
+  color: var(--toast-error-foreground);
+}
+
+[data-sonner-toast][data-type="warning"] {
+  background-color: var(--toast-warning);
+  color: var(--toast-warning-foreground);
+}
+
+[data-sonner-toast][data-type="info"] {
+  background-color: var(--toast-info);
+  color: var(--toast-info-foreground);
+}
+
+/* Style for toast description text */
+[data-sonner-toast] [data-description] {
+  opacity: 0.9;
+}
+
+/* Style for toast icons */
+[data-sonner-toast] [data-icon] {
+  color: currentColor;
 }
