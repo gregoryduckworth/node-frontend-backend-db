@@ -9,6 +9,31 @@ if (!accessTokenSecret || !refreshTokenSecret) {
   throw new Error("JWT secrets are not defined in environment variables");
 }
 
+// Password validation function to enforce security requirements
+const validatePassword = (
+  password: string
+): { isValid: boolean; message?: string } => {
+  if (password.length < 8) {
+    return {
+      isValid: false,
+      message: "Password must be at least 8 characters long",
+    };
+  }
+  if (!/[A-Z]/.test(password)) {
+    return {
+      isValid: false,
+      message: "Password must contain at least one capital letter",
+    };
+  }
+  if (!/\d/.test(password)) {
+    return {
+      isValid: false,
+      message: "Password must contain at least one number",
+    };
+  }
+  return { isValid: true };
+};
+
 export const getAllUsers = async (
   req: Request,
   res: Response
@@ -56,6 +81,13 @@ export const register = async (
       return res.status(400).json({ message: "Confirm Password is required" });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Password doesn't match" });
+
+    // Validate password strength
+    const validation = validatePassword(password);
+    if (!validation.isValid) {
+      return res.status(400).json({ message: validation.message });
+    }
+
     const isUserExist = await prisma.user.findFirst({ where: { email } });
     if (isUserExist)
       return res.status(400).json({ message: "Email already exists" });
@@ -222,6 +254,12 @@ export const resetPassword = async (
       return res.status(400).json({ message: "Confirm password is required" });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Passwords don't match" });
+
+    // Validate password strength
+    const validation = validatePassword(password);
+    if (!validation.isValid) {
+      return res.status(400).json({ message: validation.message });
+    }
 
     let decoded;
     try {
