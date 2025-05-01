@@ -36,6 +36,12 @@ const ForgotPassword = () => {
     }
   };
 
+  const handleSendAgain = () => {
+    setTimeout(() => {
+      setIsSuccess(false);
+    }, 100);
+  };
+
   return (
     <GenericLayout
       title="Forgot Password"
@@ -64,7 +70,7 @@ const ForgotPassword = () => {
           <Button
             type="button"
             className="w-full mt-6"
-            onClick={() => setIsSuccess(false)}
+            onClick={handleSendAgain}
           >
             Send Again
           </Button>

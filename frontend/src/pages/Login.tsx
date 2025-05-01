@@ -53,7 +53,8 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div className="grid gap-3">
+
+        <div className="grid gap-3 mt-4">
           <Label htmlFor="password">Password</Label>
           <Input
             id="password"
