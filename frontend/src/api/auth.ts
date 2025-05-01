@@ -21,11 +21,15 @@ export const login = async (
   email: string,
   password: string
 ): Promise<AuthResponse> => {
-  return apiClient<AuthResponse>(API_ENDPOINTS.LOGIN, {
-    method: "POST",
-    body: { email, password },
-    includeCredentials: true,
-  });
+  try {
+    return apiClient<AuthResponse>(API_ENDPOINTS.LOGIN, {
+      method: "POST",
+      body: { email, password },
+      includeCredentials: true,
+    });
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const logout = async (): Promise<{ message: string }> => {

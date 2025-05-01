@@ -30,7 +30,8 @@ const Login = () => {
       addNotification(t("auth.loginSuccess"), NotificationType.SUCCESS);
       navigate("/dashboard");
     } catch (error: any) {
-      const errorMessage = error?.message;
+      const errorMessage =
+        error?.response?.data?.message || t("auth.genericError");
       addNotification(errorMessage, NotificationType.ERROR);
     } finally {
       setIsSubmitting(false);
