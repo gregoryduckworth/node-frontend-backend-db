@@ -93,7 +93,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         get().setToken(response.accessToken);
         return;
       }
-      throw new Error("Login failed: No access token returned");
+      throw new Error("No access token returned");
     } catch (error: any) {
       console.error("Login error:", error);
       throw error;

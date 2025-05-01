@@ -1,5 +1,6 @@
 import { useState, FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNotificationStore } from "../store/useNotificationStore";
 import { NotificationType } from "../types/notification";
@@ -7,11 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import GenericLayout from "@/components/layouts/GenericLayout";
+import { ErrorResponse } from "@/api/auth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
   const { login } = useAuthStore();
@@ -23,27 +26,45 @@ const Login = () => {
 
     try {
       await login(email, password);
-      addNotification(
-        "Successfully signed in. Welcome back!",
-        NotificationType.SUCCESS
-      );
+      addNotification(t("auth.loginSuccess"), NotificationType.SUCCESS);
       navigate("/dashboard");
     } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || "Login failed";
+      let errorMessage = t("common.error");
+      
+      // Handle specific error codes from the API
+      if (error && typeof error === 'object') {
+        const apiError = error as ErrorResponse;
+        
+        if (apiError.code === 'EMAIL_NOT_REGISTERED') {
+          errorMessage = t("auth.errors.emailNotRegistered");
+        } else if (apiError.code === 'INVALID_CREDENTIALS') {
+          errorMessage = t("auth.errors.invalidCredentials");
+        } else if (apiError.statusCode === 500) {
+          errorMessage = t("auth.errors.serverError");
+        } else if (apiError.message) {
+          errorMessage = apiError.message;
+        }
+      }
+      
       addNotification(errorMessage, NotificationType.ERROR);
+      
+      // If the email isn't registered, suggest registration
+      if (error?.code === 'EMAIL_NOT_REGISTERED') {
+        // Add a short delay to show the error message first
+        setTimeout(() => {
+          addNotification(t("auth.register"), NotificationType.INFO);
+        }, 500);
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <GenericLayout
-      title="Welcome back"
-      subtitle="Login to your Acme Inc account"
-    >
+    <GenericLayout title={t("auth.login")} subtitle={t("app.description")}>
       <form onSubmit={handleLogin}>
         <div className="grid gap-3">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{t("auth.email")}</Label>
           <Input
             id="email"
             type="email"
@@ -55,7 +76,7 @@ const Login = () => {
         </div>
 
         <div className="grid gap-3 mt-4">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">{t("auth.password")}</Label>
           <Input
             id="password"
             type="password"
@@ -68,17 +89,17 @@ const Login = () => {
               to="/forgot-password"
               className="text-sm underline-offset-2 hover:underline"
             >
-              Forgot your password?
+              {t("auth.forgotPassword")}
             </Link>
           </div>
         </div>
         <Button type="submit" className="w-full mt-6" disabled={isSubmitting}>
-          {isSubmitting ? "Logging in..." : "Login"}
+          {isSubmitting ? t("common.loading") : t("auth.login")}
         </Button>
         <div className="text-center text-sm mt-6">
           Don&apos;t have an account?{" "}
           <Link to="/register" className="underline underline-offset-4">
-            Sign up
+            {t("auth.register")}
           </Link>
         </div>
       </form>

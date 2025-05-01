@@ -1,0 +1,61 @@
+{
+  "app": {
+    "title": "HR App",
+    "description": "Aplicación de Gestión de Recursos Humanos"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver",
+    "submit": "Enviar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "language": "Idioma"
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "register": "Registrarse",
+    "forgotPassword": "Olvidé mi Contraseña",
+    "resetPassword": "Restablecer Contraseña",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "name": "Nombre",
+    "loginSuccess": "Sesión iniciada exitosamente",
+    "logoutSuccess": "Sesión cerrada exitosamente",
+    "registerSuccess": "Registro exitoso",
+    "passwordResetRequest": "Instrucciones para restablecer contraseña enviadas a tu correo",
+    "passwordResetSuccess": "La contraseña ha sido restablecida exitosamente",
+    "errors": {
+      "emailNotRegistered": "El correo electrónico no está registrado. Por favor, regístrese primero.",
+      "invalidCredentials": "Correo o contraseña inválidos",
+      "accountLocked": "Su cuenta está bloqueada. Por favor contacte a soporte.",
+      "serverError": "Error del servidor. Por favor intente más tarde."
+    }
+  },
+  "validation": {
+    "required": "{{field}} es obligatorio",
+    "email": "Por favor ingrese un correo válido",
+    "passwordMatch": "Las contraseñas no coinciden",
+    "minLength": "{{field}} debe tener al menos {{min}} caracteres",
+    "maxLength": "{{field}} debe tener máximo {{max}} caracteres"
+  },
+  "notifications": {
+    "success": "Éxito",
+    "error": "Error",
+    "warning": "Advertencia",
+    "info": "Información"
+  },
+  "dashboard": {
+    "welcome": "¡Bienvenido, {{name}}!",
+    "summary": "Resumen del Panel",
+    "quickActions": "Acciones Rápidas"
+  }
+}
