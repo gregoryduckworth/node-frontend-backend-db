@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import {
   getAllUsers,
   getUserById,
@@ -14,15 +14,20 @@ import { refreshToken } from "../controller/refreshToken";
 
 const router = express.Router();
 
-router.get("/users", getAllUsers);
-router.get("/users/:userId", getUserById);
-router.put("/users/:userId", verifyToken, updateUser);
+const asyncHandler =
+  (fn: Function) => (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
 
-router.post("/auth/register", register);
-router.post("/auth/login", login);
-router.post("/auth/forgot-password", forgotPassword);
-router.post("/auth/reset-password", resetPassword);
-router.delete("/auth/logout", logout);
-router.get("/token", refreshToken);
+router.get("/users", asyncHandler(getAllUsers));
+router.get("/users/:userId", asyncHandler(getUserById));
+router.put("/users/:userId", verifyToken, asyncHandler(updateUser));
+
+router.post("/auth/register", asyncHandler(register));
+router.post("/auth/login", asyncHandler(login));
+router.post("/auth/forgot-password", asyncHandler(forgotPassword));
+router.post("/auth/reset-password", asyncHandler(resetPassword));
+router.delete("/auth/logout", asyncHandler(logout));
+router.get("/token", asyncHandler(refreshToken));
 
 export default router;

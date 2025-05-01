@@ -2,7 +2,10 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { prisma } from "../../prisma/client";
 
-export const refreshToken = async (req: Request, res: Response) => {
+export const refreshToken = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.sendStatus(204);
@@ -30,9 +33,9 @@ export const refreshToken = async (req: Request, res: Response) => {
     const accessToken = jwt.sign({ userId, name, email }, accessTokenSecret, {
       expiresIn: "15s",
     });
-    res.json({ accessToken });
+    return res.json({ accessToken });
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    return res.sendStatus(500);
   }
 };

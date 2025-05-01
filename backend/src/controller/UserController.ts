@@ -9,19 +9,25 @@ if (!accessTokenSecret || !refreshTokenSecret) {
   throw new Error("JWT secrets are not defined in environment variables");
 }
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsers = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const users = await prisma.user.findMany({
       select: { id: true, name: true, email: true },
     });
-    res.status(200).json(users);
+    return res.status(200).json(users);
   } catch (error) {
     console.log(error);
-    res.sendStatus(400);
+    return res.sendStatus(400);
   }
 };
 
-export const getUserById = async (req: Request, res: Response) => {
+export const getUserById = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const { userId } = req.params;
     const user = await prisma.user.findUnique({
@@ -29,14 +35,17 @@ export const getUserById = async (req: Request, res: Response) => {
       select: { id: true, name: true, email: true },
     });
     if (!user) return res.status(404).json({ message: "User not found" });
-    res.status(200).json(user);
+    return res.status(200).json(user);
   } catch (error) {
     console.log(error);
-    res.sendStatus(400);
+    return res.sendStatus(400);
   }
 };
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const { name, email, password, confirmPassword } = req.body;
     if (!name) return res.status(400).json({ message: "Name is required" });
@@ -58,11 +67,11 @@ export const register = async (req: Request, res: Response) => {
     return res.status(201).json({ message: "Register Successful" });
   } catch (error) {
     console.log(error);
-    res.sendStatus(400);
+    return res.sendStatus(400);
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { email, password } = req.body;
     if (!email) return res.status(400).json({ message: "Email is required" });
@@ -95,11 +104,14 @@ export const login = async (req: Request, res: Response) => {
     return res.status(200).json({ accessToken });
   } catch (error) {
     console.log(error);
-    res.sendStatus(400);
+    return res.sendStatus(400);
   }
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const { name, email } = req.body;
     const refreshToken = req.cookies.refreshToken;
@@ -123,11 +135,14 @@ export const updateUser = async (req: Request, res: Response) => {
     return res.status(200).json({ message: "User updated" });
   } catch (error) {
     console.log(error);
-    res.sendStatus(400);
+    return res.sendStatus(400);
   }
 };
 
-export const logout = async (req: Request, res: Response) => {
+export const logout = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.sendStatus(204);
@@ -143,11 +158,14 @@ export const logout = async (req: Request, res: Response) => {
     return res.status(200).json({ message: "OK" });
   } catch (error) {
     console.log(error);
-    res.sendStatus(400);
+    return res.sendStatus(400);
   }
 };
 
-export const forgotPassword = async (req: Request, res: Response) => {
+export const forgotPassword = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ message: "Email is required" });
@@ -190,7 +208,10 @@ export const forgotPassword = async (req: Request, res: Response) => {
   }
 };
 
-export const resetPassword = async (req: Request, res: Response) => {
+export const resetPassword = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const { token, password, confirmPassword } = req.body;
 
