@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import GenericLayout from "@/components/layouts/GenericLayout";
+import useTitle from "@/hooks/use-title";
+import { useTranslation } from "react-i18next";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -19,8 +21,9 @@ const Register = () => {
 
   const navigate = useNavigate();
   const { addNotification } = useNotificationStore();
+  const { t } = useTranslation();
+  useTitle("register.title");
 
-  // Validate password when it changes
   useEffect(() => {
     if (passwordTouched) {
       validatePassword(password);
@@ -29,37 +32,30 @@ const Register = () => {
 
   const validatePassword = (password: string): boolean => {
     const errors: string[] = [];
-
     if (password.length < 8) {
-      errors.push("Password must be at least 8 characters");
+      errors.push(
+        t("validation.minLength", { field: t("auth.password"), min: 8 })
+      );
     }
-
     if (!/[A-Z]/.test(password)) {
-      errors.push("Password must contain at least one capital letter");
+      errors.push(t("validation.passwordUppercase"));
     }
-
     if (!/\d/.test(password)) {
-      errors.push("Password must contain at least one number");
+      errors.push(t("validation.passwordNumber"));
     }
-
     setPasswordErrors(errors);
     return errors.length === 0;
   };
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // Validate password before submitting
     const isPasswordValid = validatePassword(password);
     setPasswordTouched(true);
-
     if (!isPasswordValid) {
       return;
     }
-
-    // Check if passwords match
     if (password !== confirmPassword) {
-      addNotification("Passwords don't match", NotificationType.ERROR);
+      addNotification(t("validation.passwordMatch"), NotificationType.ERROR);
       return;
     }
 
@@ -67,14 +63,11 @@ const Register = () => {
 
     try {
       await registerApi(name, email, password, confirmPassword);
-      addNotification(
-        "Registration successful! You can now log in.",
-        NotificationType.SUCCESS
-      );
+      addNotification(t("auth.registerSuccess"), NotificationType.SUCCESS);
       navigate("/login");
     } catch (error: any) {
       const errorMessage =
-        error?.response?.data?.message || "Registration failed";
+        error?.response?.data?.message || t("auth.errors.serverError");
       addNotification(errorMessage, NotificationType.ERROR);
     } finally {
       setIsSubmitting(false);
@@ -83,22 +76,22 @@ const Register = () => {
 
   return (
     <GenericLayout
-      title="Create account"
-      subtitle="Sign up for your Acme Inc account"
+      title={t("auth.createAccount")}
+      subtitle={t("auth.signUpForAccount")}
     >
       <form onSubmit={handleRegister}>
         <div className="grid gap-3">
-          <Label htmlFor="name">Username</Label>
+          <Label htmlFor="name">{t("auth.name")}</Label>
           <Input
             id="name"
-            placeholder="username"
+            placeholder={t("auth.usernamePlaceholder")}
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div className="grid gap-3 mt-6">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{t("auth.email")}</Label>
           <Input
             id="email"
             type="email"
@@ -109,7 +102,7 @@ const Register = () => {
           />
         </div>
         <div className="grid gap-3 mt-6">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">{t("auth.password")}</Label>
           <Input
             id="password"
             type="password"
@@ -133,12 +126,11 @@ const Register = () => {
             </div>
           )}
           <div className="text-xs text-gray-500 mt-1">
-            Password must be at least 8 characters and include a capital letter
-            and a number.
+            {t("validation.passwordRequirements")}
           </div>
         </div>
         <div className="grid gap-3 mt-6">
-          <Label htmlFor="confirmPassword">Confirm Password</Label>
+          <Label htmlFor="confirmPassword">{t("auth.confirmPassword")}</Label>
           <Input
             id="confirmPassword"
             type="password"
@@ -153,7 +145,7 @@ const Register = () => {
           />
           {password !== confirmPassword && confirmPassword && (
             <div className="text-red-500 text-sm mt-1">
-              Passwords don't match
+              {t("validation.passwordMatch")}
             </div>
           )}
         </div>
@@ -166,12 +158,12 @@ const Register = () => {
             password !== confirmPassword
           }
         >
-          {isSubmitting ? "Registering..." : "Register"}
+          {isSubmitting ? t("common.loading") : t("auth.register")}
         </Button>
         <div className="text-center text-sm mt-6">
-          Already have an account?{" "}
+          {t("auth.alreadyHaveAccount")}{" "}
           <Link to="/login" className="underline underline-offset-4">
-            Login
+            {t("auth.login")}
           </Link>
         </div>
       </form>

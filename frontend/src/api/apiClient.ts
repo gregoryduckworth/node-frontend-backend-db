@@ -12,10 +12,6 @@ interface RequestOptions {
   includeCredentials?: boolean;
 }
 
-/**
- * Base API client function to handle common request logic
- * Can be used across different API modules
- */
 export const apiClient = async <T>(
   url: string,
   options: RequestOptions = {}

@@ -1,7 +1,8 @@
 {
   "app": {
     "title": "Acme Inc",
-    "description": "Solicitud de plantilla"
+    "description": "Solicitud de plantilla",
+    "imageAlt": "Logo de la aplicación"
   },
   "common": {
     "loading": "Cargando...",
@@ -16,7 +17,30 @@
     "next": "Siguiente",
     "search": "Buscar",
     "filter": "Filtrar",
-    "language": "Idioma"
+    "language": "Idioma",
+    "and": "y",
+    "more": "Más",
+    "toggle": "Alternar"
+  },
+  "login": {
+    "title": "Iniciar Sesión"
+  },
+  "register": {
+    "title": "Registrarse"
+  },
+  "forgotPassword": {
+    "title": "Olvidé mi Contraseña"
+  },
+  "resetPassword": {
+    "title": "Restablecer Contraseña"
+  },
+  "dashboard": {
+    "title": "Panel de Control",
+    "welcome": "¡Bienvenido, {{name}}!",
+    "summary": "Resumen del Panel",
+    "quickActions": "Acciones Rápidas",
+    "buildingApplication": "Construyendo Aplicación",
+    "dataFetching": "Obteniendo Datos"
   },
   "auth": {
     "login": "Iniciar Sesión",
@@ -32,24 +56,84 @@
     "logoutSuccess": "Sesión cerrada exitosamente",
     "registerSuccess": "Registro exitoso",
     "passwordResetRequest": "Instrucciones para restablecer contraseña enviadas a tu correo",
-    "passwordResetSuccess": "La contraseña ha sido restablecida exitosamente"
+    "passwordResetSuccess": "La contraseña ha sido restablecida exitosamente",
+    "newPassword": "Nueva Contraseña",
+    "confirmNewPassword": "Confirmar Nueva Contraseña",
+    "enterNewPassword": "Ingresa tu nueva contraseña",
+    "enterEmailReset": "Ingresa tu correo para restablecer tu contraseña",
+    "invalidResetLink": "Enlace de Restablecimiento Inválido",
+    "linkExpired": "El enlace de restablecimiento de contraseña es inválido o ha expirado.",
+    "requestNewLink": "Solicitar un nuevo enlace",
+    "sendAgain": "Enviar Nuevamente",
+    "rememberPassword": "¿Recuerdas tu contraseña?",
+    "backToLogin": "Volver al Inicio de Sesión",
+    "createAccount": "Crear cuenta",
+    "signUpForAccount": "Regístrate para obtener tu cuenta",
+    "usernamePlaceholder": "nombre de usuario",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "dontHaveAccount": "¿No tienes cuenta?",
+    "termsNotice": "Al hacer clic en continuar, aceptas nuestros",
+    "termsOfService": "Términos de Servicio",
+    "privacyPolicy": "Política de Privacidad",
+    "confirmNewPasswordPlaceholder": "Confirmar nueva contraseña",
+    "errors": {
+      "emailNotRegistered": "El correo electrónico no está registrado. Por favor, regístrese primero.",
+      "invalidCredentials": "Correo o contraseña inválidos",
+      "accountLocked": "Su cuenta está bloqueada. Por favor contacte a soporte.",
+      "serverError": "Error del servidor. Por favor intente más tarde."
+    }
   },
   "validation": {
     "required": "{{field}} es obligatorio",
     "email": "Por favor ingrese un correo válido",
     "passwordMatch": "Las contraseñas no coinciden",
     "minLength": "{{field}} debe tener al menos {{min}} caracteres",
-    "maxLength": "{{field}} debe tener máximo {{max}} caracteres"
+    "maxLength": "{{field}} debe tener máximo {{max}} caracteres",
+    "passwordRequirements": "La contraseña debe tener al menos 8 caracteres e incluir una letra mayúscula y un número.",
+    "passwordUppercase": "La contraseña debe contener al menos una letra mayúscula",
+    "passwordNumber": "La contraseña debe contener al menos un número"
   },
   "notifications": {
     "success": "Éxito",
     "error": "Error",
     "warning": "Advertencia",
-    "info": "Información"
+    "info": "Información",
+    "close": "Cerrar notificación"
   },
-  "dashboard": {
-    "welcome": "¡Bienvenido, {{name}}!",
-    "summary": "Resumen del Panel",
-    "quickActions": "Acciones Rápidas"
+  "sidebar": {
+    "playground": "Zona de Pruebas",
+    "history": "Historial",
+    "starred": "Destacados",
+    "settings": "Configuración",
+    "models": "Modelos",
+    "genesis": "Génesis",
+    "explorer": "Explorador",
+    "quantum": "Cuántico",
+    "documentation": "Documentación",
+    "introduction": "Introducción",
+    "getStarted": "Primeros Pasos",
+    "tutorials": "Tutoriales",
+    "changelog": "Registro de Cambios",
+    "general": "General",
+    "team": "Equipo",
+    "billing": "Facturación",
+    "limits": "Límites",
+    "support": "Soporte",
+    "feedback": "Comentarios",
+    "account": "Cuenta",
+    "notifications": "Notificaciones",
+    "upgradeToPro": "Actualizar a Pro",
+    "projectsLabel": "Proyectos",
+    "platform": "Plataforma",
+    "projects": {
+      "designEngineering": "Ingeniería de Diseño",
+      "salesMarketing": "Ventas y Marketing",
+      "travel": "Viajes"
+    }
+  },
+  "projects": {
+    "viewProject": "Ver Proyecto",
+    "shareProject": "Compartir Proyecto",
+    "deleteProject": "Eliminar Proyecto"
   }
 }

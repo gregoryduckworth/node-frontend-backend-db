@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import GenericLayout from "@/components/layouts/GenericLayout";
+import useTitle from "@/hooks/use-title";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -18,6 +19,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuthStore();
   const { addNotification } = useNotificationStore();
+  useTitle("login.title");
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

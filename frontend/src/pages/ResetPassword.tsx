@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import GenericLayout from "@/components/layouts/GenericLayout";
+import useTitle from "@/hooks/use-title";
 
 const ResetPassword = () => {
   const [token, setToken] = useState("");
@@ -18,6 +19,7 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { addNotification } = useNotificationStore();
+  useTitle("resetPassword.title");
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
