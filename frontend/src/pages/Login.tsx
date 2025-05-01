@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import GenericLayout from "@/components/layouts/GenericLayout";
-import { ErrorResponse } from "@/api/auth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -29,32 +28,8 @@ const Login = () => {
       addNotification(t("auth.loginSuccess"), NotificationType.SUCCESS);
       navigate("/dashboard");
     } catch (error: any) {
-      let errorMessage = t("common.error");
-      
-      // Handle specific error codes from the API
-      if (error && typeof error === 'object') {
-        const apiError = error as ErrorResponse;
-        
-        if (apiError.code === 'EMAIL_NOT_REGISTERED') {
-          errorMessage = t("auth.errors.emailNotRegistered");
-        } else if (apiError.code === 'INVALID_CREDENTIALS') {
-          errorMessage = t("auth.errors.invalidCredentials");
-        } else if (apiError.statusCode === 500) {
-          errorMessage = t("auth.errors.serverError");
-        } else if (apiError.message) {
-          errorMessage = apiError.message;
-        }
-      }
-      
+      const errorMessage = error?.message;
       addNotification(errorMessage, NotificationType.ERROR);
-      
-      // If the email isn't registered, suggest registration
-      if (error?.code === 'EMAIL_NOT_REGISTERED') {
-        // Add a short delay to show the error message first
-        setTimeout(() => {
-          addNotification(t("auth.register"), NotificationType.INFO);
-        }, 500);
-      }
     } finally {
       setIsSubmitting(false);
     }
