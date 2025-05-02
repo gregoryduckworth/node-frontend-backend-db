@@ -66,7 +66,13 @@ const Profile = () => {
       addNotification(t('profile.profileUpdated'), NotificationType.SUCCESS);
       setIsEditMode(false);
     } catch (error: any) {
-      addNotification(t('profile.updateError'), NotificationType.ERROR);
+      const errorMessage = error?.response?.data?.message;
+      if (errorMessage === 'Email already exists') {
+        addNotification(t('validation.emailExists'), NotificationType.ERROR);
+        setErrors({ ...errors, email: t('validation.emailExists') });
+      } else {
+        addNotification(t('profile.updateError'), NotificationType.ERROR);
+      }
     } finally {
       setIsSubmitting(false);
     }

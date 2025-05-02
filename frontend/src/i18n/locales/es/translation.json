@@ -97,7 +97,8 @@
     "passwordNumber": "La contraseña debe contener al menos un número",
     "nameRequired": "El nombre es obligatorio",
     "emailRequired": "El correo es obligatorio",
-    "invalidEmail": "Por favor introduce un correo electrónico válido"
+    "invalidEmail": "Por favor introduce un correo electrónico válido",
+    "emailExists": "El correo electrónico ya existe. Por favor usa un correo diferente."
   },
   "notifications": {
     "success": "Éxito",

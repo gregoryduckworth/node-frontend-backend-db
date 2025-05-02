@@ -171,6 +171,16 @@ export const updateUser = async (
     });
     if (!user) return res.sendStatus(403);
     if (user.refresh_token !== refreshToken) return res.sendStatus(403);
+
+    if (email !== user.email) {
+      const existingUserWithEmail = await prisma.user.findFirst({
+        where: { email },
+      });
+      if (existingUserWithEmail) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
+    }
+
     await prisma.user.update({
       where: { id: req.params.userId },
       data: { firstName, lastName, email },

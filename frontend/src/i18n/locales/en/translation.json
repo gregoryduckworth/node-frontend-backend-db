@@ -103,7 +103,8 @@
     "firstNameRequired": "First name is required",
     "lastNameRequired": "Last name is required",
     "emailRequired": "Email is required",
-    "invalidEmail": "Please enter a valid email address"
+    "invalidEmail": "Please enter a valid email address",
+    "emailExists": "Email address already exists. Please use a different email."
   },
   "notifications": {
     "success": "Success",
