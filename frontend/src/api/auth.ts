@@ -47,6 +47,22 @@ export const refreshToken = async (): Promise<AuthResponse | { accessToken?: str
   }
 };
 
+export const updateProfile = async (
+  userId: string,
+  name: string,
+  email: string,
+  token: string
+): Promise<{ message: string }> => {
+  return apiClient<{ message: string }>(`${API_ENDPOINTS.UPDATE_PROFILE}/${userId}`, {
+    method: 'PUT',
+    body: { name, email },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    includeCredentials: true,
+  });
+};
+
 export const requestPasswordReset = async (email: string): Promise<{ message: string }> => {
   return apiClient<{ message: string }>(API_ENDPOINTS.FORGOT_PASSWORD, {
     method: 'POST',

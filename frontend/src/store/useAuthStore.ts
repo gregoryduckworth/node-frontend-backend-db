@@ -1,6 +1,11 @@
 import { create } from 'zustand';
 import jwt_decode from 'jwt-decode';
-import { refreshToken, login as loginApi, logout as logoutApi } from '../api/auth';
+import {
+  refreshToken,
+  login as loginApi,
+  logout as logoutApi,
+  updateProfile as updateProfileApi,
+} from '../api/auth';
 
 interface JwtPayload {
   userId: string;
@@ -24,6 +29,7 @@ interface AuthState {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<boolean>;
+  updateProfile: (name: string, email: string) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -123,6 +129,29 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       get().clearAuth();
       set({ isLoading: false });
       return false;
+    }
+  },
+
+  updateProfile: async (name, email) => {
+    try {
+      const userId = get().userId;
+      const token = get().token;
+
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+
+      await updateProfileApi(userId, name, email, token);
+
+      set({
+        userName: name,
+        userEmail: email,
+      });
+
+      await get().checkAuth();
+    } catch (error) {
+      console.error('Profile update error:', error);
+      throw error;
     }
   },
 }));

@@ -20,7 +20,8 @@
     "language": "Idioma",
     "and": "y",
     "more": "Más",
-    "toggle": "Alternar"
+    "toggle": "Alternar",
+    "saving": "Guardando..."
   },
   "login": {
     "title": "Iniciar Sesión"
@@ -76,6 +77,8 @@
     "termsOfService": "Términos de Servicio",
     "privacyPolicy": "Política de Privacidad",
     "confirmNewPasswordPlaceholder": "Confirmar nueva contraseña",
+    "namePlaceholder": "Ingresa tu nombre",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
     "errors": {
       "emailNotRegistered": "El correo electrónico no está registrado. Por favor, regístrese primero.",
       "invalidCredentials": "Correo o contraseña inválidos",
@@ -91,7 +94,10 @@
     "maxLength": "{{field}} debe tener máximo {{max}} caracteres",
     "passwordRequirements": "La contraseña debe tener al menos 8 caracteres e incluir una letra mayúscula y un número.",
     "passwordUppercase": "La contraseña debe contener al menos una letra mayúscula",
-    "passwordNumber": "La contraseña debe contener al menos un número"
+    "passwordNumber": "La contraseña debe contener al menos un número",
+    "nameRequired": "El nombre es obligatorio",
+    "emailRequired": "El correo es obligatorio",
+    "invalidEmail": "Por favor introduce un correo electrónico válido"
   },
   "notifications": {
     "success": "Éxito",
@@ -141,6 +147,10 @@
   "profile": {
     "title": "Perfil de Usuario",
     "personalInfo": "Información Personal",
-    "updateInfo": "Actualizar Información"
+    "updateInfo": "Actualizar Información",
+    "editProfile": "Editar Perfil",
+    "updateSuccess": "Perfil Actualizado",
+    "profileUpdated": "Tu perfil ha sido actualizado exitosamente",
+    "updateError": "Error al actualizar el perfil"
   }
 }
