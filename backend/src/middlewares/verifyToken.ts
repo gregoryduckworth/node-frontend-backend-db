@@ -1,5 +1,5 @@
-import { expressjwt } from "express-jwt";
-import { Request } from "express";
+import { expressjwt } from 'express-jwt';
+import { Request } from 'express';
 
 // Type definition for JWT auth payload
 export interface JwtAuthPayload {
@@ -11,18 +11,16 @@ export interface JwtAuthPayload {
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 if (!accessTokenSecret) {
-  throw new Error(
-    "ACCESS_TOKEN_SECRET is not defined in environment variables"
-  );
+  throw new Error('ACCESS_TOKEN_SECRET is not defined in environment variables');
 }
 
 export const verifyToken = expressjwt({
   secret: accessTokenSecret,
-  algorithms: ["HS256"],
+  algorithms: ['HS256'],
   getToken: (req: Request) => {
     const authHeader = req.headers.authorization;
     const match = authHeader?.match(/^Bearer\s+(.+)$/i);
     return match?.[1] ?? undefined; // returns string | undefined
   },
-  requestProperty: "auth",
+  requestProperty: 'auth',
 });

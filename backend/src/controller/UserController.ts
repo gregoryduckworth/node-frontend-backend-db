@@ -1,43 +1,38 @@
-import { Request, Response } from "express";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { prisma } from "../../prisma/client";
+import { Request, Response } from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { prisma } from '../../prisma/client';
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 if (!accessTokenSecret || !refreshTokenSecret) {
-  throw new Error("JWT secrets are not defined in environment variables");
+  throw new Error('JWT secrets are not defined in environment variables');
 }
 
 // Password validation function to enforce security requirements
-const validatePassword = (
-  password: string
-): { isValid: boolean; message?: string } => {
+const validatePassword = (password: string): { isValid: boolean; message?: string } => {
   if (password.length < 8) {
     return {
       isValid: false,
-      message: "Password must be at least 8 characters long",
+      message: 'Password must be at least 8 characters long',
     };
   }
   if (!/[A-Z]/.test(password)) {
     return {
       isValid: false,
-      message: "Password must contain at least one capital letter",
+      message: 'Password must contain at least one capital letter',
     };
   }
   if (!/\d/.test(password)) {
     return {
       isValid: false,
-      message: "Password must contain at least one number",
+      message: 'Password must contain at least one number',
     };
   }
   return { isValid: true };
 };
 
-export const getAllUsers = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const getAllUsers = async (req: Request, res: Response): Promise<Response> => {
   try {
     const users = await prisma.user.findMany({
       select: { id: true, name: true, email: true },
@@ -49,17 +44,14 @@ export const getAllUsers = async (
   }
 };
 
-export const getUserById = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const getUserById = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { userId } = req.params;
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: { id: true, name: true, email: true },
     });
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) return res.status(404).json({ message: 'User not found' });
     return res.status(200).json(user);
   } catch (error) {
     console.log(error);
@@ -67,18 +59,13 @@ export const getUserById = async (
   }
 };
 
-export const register = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const register = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { name, email, password, confirmPassword } = req.body;
-    if (!name) return res.status(400).json({ message: "Name is required" });
-    if (!email) return res.status(400).json({ message: "Email is required" });
-    if (!password)
-      return res.status(400).json({ message: "Password is required" });
-    if (!confirmPassword)
-      return res.status(400).json({ message: "Confirm Password is required" });
+    if (!name) return res.status(400).json({ message: 'Name is required' });
+    if (!email) return res.status(400).json({ message: 'Email is required' });
+    if (!password) return res.status(400).json({ message: 'Password is required' });
+    if (!confirmPassword) return res.status(400).json({ message: 'Confirm Password is required' });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Password doesn't match" });
 
@@ -89,14 +76,13 @@ export const register = async (
     }
 
     const isUserExist = await prisma.user.findFirst({ where: { email } });
-    if (isUserExist)
-      return res.status(400).json({ message: "Email already exists" });
+    if (isUserExist) return res.status(400).json({ message: 'Email already exists' });
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
     await prisma.user.create({
       data: { name, email, password: hashedPassword },
     });
-    return res.status(201).json({ message: "Register Successful" });
+    return res.status(201).json({ message: 'Register Successful' });
   } catch (error) {
     console.log(error);
     return res.sendStatus(400);
@@ -106,30 +92,24 @@ export const register = async (
 export const login = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { email, password } = req.body;
-    if (!email) return res.status(400).json({ message: "Email is required" });
-    if (!password)
-      return res.status(400).json({ message: "Password is required" });
+    if (!email) return res.status(400).json({ message: 'Email is required' });
+    if (!password) return res.status(400).json({ message: 'Password is required' });
     const user = await prisma.user.findFirst({ where: { email } });
-    if (!user) return res.status(400).json({ message: "Email not found" });
+    if (!user) return res.status(400).json({ message: 'Email not found' });
     const isMatched = await bcrypt.compare(password, user.password);
-    if (!isMatched)
-      return res.status(400).json({ message: "Password is wrong" });
+    if (!isMatched) return res.status(400).json({ message: 'Password is wrong' });
     const { id: userId, email: userEmail, name: userName } = user;
-    const accessToken = jwt.sign(
-      { userId, userEmail, userName },
-      accessTokenSecret,
-      { expiresIn: "15s" }
-    );
-    const refreshToken = jwt.sign(
-      { userId, userEmail, userName },
-      refreshTokenSecret,
-      { expiresIn: "1d" }
-    );
+    const accessToken = jwt.sign({ userId, userEmail, userName }, accessTokenSecret, {
+      expiresIn: '15s',
+    });
+    const refreshToken = jwt.sign({ userId, userEmail, userName }, refreshTokenSecret, {
+      expiresIn: '1d',
+    });
     await prisma.user.update({
       where: { id: userId },
       data: { refresh_token: refreshToken },
     });
-    res.cookie("refreshToken", refreshToken, {
+    res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
@@ -140,16 +120,13 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
   }
 };
 
-export const updateUser = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const updateUser = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { name, email } = req.body;
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.sendStatus(401);
-    if (!name) return res.status(400).json({ message: "Name is required" });
-    if (!email) return res.status(400).json({ message: "Email is required" });
+    if (!name) return res.status(400).json({ message: 'Name is required' });
+    if (!email) return res.status(400).json({ message: 'Email is required' });
     try {
       jwt.verify(refreshToken, refreshTokenSecret);
     } catch (err) {
@@ -164,17 +141,14 @@ export const updateUser = async (
       where: { id: req.params.userId },
       data: { name, email },
     });
-    return res.status(200).json({ message: "User updated" });
+    return res.status(200).json({ message: 'User updated' });
   } catch (error) {
     console.log(error);
     return res.sendStatus(400);
   }
 };
 
-export const logout = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const logout = async (req: Request, res: Response): Promise<Response> => {
   try {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.sendStatus(204);
@@ -186,31 +160,26 @@ export const logout = async (
       where: { id: user.id },
       data: { refresh_token: null },
     });
-    res.clearCookie("refreshToken");
-    return res.status(200).json({ message: "OK" });
+    res.clearCookie('refreshToken');
+    return res.status(200).json({ message: 'OK' });
   } catch (error) {
     console.log(error);
     return res.sendStatus(400);
   }
 };
 
-export const forgotPassword = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const forgotPassword = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { email } = req.body;
-    if (!email) return res.status(400).json({ message: "Email is required" });
+    if (!email) return res.status(400).json({ message: 'Email is required' });
 
     const user = await prisma.user.findFirst({ where: { email } });
     if (!user) {
-      return res
-        .status(200)
-        .json({ message: "Password reset instructions sent to your email" });
+      return res.status(200).json({ message: 'Password reset instructions sent to your email' });
     }
 
     const resetToken = jwt.sign({ userId: user.id, email }, accessTokenSecret, {
-      expiresIn: "1h",
+      expiresIn: '1h',
     });
 
     const expiresAt = new Date();
@@ -227,31 +196,22 @@ export const forgotPassword = async (
     // In a real application, you would send an email with a link containing the token
     // For example: `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`
     console.log(`Reset token for ${email}: ${resetToken}`);
-    console.log(
-      `Reset link would be: http://localhost:5173/reset-password?token=${resetToken}`
-    );
+    console.log(`Reset link would be: http://localhost:5173/reset-password?token=${resetToken}`);
 
-    return res
-      .status(200)
-      .json({ message: "Password reset instructions sent to your email" });
+    return res.status(200).json({ message: 'Password reset instructions sent to your email' });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 
-export const resetPassword = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const resetPassword = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { token, password, confirmPassword } = req.body;
 
-    if (!token) return res.status(400).json({ message: "Token is required" });
-    if (!password)
-      return res.status(400).json({ message: "Password is required" });
-    if (!confirmPassword)
-      return res.status(400).json({ message: "Confirm password is required" });
+    if (!token) return res.status(400).json({ message: 'Token is required' });
+    if (!password) return res.status(400).json({ message: 'Password is required' });
+    if (!confirmPassword) return res.status(400).json({ message: 'Confirm password is required' });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Passwords don't match" });
 
@@ -265,7 +225,7 @@ export const resetPassword = async (
     try {
       decoded = jwt.verify(token, accessTokenSecret);
     } catch (error) {
-      return res.status(400).json({ message: "Invalid or expired token" });
+      return res.status(400).json({ message: 'Invalid or expired token' });
     }
 
     const user = await prisma.user.findFirst({
@@ -279,7 +239,7 @@ export const resetPassword = async (
     });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid or expired token" });
+      return res.status(400).json({ message: 'Invalid or expired token' });
     }
 
     const salt = await bcrypt.genSalt();
@@ -294,11 +254,9 @@ export const resetPassword = async (
       },
     });
 
-    return res
-      .status(200)
-      .json({ message: "Password has been reset successfully" });
+    return res.status(200).json({ message: 'Password has been reset successfully' });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: 'Server error' });
   }
 };

@@ -1,11 +1,8 @@
-import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import { prisma } from "../../prisma/client";
+import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import { prisma } from '../../prisma/client';
 
-export const refreshToken = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const refreshToken = async (req: Request, res: Response): Promise<Response> => {
   try {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.sendStatus(204);
@@ -19,7 +16,7 @@ export const refreshToken = async (
     const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
     if (!refreshTokenSecret || !accessTokenSecret) {
-      console.error("JWT secrets are not defined in environment variables");
+      console.error('JWT secrets are not defined in environment variables');
       return res.sendStatus(500);
     }
 
@@ -31,7 +28,7 @@ export const refreshToken = async (
 
     const { id: userId, name, email } = user;
     const accessToken = jwt.sign({ userId, name, email }, accessTokenSecret, {
-      expiresIn: "15s",
+      expiresIn: '15s',
     });
     return res.json({ accessToken });
   } catch (error) {
