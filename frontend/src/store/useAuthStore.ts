@@ -8,21 +8,22 @@ import {
 } from '../api/auth';
 
 interface JwtPayload {
-  userId: string;
-  userFirstName: string;
-  userLastName: string;
-  userEmail: string;
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  dateOfBirth?: string | null;
   exp: number;
   [key: string]: any;
 }
 
 interface AuthState {
   token: string;
-  userFirstName: string;
-  userLastName: string;
-  userId: string;
-  userEmail: string;
-  userDateOfBirth: string | null;
+  firstName: string;
+  lastName: string;
+  id: string;
+  email: string;
+  dateOfBirth: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   expiresAt: number | null;
@@ -42,11 +43,11 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   token: '',
-  userFirstName: '',
-  userLastName: '',
-  userId: '',
-  userEmail: '',
-  userDateOfBirth: null,
+  firstName: '',
+  lastName: '',
+  id: '',
+  email: '',
+  dateOfBirth: null,
   isAuthenticated: false,
   isLoading: true,
   expiresAt: null,
@@ -55,11 +56,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     if (!token) {
       set({
         token: '',
-        userFirstName: '',
-        userLastName: '',
-        userId: '',
-        userEmail: '',
-        userDateOfBirth: null,
+        firstName: '',
+        lastName: '',
+        id: '',
+        email: '',
+        dateOfBirth: null,
         isAuthenticated: false,
         expiresAt: null,
       });
@@ -70,11 +71,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const decoded = jwt_decode<JwtPayload>(token);
       set({
         token,
-        userFirstName: decoded.userFirstName || '',
-        userLastName: decoded.userLastName || '',
-        userId: decoded.userId || '',
-        userEmail: decoded.userEmail || '',
-        userDateOfBirth: decoded.userDateOfBirth || null,
+        firstName: decoded.firstName || '',
+        lastName: decoded.lastName || '',
+        id: decoded.id || '',
+        email: decoded.email || '',
+        dateOfBirth: decoded.dateOfBirth || null,
         isAuthenticated: true,
         expiresAt: decoded.exp * 1000,
       });
@@ -82,11 +83,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       console.error('Error decoding JWT token:', error);
       set({
         token: '',
-        userFirstName: '',
-        userLastName: '',
-        userId: '',
-        userEmail: '',
-        userDateOfBirth: null,
+        firstName: '',
+        lastName: '',
+        id: '',
+        email: '',
+        dateOfBirth: null,
         isAuthenticated: false,
         expiresAt: null,
       });
@@ -96,11 +97,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   clearAuth: () => {
     set({
       token: '',
-      userFirstName: '',
-      userLastName: '',
-      userId: '',
-      userEmail: '',
-      userDateOfBirth: null,
+      firstName: '',
+      lastName: '',
+      id: '',
+      email: '',
+      dateOfBirth: null,
       isAuthenticated: false,
       expiresAt: null,
     });
@@ -152,20 +153,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   updateProfile: async (firstName, lastName, email, dateOfBirth) => {
     try {
-      const userId = get().userId;
+      const id = get().id;
       const token = get().token;
 
-      if (!userId) {
+      if (!id) {
         throw new Error('User not authenticated');
       }
 
-      await updateProfileApi(userId, firstName, lastName, email, dateOfBirth, token);
+      await updateProfileApi(id, firstName, lastName, email, dateOfBirth, token);
 
       set({
-        userFirstName: firstName,
-        userLastName: lastName,
-        userEmail: email,
-        userDateOfBirth: dateOfBirth,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        dateOfBirth: dateOfBirth,
       });
 
       await get().checkAuth();

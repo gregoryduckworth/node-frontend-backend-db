@@ -11,17 +11,16 @@ import { NotificationType } from '../../types/notification';
 import { useNotificationStore } from '@/store/useNotificationStore';
 
 const Profile = () => {
-  const { userFirstName, userLastName, userEmail, userDateOfBirth, isLoading, updateProfile } =
-    useAuthStore();
+  const { firstName, lastName, email, dateOfBirth, isLoading, updateProfile } = useAuthStore();
   const { addNotification } = useNotificationStore();
   const { t } = useTranslation();
   useTitle('profile.title');
 
   // Form state
-  const [firstName, setFirstName] = useState(userFirstName);
-  const [lastName, setLastName] = useState(userLastName);
-  const [email, setEmail] = useState(userEmail);
-  const [dateOfBirth, setDateOfBirth] = useState(userDateOfBirth || '');
+  const [formFirstName, setFormFirstName] = useState(firstName);
+  const [formLastName, setFormLastName] = useState(lastName);
+  const [formEmail, setFormEmail] = useState(email);
+  const [formDateOfBirth, setFormDateOfBirth] = useState(dateOfBirth || '');
   const [errors, setErrors] = useState<{
     firstName?: string;
     lastName?: string;
@@ -41,25 +40,25 @@ const Profile = () => {
     } = {};
     let isValid = true;
 
-    if (!firstName.trim()) {
+    if (!formFirstName.trim()) {
       newErrors.firstName = t('validation.firstNameRequired');
       isValid = false;
     }
 
-    if (!lastName.trim()) {
+    if (!formLastName.trim()) {
       newErrors.lastName = t('validation.lastNameRequired');
       isValid = false;
     }
 
-    if (!email.trim()) {
+    if (!formEmail.trim()) {
       newErrors.email = t('validation.emailRequired');
       isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
+    } else if (!/\S+@\S+\.\S+/.test(formEmail)) {
       newErrors.email = t('validation.invalidEmail');
       isValid = false;
     }
 
-    if (dateOfBirth && isNaN(Date.parse(dateOfBirth))) {
+    if (formDateOfBirth && isNaN(Date.parse(formDateOfBirth))) {
       newErrors.dateOfBirth = t('validation.invalidDate');
       isValid = false;
     }
@@ -77,7 +76,7 @@ const Profile = () => {
     setIsSubmitting(true);
 
     try {
-      await updateProfile(firstName, lastName, email, dateOfBirth || null);
+      await updateProfile(formFirstName, formLastName, formEmail, formDateOfBirth || null);
       addNotification(t('profile.profileUpdated'), NotificationType.SUCCESS);
       setIsEditMode(false);
     } catch (error: any) {
@@ -94,10 +93,10 @@ const Profile = () => {
   };
 
   const handleCancel = () => {
-    setFirstName(userFirstName);
-    setLastName(userLastName);
-    setEmail(userEmail);
-    setDateOfBirth(userDateOfBirth || '');
+    setFormFirstName(firstName);
+    setFormLastName(lastName);
+    setFormEmail(email);
+    setFormDateOfBirth(dateOfBirth || '');
     setErrors({});
     setIsEditMode(false);
   };
@@ -129,8 +128,8 @@ const Profile = () => {
                 <Label htmlFor="firstName">{t('auth.firstName')}</Label>
                 <Input
                   id="firstName"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  value={formFirstName}
+                  onChange={(e) => setFormFirstName(e.target.value)}
                   placeholder={t('auth.firstNamePlaceholder')}
                   className={errors.firstName ? 'border-red-500' : ''}
                 />
@@ -141,8 +140,8 @@ const Profile = () => {
                 <Label htmlFor="lastName">{t('auth.lastName')}</Label>
                 <Input
                   id="lastName"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
+                  value={formLastName}
+                  onChange={(e) => setFormLastName(e.target.value)}
                   placeholder={t('auth.lastNamePlaceholder')}
                   className={errors.lastName ? 'border-red-500' : ''}
                 />
@@ -154,8 +153,8 @@ const Profile = () => {
                 <Input
                   id="email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={formEmail}
+                  onChange={(e) => setFormEmail(e.target.value)}
                   placeholder={t('auth.emailPlaceholder')}
                   className={errors.email ? 'border-red-500' : ''}
                 />
@@ -167,8 +166,8 @@ const Profile = () => {
                 <Input
                   id="dateOfBirth"
                   type="date"
-                  value={dateOfBirth ? dateOfBirth.substring(0, 10) : ''}
-                  onChange={(e) => setDateOfBirth(e.target.value)}
+                  value={formDateOfBirth ? formDateOfBirth.substring(0, 10) : ''}
+                  onChange={(e) => setFormDateOfBirth(e.target.value)}
                   placeholder={t('auth.dateOfBirthPlaceholder')}
                   className={errors.dateOfBirth ? 'border-red-500' : ''}
                 />
@@ -180,18 +179,18 @@ const Profile = () => {
               <h2 className="mb-4 text-lg font-semibold">{t('profile.personalInfo')}</h2>
               <div className="space-y-2">
                 <p>
-                  <strong>{t('auth.firstName')}:</strong> {userFirstName}
+                  <strong>{t('auth.firstName')}:</strong> {firstName}
                 </p>
                 <p>
-                  <strong>{t('auth.lastName')}:</strong> {userLastName}
+                  <strong>{t('auth.lastName')}:</strong> {lastName}
                 </p>
                 <p>
-                  <strong>{t('auth.email')}:</strong> {userEmail}
+                  <strong>{t('auth.email')}:</strong> {email}
                 </p>
                 <p>
                   <strong>{t('auth.dateOfBirth')}:</strong>{' '}
-                  {userDateOfBirth ? (
-                    formatDate(userDateOfBirth)
+                  {dateOfBirth ? (
+                    formatDate(dateOfBirth)
                   ) : (
                     <span className="text-amber-600 font-medium">
                       {t('profile.dateOfBirthNeeded')}

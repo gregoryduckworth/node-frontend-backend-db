@@ -117,43 +117,36 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
     const isMatched = await bcrypt.compare(password, user.password);
     if (!isMatched)
       return res.status(400).json({ message: "Password is wrong" });
-    const {
-      id: userId,
-      email: userEmail,
-      firstName: userFirstName,
-      lastName: userLastName,
-      dateOfBirth: userDateOfBirth,
-    } = user;
 
     // Format dateOfBirth as ISO string if it exists
-    const formattedDateOfBirth = userDateOfBirth
-      ? userDateOfBirth.toISOString()
+    const dateOfBirthFormatted = user.dateOfBirth
+      ? user.dateOfBirth.toISOString()
       : null;
 
     const accessToken = jwt.sign(
       {
-        userId,
-        userEmail,
-        userFirstName,
-        userLastName,
-        userDateOfBirth: formattedDateOfBirth,
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        dateOfBirth: dateOfBirthFormatted,
       },
       accessTokenSecret,
       { expiresIn: "30m" }
     );
     const refreshToken = jwt.sign(
       {
-        userId,
-        userEmail,
-        userFirstName,
-        userLastName,
-        userDateOfBirth: formattedDateOfBirth,
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        dateOfBirth: dateOfBirthFormatted,
       },
       refreshTokenSecret,
       { expiresIn: "1d" }
     );
     await prisma.user.update({
-      where: { id: userId },
+      where: { id: user.id },
       data: { refresh_token: refreshToken },
     });
     res.cookie("refreshToken", refreshToken, {

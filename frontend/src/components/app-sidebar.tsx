@@ -31,14 +31,14 @@ import { useAuthStore } from '../store/useAuthStore';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { t, i18n } = useTranslation();
-  const { userFirstName, userLastName, userEmail } = useAuthStore();
+  const { firstName, lastName, email } = useAuthStore();
 
   const data = React.useMemo(
     () => ({
       user: {
-        firstName: userFirstName,
-        lastName: userLastName,
-        email: userEmail || 'm@example.com',
+        firstName,
+        lastName,
+        email: email || 'm@example.com',
         avatar: '/avatars/shadcn.jpg',
       },
       navMain: [
@@ -162,7 +162,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         },
       ],
     }),
-    [t, i18n.language, userFirstName, userLastName, userEmail]
+    [t, i18n.language, firstName, lastName, email]
   );
 
   return (

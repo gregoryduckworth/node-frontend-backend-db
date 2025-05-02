@@ -49,14 +49,14 @@ export const refreshToken = async (): Promise<AuthResponse | { accessToken?: str
 };
 
 export const updateProfile = async (
-  userId: string,
+  id: string,
   firstName: string,
   lastName: string,
   email: string,
   dateOfBirth: string | null,
   token: string
 ): Promise<{ message: string }> => {
-  return apiClient<{ message: string }>(`${API_ENDPOINTS.UPDATE_PROFILE}/${userId}`, {
+  return apiClient<{ message: string }>(`${API_ENDPOINTS.UPDATE_PROFILE}/${id}`, {
     method: 'PUT',
     body: { firstName, lastName, email, dateOfBirth },
     headers: {
