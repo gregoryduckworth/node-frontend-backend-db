@@ -1,7 +1,7 @@
-import React, { ReactNode } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import LanguageSwitcher from "@/components/language-switcher";
-import { GalleryVerticalEnd } from "lucide-react";
+import React, { ReactNode } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import LanguageSwitcher from '@/components/language-switcher';
+import { GalleryVerticalEnd } from 'lucide-react';
 
 type GenericLayoutProps = {
   children: ReactNode;
@@ -9,11 +9,7 @@ type GenericLayoutProps = {
   subtitle?: string;
 };
 
-const GenericLayout: React.FC<GenericLayoutProps> = ({
-  children,
-  title,
-  subtitle,
-}) => {
+const GenericLayout: React.FC<GenericLayoutProps> = ({ children, title, subtitle }) => {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
       <div className="w-full max-w-sm md:max-w-3xl">
@@ -21,10 +17,7 @@ const GenericLayout: React.FC<GenericLayoutProps> = ({
           <LanguageSwitcher />
         </div>
         <div className="flex flex-col gap-6">
-          <a
-            href="#"
-            className="flex items-center gap-2 self-center font-medium"
-          >
+          <a href="#" className="flex items-center gap-2 self-center font-medium">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <GalleryVerticalEnd className="size-4" />
             </div>
@@ -36,11 +29,7 @@ const GenericLayout: React.FC<GenericLayoutProps> = ({
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col items-center text-center">
                     <h1 className="text-2xl font-bold">{title}</h1>
-                    {subtitle && (
-                      <p className="text-muted-foreground text-balance">
-                        {subtitle}
-                      </p>
-                    )}
+                    {subtitle && <p className="text-muted-foreground text-balance">{subtitle}</p>}
                   </div>
 
                   {children}

@@ -1,8 +1,5 @@
-import { useEffect } from "react";
-import {
-  useNotificationStore,
-  NotificationType,
-} from "../store/useNotificationStore";
+import { useEffect } from 'react';
+import { useNotificationStore, NotificationType } from '../store/useNotificationStore';
 
 interface NotificationProps {
   id: string;
@@ -21,29 +18,25 @@ const Notification = ({ id, message, type, onClose }: NotificationProps) => {
   }, [id, onClose]);
 
   let styles = {
-    container:
-      "mb-3 p-4 rounded-md shadow-md flex justify-between items-center",
-    icon: "mr-3",
-    message: "flex-1",
-    closeButton: "ml-2 text-gray-500 hover:text-gray-700",
+    container: 'mb-3 p-4 rounded-md shadow-md flex justify-between items-center',
+    icon: 'mr-3',
+    message: 'flex-1',
+    closeButton: 'ml-2 text-gray-500 hover:text-gray-700',
   };
 
   switch (type) {
-    case "success":
-      styles.container +=
-        " bg-green-100 border-l-4 border-green-500 text-green-700";
+    case 'success':
+      styles.container += ' bg-green-100 border-l-4 border-green-500 text-green-700';
       break;
-    case "error":
-      styles.container += " bg-red-100 border-l-4 border-red-500 text-red-700";
+    case 'error':
+      styles.container += ' bg-red-100 border-l-4 border-red-500 text-red-700';
       break;
-    case "warning":
-      styles.container +=
-        " bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700";
+    case 'warning':
+      styles.container += ' bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700';
       break;
-    case "info":
+    case 'info':
     default:
-      styles.container +=
-        " bg-blue-100 border-l-4 border-blue-500 text-blue-700";
+      styles.container += ' bg-blue-100 border-l-4 border-blue-500 text-blue-700';
       break;
   }
 

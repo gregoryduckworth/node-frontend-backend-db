@@ -12,24 +12,16 @@ interface RequestOptions {
   includeCredentials?: boolean;
 }
 
-export const apiClient = async <T>(
-  url: string,
-  options: RequestOptions = {}
-): Promise<T> => {
-  const {
-    method = "GET",
-    headers = {},
-    body,
-    includeCredentials = false,
-  } = options;
+export const apiClient = async <T>(url: string, options: RequestOptions = {}): Promise<T> => {
+  const { method = 'GET', headers = {}, body, includeCredentials = false } = options;
 
   const requestOptions: RequestInit = {
     method,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...headers,
     },
-    ...(includeCredentials ? { credentials: "include" } : {}),
+    ...(includeCredentials ? { credentials: 'include' } : {}),
     ...(body ? { body: JSON.stringify(body) } : {}),
   };
 
@@ -43,12 +35,8 @@ export const apiClient = async <T>(
   }
 
   // Handle empty responses
-  const contentType = response.headers.get("content-type");
-  if (
-    response.status === 204 ||
-    !contentType ||
-    !contentType.includes("application/json")
-  ) {
+  const contentType = response.headers.get('content-type');
+  if (response.status === 204 || !contentType || !contentType.includes('application/json')) {
     return {} as T;
   }
 
@@ -60,7 +48,7 @@ export const apiClient = async <T>(
   try {
     return JSON.parse(text);
   } catch (e) {
-    console.error("Failed to parse response:", e);
+    console.error('Failed to parse response:', e);
     return {} as T;
   }
 };

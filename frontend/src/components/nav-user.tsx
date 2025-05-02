@@ -1,16 +1,9 @@
-"use client";
+'use client';
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { NotificationType } from "../types/notification";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { NotificationType } from '../types/notification';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,16 +12,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar";
-import { useAuthStore } from "../store/useAuthStore";
-import { useNotificationStore } from "../store/useNotificationStore";
-import { useTranslation } from "react-i18next";
+} from '@/components/ui/sidebar';
+import { useAuthStore } from '../store/useAuthStore';
+import { useNotificationStore } from '../store/useNotificationStore';
+import { useTranslation } from 'react-i18next';
 
 export function NavUser({
   user,
@@ -48,11 +41,11 @@ export function NavUser({
   const handleLogout = async () => {
     try {
       await logout();
-      addNotification("Logged out successfully", NotificationType.SUCCESS);
-      navigate("/login");
+      addNotification('Logged out successfully', NotificationType.SUCCESS);
+      navigate('/login');
     } catch (error) {
-      console.error("Logout error:", error);
-      addNotification("Failed to log out", NotificationType.ERROR);
+      console.error('Logout error:', error);
+      addNotification('Failed to log out', NotificationType.ERROR);
     }
   };
 
@@ -78,7 +71,7 @@ export function NavUser({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={4}
           >
@@ -98,28 +91,28 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Sparkles />
-                {t("sidebar.upgradeToPro")}
+                {t('sidebar.upgradeToPro')}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
-                {t("sidebar.account")}
+                {t('sidebar.account')}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />
-                {t("sidebar.billing")}
+                {t('sidebar.billing')}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Bell />
-                {t("sidebar.notifications")}
+                {t('sidebar.notifications')}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
-              {t("auth.logout")}
+              {t('auth.logout')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

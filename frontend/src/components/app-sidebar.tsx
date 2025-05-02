@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   BookOpen,
   Bot,
@@ -10,13 +10,13 @@ import {
   Send,
   Settings2,
   SquareTerminal,
-} from "lucide-react";
-import { useTranslation } from "react-i18next";
+} from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
-import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
-import { NavSecondary } from "@/components/nav-secondary";
-import { NavUser } from "@/components/nav-user";
+import { NavMain } from '@/components/nav-main';
+import { NavProjects } from '@/components/nav-projects';
+import { NavSecondary } from '@/components/nav-secondary';
+import { NavUser } from '@/components/nav-user';
 import {
   Sidebar,
   SidebarContent,
@@ -25,8 +25,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import { COMPANY } from "@/config/settings";
+} from '@/components/ui/sidebar';
+import { COMPANY } from '@/config/settings';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { t, i18n } = useTranslation();
@@ -34,123 +34,123 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const data = React.useMemo(
     () => ({
       user: {
-        name: "shadcn",
-        email: "m@example.com",
-        avatar: "/avatars/shadcn.jpg",
+        name: 'shadcn',
+        email: 'm@example.com',
+        avatar: '/avatars/shadcn.jpg',
       },
       navMain: [
         {
-          title: t("sidebar.playground"),
-          url: "#",
+          title: t('sidebar.playground'),
+          url: '#',
           icon: SquareTerminal,
           isActive: true,
           items: [
             {
-              title: t("sidebar.history"),
-              url: "#",
+              title: t('sidebar.history'),
+              url: '#',
             },
             {
-              title: t("sidebar.starred"),
-              url: "#",
+              title: t('sidebar.starred'),
+              url: '#',
             },
             {
-              title: t("sidebar.settings"),
-              url: "#",
+              title: t('sidebar.settings'),
+              url: '#',
             },
           ],
         },
         {
-          title: t("sidebar.models"),
-          url: "#",
+          title: t('sidebar.models'),
+          url: '#',
           icon: Bot,
           items: [
             {
-              title: t("sidebar.genesis"),
-              url: "#",
+              title: t('sidebar.genesis'),
+              url: '#',
             },
             {
-              title: t("sidebar.explorer"),
-              url: "#",
+              title: t('sidebar.explorer'),
+              url: '#',
             },
             {
-              title: t("sidebar.quantum"),
-              url: "#",
+              title: t('sidebar.quantum'),
+              url: '#',
             },
           ],
         },
         {
-          title: t("sidebar.documentation"),
-          url: "#",
+          title: t('sidebar.documentation'),
+          url: '#',
           icon: BookOpen,
           items: [
             {
-              title: t("sidebar.introduction"),
-              url: "#",
+              title: t('sidebar.introduction'),
+              url: '#',
             },
             {
-              title: t("sidebar.getStarted"),
-              url: "#",
+              title: t('sidebar.getStarted'),
+              url: '#',
             },
             {
-              title: t("sidebar.tutorials"),
-              url: "#",
+              title: t('sidebar.tutorials'),
+              url: '#',
             },
             {
-              title: t("sidebar.changelog"),
-              url: "#",
+              title: t('sidebar.changelog'),
+              url: '#',
             },
           ],
         },
         {
-          title: t("sidebar.settings"),
-          url: "#",
+          title: t('sidebar.settings'),
+          url: '#',
           icon: Settings2,
           items: [
             {
-              title: t("sidebar.general"),
-              url: "#",
+              title: t('sidebar.general'),
+              url: '#',
             },
             {
-              title: t("sidebar.team"),
-              url: "#",
+              title: t('sidebar.team'),
+              url: '#',
             },
             {
-              title: t("sidebar.billing"),
-              url: "#",
+              title: t('sidebar.billing'),
+              url: '#',
             },
             {
-              title: t("sidebar.limits"),
-              url: "#",
+              title: t('sidebar.limits'),
+              url: '#',
             },
           ],
         },
       ],
       navSecondary: [
         {
-          title: t("sidebar.support"),
-          url: "#",
+          title: t('sidebar.support'),
+          url: '#',
           icon: LifeBuoy,
         },
         {
-          title: t("sidebar.feedback"),
-          url: "#",
+          title: t('sidebar.feedback'),
+          url: '#',
           icon: Send,
         },
       ],
       projects: [
         {
-          name: t("sidebar.projects.designEngineering"),
-          url: "#",
+          name: t('sidebar.projects.designEngineering'),
+          url: '#',
           icon: Frame,
         },
         {
-          name: t("sidebar.projects.salesMarketing"),
-          url: "#",
+          name: t('sidebar.projects.salesMarketing'),
+          url: '#',
           icon: PieChart,
         },
         {
-          name: t("sidebar.projects.travel"),
-          url: "#",
+          name: t('sidebar.projects.travel'),
+          url: '#',
           icon: Map,
         },
       ],

@@ -1,6 +1,6 @@
-import { create } from "zustand";
-import { toast } from "sonner";
-import { NotificationType } from "../types/notification";
+import { create } from 'zustand';
+import { toast } from 'sonner';
+import { NotificationType } from '../types/notification';
 
 export type { NotificationType };
 
@@ -49,9 +49,7 @@ export const useNotificationStore = create<NotificationState>((set) => ({
 
   removeNotification: (id) =>
     set((state) => ({
-      notifications: state.notifications.filter(
-        (notification) => notification.id !== id
-      ),
+      notifications: state.notifications.filter((notification) => notification.id !== id),
     })),
 
   clearNotifications: () => set({ notifications: [] }),
