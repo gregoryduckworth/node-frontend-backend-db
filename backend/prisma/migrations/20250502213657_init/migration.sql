@@ -1,9 +1,11 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "dateOfBirth" TIMESTAMP(3),
     "refresh_token" TEXT,
     "reset_token" TEXT,
     "reset_token_expires" TIMESTAMP(3),

@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Register from './pages/Register';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
+import Register from './pages/generic/Register';
+import Login from './pages/generic/Login';
+import Dashboard from './pages/authenticated/Dashboard';
+import ForgotPassword from './pages/generic/ForgotPassword';
+import ResetPassword from './pages/generic/ResetPassword';
+import Profile from './pages/authenticated/Profile';
 import { Toaster } from './components/ui/sonner';
 import { useAuthStore } from './store/useAuthStore';
 import { ROUTES } from './config/auth';
@@ -48,6 +49,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.PROFILE}
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />

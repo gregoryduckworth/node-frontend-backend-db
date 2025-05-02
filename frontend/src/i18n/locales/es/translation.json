@@ -20,7 +20,8 @@
     "language": "Idioma",
     "and": "y",
     "more": "Más",
-    "toggle": "Alternar"
+    "toggle": "Alternar",
+    "saving": "Guardando..."
   },
   "login": {
     "title": "Iniciar Sesión"
@@ -36,7 +37,7 @@
   },
   "dashboard": {
     "title": "Panel de Control",
-    "welcome": "¡Bienvenido, {{name}}!",
+    "welcome": "¡Bienvenido, {{firstName}} {{lastName}}!",
     "summary": "Resumen del Panel",
     "quickActions": "Acciones Rápidas",
     "buildingApplication": "Construyendo Aplicación",
@@ -76,6 +77,12 @@
     "termsOfService": "Términos de Servicio",
     "privacyPolicy": "Política de Privacidad",
     "confirmNewPasswordPlaceholder": "Confirmar nueva contraseña",
+    "namePlaceholder": "Ingresa tu nombre",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "dateOfBirth": "Fecha de Nacimiento",
+    "dateOfBirthPlaceholder": "Selecciona tu fecha de nacimiento",
     "errors": {
       "emailNotRegistered": "El correo electrónico no está registrado. Por favor, regístrese primero.",
       "invalidCredentials": "Correo o contraseña inválidos",
@@ -91,7 +98,14 @@
     "maxLength": "{{field}} debe tener máximo {{max}} caracteres",
     "passwordRequirements": "La contraseña debe tener al menos 8 caracteres e incluir una letra mayúscula y un número.",
     "passwordUppercase": "La contraseña debe contener al menos una letra mayúscula",
-    "passwordNumber": "La contraseña debe contener al menos un número"
+    "passwordNumber": "La contraseña debe contener al menos un número",
+    "nameRequired": "El nombre es obligatorio",
+    "emailRequired": "El correo es obligatorio",
+    "invalidEmail": "Por favor introduce un correo electrónico válido",
+    "emailExists": "El correo electrónico ya existe. Por favor usa un correo diferente.",
+    "firstNameRequired": "El nombre es obligatorio",
+    "lastNameRequired": "El apellido es obligatorio",
+    "invalidDate": "Por favor introduce una fecha válida"
   },
   "notifications": {
     "success": "Éxito",
@@ -102,6 +116,7 @@
   },
   "sidebar": {
     "playground": "Zona de Pruebas",
+    "dashboard": "Panel de Control",
     "history": "Historial",
     "starred": "Destacados",
     "settings": "Configuración",
@@ -124,6 +139,7 @@
     "notifications": "Notificaciones",
     "upgradeToPro": "Actualizar a Pro",
     "projectsLabel": "Proyectos",
+    "profile": "Perfil",
     "platform": "Plataforma",
     "projects": {
       "designEngineering": "Ingeniería de Diseño",
@@ -135,5 +151,15 @@
     "viewProject": "Ver Proyecto",
     "shareProject": "Compartir Proyecto",
     "deleteProject": "Eliminar Proyecto"
+  },
+  "profile": {
+    "title": "Perfil de Usuario",
+    "personalInfo": "Información Personal",
+    "updateInfo": "Actualizar Información",
+    "editProfile": "Editar Perfil",
+    "updateSuccess": "Perfil Actualizado",
+    "profileUpdated": "Tu perfil ha sido actualizado exitosamente",
+    "updateError": "Error al actualizar el perfil",
+    "dateOfBirthNeeded": "Por favor establece tu fecha de nacimiento"
   }
 }

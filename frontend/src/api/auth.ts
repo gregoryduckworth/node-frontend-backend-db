@@ -6,14 +6,15 @@ export type AuthResponse = {
 };
 
 export const register = async (
-  name: string,
+  firstName: string,
+  lastName: string,
   email: string,
   password: string,
   confirmPassword: string
 ): Promise<AuthResponse> => {
   return apiClient<AuthResponse>(API_ENDPOINTS.REGISTER, {
     method: 'POST',
-    body: { name, email, password, confirmPassword },
+    body: { firstName, lastName, email, password, confirmPassword },
   });
 };
 
@@ -45,6 +46,24 @@ export const refreshToken = async (): Promise<AuthResponse | { accessToken?: str
     console.error('Network error during token refresh:', error);
     return { accessToken: undefined };
   }
+};
+
+export const updateProfile = async (
+  id: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+  dateOfBirth: string | null,
+  token: string
+): Promise<{ message: string }> => {
+  return apiClient<{ message: string }>(`${API_ENDPOINTS.UPDATE_PROFILE}/${id}`, {
+    method: 'PUT',
+    body: { firstName, lastName, email, dateOfBirth },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    includeCredentials: true,
+  });
 };
 
 export const requestPasswordReset = async (email: string): Promise<{ message: string }> => {

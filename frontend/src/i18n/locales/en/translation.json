@@ -20,7 +20,8 @@
     "language": "Language",
     "and": "and",
     "more": "More",
-    "toggle": "Toggle"
+    "toggle": "Toggle",
+    "saving": "Saving..."
   },
   "login": {
     "title": "Login"
@@ -36,7 +37,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Welcome, {{name}}!",
+    "welcome": "Welcome, {{firstName}} {{lastName}}!",
     "summary": "Dashboard Summary",
     "quickActions": "Quick Actions",
     "buildingApplication": "Building Application",
@@ -51,6 +52,10 @@
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "dateOfBirth": "Date of Birth",
+    "dateOfBirthPlaceholder": "Select your date of birth",
     "name": "Name",
     "loginSuccess": "Logged in successfully",
     "logoutSuccess": "Logged out successfully",
@@ -70,12 +75,16 @@
     "createAccount": "Create account",
     "signUpForAccount": "Sign up for your account",
     "usernamePlaceholder": "username",
+    "firstNamePlaceholder": "Enter your first name",
+    "lastNamePlaceholder": "Enter your last name",
     "alreadyHaveAccount": "Already have an account?",
     "dontHaveAccount": "Don't have an account?",
     "termsNotice": "By clicking continue, you agree to our",
     "termsOfService": "Terms of Service",
     "privacyPolicy": "Privacy Policy",
     "confirmNewPasswordPlaceholder": "Confirm new password",
+    "namePlaceholder": "Enter your name",
+    "emailPlaceholder": "Enter your email",
     "errors": {
       "emailNotRegistered": "Email is not registered. Please register first.",
       "invalidCredentials": "Invalid email or password",
@@ -91,7 +100,14 @@
     "maxLength": "{{field}} must be at most {{max}} characters",
     "passwordRequirements": "Password must be at least 8 characters and include one uppercase letter and one number.",
     "passwordUppercase": "Password must contain at least one uppercase letter",
-    "passwordNumber": "Password must contain at least one number"
+    "passwordNumber": "Password must contain at least one number",
+    "nameRequired": "Name is required",
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "emailRequired": "Email is required",
+    "invalidEmail": "Please enter a valid email address",
+    "emailExists": "Email address already exists. Please use a different email.",
+    "invalidDate": "Please enter a valid date"
   },
   "notifications": {
     "success": "Success",
@@ -102,6 +118,7 @@
   },
   "sidebar": {
     "playground": "Playground",
+    "dashboard": "Dashboard",
     "history": "History",
     "starred": "Starred",
     "settings": "Settings",
@@ -124,6 +141,7 @@
     "notifications": "Notifications",
     "upgradeToPro": "Upgrade to Pro",
     "projectsLabel": "Projects",
+    "profile": "Profile",
     "platform": "Platform",
     "projects": {
       "designEngineering": "Design Engineering",
@@ -135,5 +153,15 @@
     "viewProject": "View Project",
     "shareProject": "Share Project",
     "deleteProject": "Delete Project"
+  },
+  "profile": {
+    "title": "User Profile",
+    "personalInfo": "Personal Information",
+    "updateInfo": "Update Information",
+    "editProfile": "Edit Profile",
+    "updateSuccess": "Profile Updated",
+    "profileUpdated": "Your profile has been updated successfully",
+    "updateError": "Failed to update profile",
+    "dateOfBirthNeeded": "Please set your date of birth"
   }
 }

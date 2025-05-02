@@ -40,7 +40,7 @@ export const getAllUsers = async (
 ): Promise<Response> => {
   try {
     const users = await prisma.user.findMany({
-      select: { id: true, name: true, email: true },
+      select: { id: true, firstName: true, lastName: true, email: true },
     });
     return res.status(200).json(users);
   } catch (error) {
@@ -57,7 +57,7 @@ export const getUserById = async (
     const { userId } = req.params;
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, name: true, email: true },
+      select: { id: true, firstName: true, lastName: true, email: true },
     });
     if (!user) return res.status(404).json({ message: "User not found" });
     return res.status(200).json(user);
@@ -72,8 +72,11 @@ export const register = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const { name, email, password, confirmPassword } = req.body;
-    if (!name) return res.status(400).json({ message: "Name is required" });
+    const { firstName, lastName, email, password, confirmPassword } = req.body;
+    if (!firstName)
+      return res.status(400).json({ message: "First name is required" });
+    if (!lastName)
+      return res.status(400).json({ message: "Last name is required" });
     if (!email) return res.status(400).json({ message: "Email is required" });
     if (!password)
       return res.status(400).json({ message: "Password is required" });
@@ -94,7 +97,7 @@ export const register = async (
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
     await prisma.user.create({
-      data: { name, email, password: hashedPassword },
+      data: { firstName, lastName, email, password: hashedPassword },
     });
     return res.status(201).json({ message: "Register Successful" });
   } catch (error) {
@@ -114,19 +117,36 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
     const isMatched = await bcrypt.compare(password, user.password);
     if (!isMatched)
       return res.status(400).json({ message: "Password is wrong" });
-    const { id: userId, email: userEmail, name: userName } = user;
+
+    // Format dateOfBirth as ISO string if it exists
+    const dateOfBirthFormatted = user.dateOfBirth
+      ? user.dateOfBirth.toISOString()
+      : null;
+
     const accessToken = jwt.sign(
-      { userId, userEmail, userName },
+      {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        dateOfBirth: dateOfBirthFormatted,
+      },
       accessTokenSecret,
-      { expiresIn: "15s" }
+      { expiresIn: "30m" }
     );
     const refreshToken = jwt.sign(
-      { userId, userEmail, userName },
+      {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        dateOfBirth: dateOfBirthFormatted,
+      },
       refreshTokenSecret,
       { expiresIn: "1d" }
     );
     await prisma.user.update({
-      where: { id: userId },
+      where: { id: user.id },
       data: { refresh_token: refreshToken },
     });
     res.cookie("refreshToken", refreshToken, {
@@ -145,10 +165,13 @@ export const updateUser = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const { name, email } = req.body;
+    const { firstName, lastName, email, dateOfBirth } = req.body;
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.sendStatus(401);
-    if (!name) return res.status(400).json({ message: "Name is required" });
+    if (!firstName)
+      return res.status(400).json({ message: "First name is required" });
+    if (!lastName)
+      return res.status(400).json({ message: "Last name is required" });
     if (!email) return res.status(400).json({ message: "Email is required" });
     try {
       jwt.verify(refreshToken, refreshTokenSecret);
@@ -160,9 +183,24 @@ export const updateUser = async (
     });
     if (!user) return res.sendStatus(403);
     if (user.refresh_token !== refreshToken) return res.sendStatus(403);
+
+    if (email !== user.email) {
+      const existingUserWithEmail = await prisma.user.findFirst({
+        where: { email },
+      });
+      if (existingUserWithEmail) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
+    }
+
     await prisma.user.update({
       where: { id: req.params.userId },
-      data: { name, email },
+      data: {
+        firstName,
+        lastName,
+        email,
+        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+      },
     });
     return res.status(200).json({ message: "User updated" });
   } catch (error) {

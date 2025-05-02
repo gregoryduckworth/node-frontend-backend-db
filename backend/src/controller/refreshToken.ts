@@ -29,10 +29,18 @@ export const refreshToken = async (
       return res.sendStatus(403);
     }
 
-    const { id: userId, name, email } = user;
-    const accessToken = jwt.sign({ userId, name, email }, accessTokenSecret, {
-      expiresIn: "15s",
-    });
+    const accessToken = jwt.sign(
+      {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        dateOfBirth: user.dateOfBirth ? user.dateOfBirth.toISOString() : null,
+      },
+      accessTokenSecret,
+      { expiresIn: "30m" }
+    );
+
     return res.json({ accessToken });
   } catch (error) {
     console.log(error);
