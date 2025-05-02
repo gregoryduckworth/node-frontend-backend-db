@@ -29,13 +29,15 @@ export const refreshToken = async (
       return res.sendStatus(403);
     }
 
-    const { id, firstName, lastName, email } = user;
+    const { id, firstName, lastName, email, dateOfBirth } = user;
+    const formattedDateOfBirth = dateOfBirth ? dateOfBirth.toISOString() : null;
     const accessToken = jwt.sign(
       {
         userId: id,
         userFirstName: firstName,
         userLastName: lastName,
         userEmail: email,
+        userDateOfBirth: formattedDateOfBirth,
       },
       accessTokenSecret,
       { expiresIn: "30m" }

@@ -22,6 +22,7 @@ interface AuthState {
   userLastName: string;
   userId: string;
   userEmail: string;
+  userDateOfBirth: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   expiresAt: number | null;
@@ -31,7 +32,12 @@ interface AuthState {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<boolean>;
-  updateProfile: (firstName: string, lastName: string, email: string) => Promise<void>;
+  updateProfile: (
+    firstName: string,
+    lastName: string,
+    email: string,
+    dateOfBirth: string | null
+  ) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -40,6 +46,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   userLastName: '',
   userId: '',
   userEmail: '',
+  userDateOfBirth: null,
   isAuthenticated: false,
   isLoading: true,
   expiresAt: null,
@@ -52,6 +59,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         userLastName: '',
         userId: '',
         userEmail: '',
+        userDateOfBirth: null,
         isAuthenticated: false,
         expiresAt: null,
       });
@@ -66,6 +74,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         userLastName: decoded.userLastName || '',
         userId: decoded.userId || '',
         userEmail: decoded.userEmail || '',
+        userDateOfBirth: decoded.userDateOfBirth || null,
         isAuthenticated: true,
         expiresAt: decoded.exp * 1000,
       });
@@ -77,6 +86,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         userLastName: '',
         userId: '',
         userEmail: '',
+        userDateOfBirth: null,
         isAuthenticated: false,
         expiresAt: null,
       });
@@ -90,6 +100,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       userLastName: '',
       userId: '',
       userEmail: '',
+      userDateOfBirth: null,
       isAuthenticated: false,
       expiresAt: null,
     });
@@ -139,7 +150,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  updateProfile: async (firstName, lastName, email) => {
+  updateProfile: async (firstName, lastName, email, dateOfBirth) => {
     try {
       const userId = get().userId;
       const token = get().token;
@@ -148,12 +159,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         throw new Error('User not authenticated');
       }
 
-      await updateProfileApi(userId, firstName, lastName, email, token);
+      await updateProfileApi(userId, firstName, lastName, email, dateOfBirth, token);
 
       set({
         userFirstName: firstName,
         userLastName: lastName,
         userEmail: email,
+        userDateOfBirth: dateOfBirth,
       });
 
       await get().checkAuth();

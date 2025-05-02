@@ -53,11 +53,12 @@ export const updateProfile = async (
   firstName: string,
   lastName: string,
   email: string,
+  dateOfBirth: string | null,
   token: string
 ): Promise<{ message: string }> => {
   return apiClient<{ message: string }>(`${API_ENDPOINTS.UPDATE_PROFILE}/${userId}`, {
     method: 'PUT',
-    body: { firstName, lastName, email },
+    body: { firstName, lastName, email, dateOfBirth },
     headers: {
       Authorization: `Bearer ${token}`,
     },

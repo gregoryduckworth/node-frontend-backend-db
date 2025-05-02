@@ -122,14 +122,33 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
       email: userEmail,
       firstName: userFirstName,
       lastName: userLastName,
+      dateOfBirth: userDateOfBirth,
     } = user;
+
+    // Format dateOfBirth as ISO string if it exists
+    const formattedDateOfBirth = userDateOfBirth
+      ? userDateOfBirth.toISOString()
+      : null;
+
     const accessToken = jwt.sign(
-      { userId, userEmail, userFirstName, userLastName },
+      {
+        userId,
+        userEmail,
+        userFirstName,
+        userLastName,
+        userDateOfBirth: formattedDateOfBirth,
+      },
       accessTokenSecret,
       { expiresIn: "30m" }
     );
     const refreshToken = jwt.sign(
-      { userId, userEmail, userFirstName, userLastName },
+      {
+        userId,
+        userEmail,
+        userFirstName,
+        userLastName,
+        userDateOfBirth: formattedDateOfBirth,
+      },
       refreshTokenSecret,
       { expiresIn: "1d" }
     );
@@ -153,7 +172,7 @@ export const updateUser = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const { firstName, lastName, email } = req.body;
+    const { firstName, lastName, email, dateOfBirth } = req.body;
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.sendStatus(401);
     if (!firstName)
@@ -183,7 +202,12 @@ export const updateUser = async (
 
     await prisma.user.update({
       where: { id: req.params.userId },
-      data: { firstName, lastName, email },
+      data: {
+        firstName,
+        lastName,
+        email,
+        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+      },
     });
     return res.status(200).json({ message: "User updated" });
   } catch (error) {

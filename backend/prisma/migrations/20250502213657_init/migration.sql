@@ -5,6 +5,7 @@ CREATE TABLE "User" (
     "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "dateOfBirth" TIMESTAMP(3),
     "refresh_token" TEXT,
     "reset_token" TEXT,
     "reset_token_expires" TIMESTAMP(3),

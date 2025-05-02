@@ -13,6 +13,7 @@ model User {
   lastName            String
   email               String
   password            String
+  dateOfBirth         DateTime? 
   refresh_token       String?
   reset_token         String?
   reset_token_expires DateTime?

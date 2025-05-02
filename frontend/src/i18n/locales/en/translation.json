@@ -54,6 +54,8 @@
     "confirmPassword": "Confirm Password",
     "firstName": "First Name",
     "lastName": "Last Name",
+    "dateOfBirth": "Date of Birth",
+    "dateOfBirthPlaceholder": "Select your date of birth",
     "name": "Name",
     "loginSuccess": "Logged in successfully",
     "logoutSuccess": "Logged out successfully",
@@ -104,7 +106,8 @@
     "lastNameRequired": "Last name is required",
     "emailRequired": "Email is required",
     "invalidEmail": "Please enter a valid email address",
-    "emailExists": "Email address already exists. Please use a different email."
+    "emailExists": "Email address already exists. Please use a different email.",
+    "invalidDate": "Please enter a valid date"
   },
   "notifications": {
     "success": "Success",
@@ -158,6 +161,7 @@
     "editProfile": "Edit Profile",
     "updateSuccess": "Profile Updated",
     "profileUpdated": "Your profile has been updated successfully",
-    "updateError": "Failed to update profile"
+    "updateError": "Failed to update profile",
+    "dateOfBirthNeeded": "Please set your date of birth"
   }
 }

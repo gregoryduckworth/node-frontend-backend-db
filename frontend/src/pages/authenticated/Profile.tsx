@@ -11,7 +11,8 @@ import { NotificationType } from '../../types/notification';
 import { useNotificationStore } from '@/store/useNotificationStore';
 
 const Profile = () => {
-  const { userFirstName, userLastName, userEmail, isLoading, updateProfile } = useAuthStore();
+  const { userFirstName, userLastName, userEmail, userDateOfBirth, isLoading, updateProfile } =
+    useAuthStore();
   const { addNotification } = useNotificationStore();
   const { t } = useTranslation();
   useTitle('profile.title');
@@ -20,15 +21,24 @@ const Profile = () => {
   const [firstName, setFirstName] = useState(userFirstName);
   const [lastName, setLastName] = useState(userLastName);
   const [email, setEmail] = useState(userEmail);
-  const [errors, setErrors] = useState<{ firstName?: string; lastName?: string; email?: string }>(
-    {}
-  );
+  const [dateOfBirth, setDateOfBirth] = useState(userDateOfBirth || '');
+  const [errors, setErrors] = useState<{
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    dateOfBirth?: string;
+  }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
   // Validation function
   const validateForm = () => {
-    const newErrors: { firstName?: string; lastName?: string; email?: string } = {};
+    const newErrors: {
+      firstName?: string;
+      lastName?: string;
+      email?: string;
+      dateOfBirth?: string;
+    } = {};
     let isValid = true;
 
     if (!firstName.trim()) {
@@ -49,6 +59,11 @@ const Profile = () => {
       isValid = false;
     }
 
+    if (dateOfBirth && isNaN(Date.parse(dateOfBirth))) {
+      newErrors.dateOfBirth = t('validation.invalidDate');
+      isValid = false;
+    }
+
     setErrors(newErrors);
     return isValid;
   };
@@ -62,7 +77,7 @@ const Profile = () => {
     setIsSubmitting(true);
 
     try {
-      await updateProfile(firstName, lastName, email);
+      await updateProfile(firstName, lastName, email, dateOfBirth || null);
       addNotification(t('profile.profileUpdated'), NotificationType.SUCCESS);
       setIsEditMode(false);
     } catch (error: any) {
@@ -82,8 +97,19 @@ const Profile = () => {
     setFirstName(userFirstName);
     setLastName(userLastName);
     setEmail(userEmail);
+    setDateOfBirth(userDateOfBirth || '');
     setErrors({});
     setIsEditMode(false);
+  };
+
+  // Format date for display
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return '';
+    try {
+      return new Date(dateString).toLocaleDateString();
+    } catch (e) {
+      return '';
+    }
   };
 
   return (
@@ -135,6 +161,19 @@ const Profile = () => {
                 />
                 {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
               </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="dateOfBirth">{t('auth.dateOfBirth')}</Label>
+                <Input
+                  id="dateOfBirth"
+                  type="date"
+                  value={dateOfBirth ? dateOfBirth.substring(0, 10) : ''}
+                  onChange={(e) => setDateOfBirth(e.target.value)}
+                  placeholder={t('auth.dateOfBirthPlaceholder')}
+                  className={errors.dateOfBirth ? 'border-red-500' : ''}
+                />
+                {errors.dateOfBirth && <p className="text-sm text-red-500">{errors.dateOfBirth}</p>}
+              </div>
             </form>
           ) : (
             <div>
@@ -148,6 +187,16 @@ const Profile = () => {
                 </p>
                 <p>
                   <strong>{t('auth.email')}:</strong> {userEmail}
+                </p>
+                <p>
+                  <strong>{t('auth.dateOfBirth')}:</strong>{' '}
+                  {userDateOfBirth ? (
+                    formatDate(userDateOfBirth)
+                  ) : (
+                    <span className="text-amber-600 font-medium">
+                      {t('profile.dateOfBirthNeeded')}
+                    </span>
+                  )}
                 </p>
               </div>
             </div>

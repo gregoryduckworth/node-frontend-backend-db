@@ -79,6 +79,10 @@
     "confirmNewPasswordPlaceholder": "Confirmar nueva contraseña",
     "namePlaceholder": "Ingresa tu nombre",
     "emailPlaceholder": "Ingresa tu correo electrónico",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "dateOfBirth": "Fecha de Nacimiento",
+    "dateOfBirthPlaceholder": "Selecciona tu fecha de nacimiento",
     "errors": {
       "emailNotRegistered": "El correo electrónico no está registrado. Por favor, regístrese primero.",
       "invalidCredentials": "Correo o contraseña inválidos",
@@ -98,7 +102,10 @@
     "nameRequired": "El nombre es obligatorio",
     "emailRequired": "El correo es obligatorio",
     "invalidEmail": "Por favor introduce un correo electrónico válido",
-    "emailExists": "El correo electrónico ya existe. Por favor usa un correo diferente."
+    "emailExists": "El correo electrónico ya existe. Por favor usa un correo diferente.",
+    "firstNameRequired": "El nombre es obligatorio",
+    "lastNameRequired": "El apellido es obligatorio",
+    "invalidDate": "Por favor introduce una fecha válida"
   },
   "notifications": {
     "success": "Éxito",
@@ -152,6 +159,7 @@
     "editProfile": "Editar Perfil",
     "updateSuccess": "Perfil Actualizado",
     "profileUpdated": "Tu perfil ha sido actualizado exitosamente",
-    "updateError": "Error al actualizar el perfil"
+    "updateError": "Error al actualizar el perfil",
+    "dateOfBirthNeeded": "Por favor establece tu fecha de nacimiento"
   }
 }
