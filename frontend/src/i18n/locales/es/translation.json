@@ -37,7 +37,7 @@
   },
   "dashboard": {
     "title": "Panel de Control",
-    "welcome": "¡Bienvenido, {{name}}!",
+    "welcome": "¡Bienvenido, {{firstName}} {{lastName}}!",
     "summary": "Resumen del Panel",
     "quickActions": "Acciones Rápidas",
     "buildingApplication": "Construyendo Aplicación",

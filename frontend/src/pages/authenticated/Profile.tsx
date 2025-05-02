@@ -11,25 +11,33 @@ import { NotificationType } from '../../types/notification';
 import { useNotificationStore } from '@/store/useNotificationStore';
 
 const Profile = () => {
-  const { userName, userEmail, isLoading, updateProfile } = useAuthStore();
+  const { userFirstName, userLastName, userEmail, isLoading, updateProfile } = useAuthStore();
   const { addNotification } = useNotificationStore();
   const { t } = useTranslation();
   useTitle('profile.title');
 
   // Form state
-  const [name, setName] = useState(userName);
+  const [firstName, setFirstName] = useState(userFirstName);
+  const [lastName, setLastName] = useState(userLastName);
   const [email, setEmail] = useState(userEmail);
-  const [errors, setErrors] = useState<{ name?: string; email?: string }>({});
+  const [errors, setErrors] = useState<{ firstName?: string; lastName?: string; email?: string }>(
+    {}
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
   // Validation function
   const validateForm = () => {
-    const newErrors: { name?: string; email?: string } = {};
+    const newErrors: { firstName?: string; lastName?: string; email?: string } = {};
     let isValid = true;
 
-    if (!name.trim()) {
-      newErrors.name = t('validation.nameRequired');
+    if (!firstName.trim()) {
+      newErrors.firstName = t('validation.firstNameRequired');
+      isValid = false;
+    }
+
+    if (!lastName.trim()) {
+      newErrors.lastName = t('validation.lastNameRequired');
       isValid = false;
     }
 
@@ -54,7 +62,7 @@ const Profile = () => {
     setIsSubmitting(true);
 
     try {
-      await updateProfile(name, email);
+      await updateProfile(firstName, lastName, email);
       addNotification(t('profile.profileUpdated'), NotificationType.SUCCESS);
       setIsEditMode(false);
     } catch (error: any) {
@@ -65,7 +73,8 @@ const Profile = () => {
   };
 
   const handleCancel = () => {
-    setName(userName);
+    setFirstName(userFirstName);
+    setLastName(userLastName);
     setEmail(userEmail);
     setErrors({});
     setIsEditMode(false);
@@ -85,15 +94,27 @@ const Profile = () => {
           ) : isEditMode ? (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">{t('auth.name')}</Label>
+                <Label htmlFor="firstName">{t('auth.firstName')}</Label>
                 <Input
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder={t('auth.namePlaceholder')}
-                  className={errors.name ? 'border-red-500' : ''}
+                  id="firstName"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder={t('auth.firstNamePlaceholder')}
+                  className={errors.firstName ? 'border-red-500' : ''}
                 />
-                {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
+                {errors.firstName && <p className="text-sm text-red-500">{errors.firstName}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="lastName">{t('auth.lastName')}</Label>
+                <Input
+                  id="lastName"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder={t('auth.lastNamePlaceholder')}
+                  className={errors.lastName ? 'border-red-500' : ''}
+                />
+                {errors.lastName && <p className="text-sm text-red-500">{errors.lastName}</p>}
               </div>
 
               <div className="space-y-2">
@@ -114,7 +135,10 @@ const Profile = () => {
               <h2 className="mb-4 text-lg font-semibold">{t('profile.personalInfo')}</h2>
               <div className="space-y-2">
                 <p>
-                  <strong>{t('auth.name')}:</strong> {userName}
+                  <strong>{t('auth.firstName')}:</strong> {userFirstName}
+                </p>
+                <p>
+                  <strong>{t('auth.lastName')}:</strong> {userLastName}
                 </p>
                 <p>
                   <strong>{t('auth.email')}:</strong> {userEmail}

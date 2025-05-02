@@ -11,7 +11,8 @@ import useTitle from '@/hooks/use-title';
 import { useTranslation } from 'react-i18next';
 
 const Register = () => {
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -60,7 +61,7 @@ const Register = () => {
     setIsSubmitting(true);
 
     try {
-      await registerApi(name, email, password, confirmPassword);
+      await registerApi(firstName, lastName, email, password, confirmPassword);
       addNotification(t('auth.registerSuccess'), NotificationType.SUCCESS);
       navigate('/login');
     } catch (error: any) {
@@ -75,13 +76,23 @@ const Register = () => {
     <GenericLayout title={t('auth.createAccount')} subtitle={t('auth.signUpForAccount')}>
       <form onSubmit={handleRegister}>
         <div className="grid gap-3">
-          <Label htmlFor="name">{t('auth.name')}</Label>
+          <Label htmlFor="firstName">{t('auth.firstName')}</Label>
           <Input
-            id="name"
-            placeholder={t('auth.usernamePlaceholder')}
+            id="firstName"
+            placeholder={t('auth.firstNamePlaceholder')}
             required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+        </div>
+        <div className="grid gap-3 mt-6">
+          <Label htmlFor="lastName">{t('auth.lastName')}</Label>
+          <Input
+            id="lastName"
+            placeholder={t('auth.lastNamePlaceholder')}
+            required
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
           />
         </div>
         <div className="grid gap-3 mt-6">

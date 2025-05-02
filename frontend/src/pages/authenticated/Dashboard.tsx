@@ -5,7 +5,7 @@ import { useTitle } from '@/hooks/use-title';
 import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {
-  const { userName, isLoading } = useAuthStore();
+  const { userFirstName, userLastName, isLoading } = useAuthStore();
   const { t } = useTranslation();
   useTitle('dashboard.title');
 
@@ -16,7 +16,9 @@ const Dashboard = () => {
       <Card>
         <CardHeader>
           <CardTitle>
-            {isLoading ? t('common.loading') : t('dashboard.welcome', { name: userName })}
+            {isLoading
+              ? t('common.loading')
+              : t('dashboard.welcome', { firstName: userFirstName, lastName: userLastName })}
           </CardTitle>
         </CardHeader>
         <CardContent>Dashboard Content</CardContent>

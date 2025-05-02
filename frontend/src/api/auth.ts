@@ -6,14 +6,15 @@ export type AuthResponse = {
 };
 
 export const register = async (
-  name: string,
+  firstName: string,
+  lastName: string,
   email: string,
   password: string,
   confirmPassword: string
 ): Promise<AuthResponse> => {
   return apiClient<AuthResponse>(API_ENDPOINTS.REGISTER, {
     method: 'POST',
-    body: { name, email, password, confirmPassword },
+    body: { firstName, lastName, email, password, confirmPassword },
   });
 };
 
@@ -49,13 +50,14 @@ export const refreshToken = async (): Promise<AuthResponse | { accessToken?: str
 
 export const updateProfile = async (
   userId: string,
-  name: string,
+  firstName: string,
+  lastName: string,
   email: string,
   token: string
 ): Promise<{ message: string }> => {
   return apiClient<{ message: string }>(`${API_ENDPOINTS.UPDATE_PROFILE}/${userId}`, {
     method: 'PUT',
-    body: { name, email },
+    body: { firstName, lastName, email },
     headers: {
       Authorization: `Bearer ${token}`,
     },
