@@ -27,15 +27,17 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { COMPANY } from '@/config/settings';
+import { useAuthStore } from '../store/useAuthStore';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { t, i18n } = useTranslation();
+  const { userName, userEmail } = useAuthStore();
 
   const data = React.useMemo(
     () => ({
       user: {
-        name: 'shadcn',
-        email: 'm@example.com',
+        name: userName,
+        email: userEmail || 'm@example.com',
         avatar: '/avatars/shadcn.jpg',
       },
       navMain: [
@@ -45,6 +47,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           icon: SquareTerminal,
           isActive: true,
           items: [
+            {
+              title: t('sidebar.dashboard'),
+              url: 'dashboard',
+            },
             {
               title: t('sidebar.history'),
               url: '#',
@@ -155,7 +161,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         },
       ],
     }),
-    [t, i18n.language]
+    [t, i18n.language, userName, userEmail]
   );
 
   return (

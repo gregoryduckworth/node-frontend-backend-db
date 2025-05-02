@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { ReactNode } from 'react';
+import { Fragment, ReactNode } from 'react';
 
 type BreadcrumbItem = {
   label: string;
@@ -36,11 +36,8 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ children, bre
               <Breadcrumb>
                 <BreadcrumbList>
                   {breadcrumbs.map((item, index) => (
-                    <>
-                      <BreadcrumbItem
-                        key={`item-${index}`}
-                        className={item.current ? '' : 'hidden md:block'}
-                      >
+                    <Fragment key={`breadcrumb-${index}`}>
+                      <BreadcrumbItem className={item.current ? '' : 'hidden md:block'}>
                         {item.href ? (
                           <BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
                         ) : (
@@ -48,9 +45,9 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ children, bre
                         )}
                       </BreadcrumbItem>
                       {index < breadcrumbs.length - 1 && (
-                        <BreadcrumbSeparator key={`sep-${index}`} className="hidden md:block" />
+                        <BreadcrumbSeparator className="hidden md:block" />
                       )}
-                    </>
+                    </Fragment>
                   ))}
                 </BreadcrumbList>
               </Breadcrumb>

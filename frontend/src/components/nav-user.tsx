@@ -1,6 +1,6 @@
 'use client';
 
-import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from 'lucide-react';
+import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { NotificationType } from '../types/notification';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -22,6 +22,7 @@ import {
 import { useAuthStore } from '../store/useAuthStore';
 import { useNotificationStore } from '../store/useNotificationStore';
 import { useTranslation } from 'react-i18next';
+import { ROUTES } from '../config/auth';
 
 export function NavUser({
   user,
@@ -47,6 +48,10 @@ export function NavUser({
       console.error('Logout error:', error);
       addNotification('Failed to log out', NotificationType.ERROR);
     }
+  };
+
+  const navigateToProfile = () => {
+    navigate(ROUTES.PROFILE);
   };
 
   return (
@@ -96,6 +101,10 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <DropdownMenuItem onClick={navigateToProfile}>
+                <User />
+                {t('sidebar.profile')}
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <BadgeCheck />
                 {t('sidebar.account')}

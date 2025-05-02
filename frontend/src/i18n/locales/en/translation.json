@@ -102,6 +102,7 @@
   },
   "sidebar": {
     "playground": "Playground",
+    "dashboard": "Dashboard",
     "history": "History",
     "starred": "Starred",
     "settings": "Settings",
@@ -124,6 +125,7 @@
     "notifications": "Notifications",
     "upgradeToPro": "Upgrade to Pro",
     "projectsLabel": "Projects",
+    "profile": "Profile",
     "platform": "Platform",
     "projects": {
       "designEngineering": "Design Engineering",
@@ -135,5 +137,10 @@
     "viewProject": "View Project",
     "shareProject": "Share Project",
     "deleteProject": "Delete Project"
+  },
+  "profile": {
+    "title": "User Profile",
+    "personalInfo": "Personal Information",
+    "updateInfo": "Update Information"
   }
 }

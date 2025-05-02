@@ -102,6 +102,7 @@
   },
   "sidebar": {
     "playground": "Zona de Pruebas",
+    "dashboard": "Panel de Control",
     "history": "Historial",
     "starred": "Destacados",
     "settings": "Configuración",
@@ -124,6 +125,7 @@
     "notifications": "Notificaciones",
     "upgradeToPro": "Actualizar a Pro",
     "projectsLabel": "Proyectos",
+    "profile": "Perfil",
     "platform": "Plataforma",
     "projects": {
       "designEngineering": "Ingeniería de Diseño",
@@ -135,5 +137,10 @@
     "viewProject": "Ver Proyecto",
     "shareProject": "Compartir Proyecto",
     "deleteProject": "Eliminar Proyecto"
+  },
+  "profile": {
+    "title": "Perfil de Usuario",
+    "personalInfo": "Información Personal",
+    "updateInfo": "Actualizar Información"
   }
 }
