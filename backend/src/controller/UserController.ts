@@ -126,7 +126,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
     const accessToken = jwt.sign(
       { userId, userEmail, userFirstName, userLastName },
       accessTokenSecret,
-      { expiresIn: "15s" }
+      { expiresIn: "30m" }
     );
     const refreshToken = jwt.sign(
       { userId, userEmail, userFirstName, userLastName },

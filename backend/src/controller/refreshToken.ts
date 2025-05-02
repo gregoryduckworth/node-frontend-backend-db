@@ -38,7 +38,7 @@ export const refreshToken = async (
         userEmail: email,
       },
       accessTokenSecret,
-      { expiresIn: "15s" }
+      { expiresIn: "30m" }
     );
     return res.json({ accessToken });
   } catch (error) {
