@@ -1,5 +1,5 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import LanguageSwitcher from "@/components/language-switcher";
+import { AppSidebar } from '@/components/app-sidebar';
+import LanguageSwitcher from '@/components/language-switcher';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,14 +7,10 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { ReactNode } from "react";
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { ReactNode } from 'react';
 
 type BreadcrumbItem = {
   label: string;
@@ -27,10 +23,7 @@ type AuthenticatedLayoutProps = {
   breadcrumbs?: BreadcrumbItem[];
 };
 
-const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({
-  children,
-  breadcrumbs,
-}) => {
+const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ children, breadcrumbs }) => {
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -46,21 +39,16 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({
                     <>
                       <BreadcrumbItem
                         key={`item-${index}`}
-                        className={item.current ? "" : "hidden md:block"}
+                        className={item.current ? '' : 'hidden md:block'}
                       >
                         {item.href ? (
-                          <BreadcrumbLink href={item.href}>
-                            {item.label}
-                          </BreadcrumbLink>
+                          <BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
                         ) : (
                           <BreadcrumbPage>{item.label}</BreadcrumbPage>
                         )}
                       </BreadcrumbItem>
                       {index < breadcrumbs.length - 1 && (
-                        <BreadcrumbSeparator
-                          key={`sep-${index}`}
-                          className="hidden md:block"
-                        />
+                        <BreadcrumbSeparator key={`sep-${index}`} className="hidden md:block" />
                       )}
                     </>
                   ))}

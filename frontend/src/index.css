@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -143,22 +143,22 @@
 }
 
 /* Sonner toast styling */
-[data-sonner-toast][data-type="success"] {
+[data-sonner-toast][data-type='success'] {
   background-color: var(--toast-success);
   color: var(--toast-success-foreground);
 }
 
-[data-sonner-toast][data-type="error"] {
+[data-sonner-toast][data-type='error'] {
   background-color: var(--toast-error);
   color: var(--toast-error-foreground);
 }
 
-[data-sonner-toast][data-type="warning"] {
+[data-sonner-toast][data-type='warning'] {
   background-color: var(--toast-warning);
   color: var(--toast-warning-foreground);
 }
 
-[data-sonner-toast][data-type="info"] {
+[data-sonner-toast][data-type='info'] {
   background-color: var(--toast-info);
   color: var(--toast-info-foreground);
 }

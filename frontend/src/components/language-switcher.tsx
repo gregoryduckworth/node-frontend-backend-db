@@ -1,14 +1,14 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Globe, Check } from "lucide-react";
-import i18n from "@/i18n/config";
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { Globe, Check } from 'lucide-react';
+import i18n from '@/i18n/config';
 
 // Define language information
 interface Language {
@@ -18,8 +18,8 @@ interface Language {
 
 // Language native names map
 const NATIVE_NAMES: Record<string, string> = {
-  en: "English",
-  es: "Español",
+  en: 'English',
+  es: 'Español',
 };
 
 const LanguageSwitcher: React.FC = () => {
@@ -43,7 +43,7 @@ const LanguageSwitcher: React.FC = () => {
 
   // Get the name of the current language
   const getCurrentLanguage = (): Language => {
-    const currentCode = i18n.language.split("-")[0]; // Handle cases like 'en-US'
+    const currentCode = i18n.language.split('-')[0]; // Handle cases like 'en-US'
     const languages = getAvailableLanguages();
     const currentLanguage = languages.find((lang) => lang.code === currentCode);
     return (
@@ -73,9 +73,7 @@ const LanguageSwitcher: React.FC = () => {
             className="flex items-center justify-between"
           >
             <span>{language.nativeName}</span>
-            {currentLanguage.code === language.code && (
-              <Check className="h-4 w-4 ml-2" />
-            )}
+            {currentLanguage.code === language.code && <Check className="h-4 w-4 ml-2" />}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

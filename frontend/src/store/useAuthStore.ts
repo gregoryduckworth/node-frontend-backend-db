@@ -1,10 +1,6 @@
-import { create } from "zustand";
-import jwt_decode from "jwt-decode";
-import {
-  refreshToken,
-  login as loginApi,
-  logout as logoutApi,
-} from "../api/auth";
+import { create } from 'zustand';
+import jwt_decode from 'jwt-decode';
+import { refreshToken, login as loginApi, logout as logoutApi } from '../api/auth';
 
 interface JwtPayload {
   userId: string;
@@ -31,10 +27,10 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
-  token: "",
-  userName: "",
-  userId: "",
-  userEmail: "",
+  token: '',
+  userName: '',
+  userId: '',
+  userEmail: '',
   isAuthenticated: false,
   isLoading: true,
   expiresAt: null,
@@ -42,10 +38,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   setToken: (token) => {
     if (!token) {
       set({
-        token: "",
-        userName: "",
-        userId: "",
-        userEmail: "",
+        token: '',
+        userName: '',
+        userId: '',
+        userEmail: '',
         isAuthenticated: false,
         expiresAt: null,
       });
@@ -56,19 +52,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const decoded = jwt_decode<JwtPayload>(token);
       set({
         token,
-        userName: decoded.userName || "",
-        userId: decoded.userId || "",
-        userEmail: decoded.userEmail || "",
+        userName: decoded.userName || '',
+        userId: decoded.userId || '',
+        userEmail: decoded.userEmail || '',
         isAuthenticated: true,
         expiresAt: decoded.exp * 1000,
       });
     } catch (error) {
-      console.error("Error decoding JWT token:", error);
+      console.error('Error decoding JWT token:', error);
       set({
-        token: "",
-        userName: "",
-        userId: "",
-        userEmail: "",
+        token: '',
+        userName: '',
+        userId: '',
+        userEmail: '',
         isAuthenticated: false,
         expiresAt: null,
       });
@@ -77,10 +73,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   clearAuth: () => {
     set({
-      token: "",
-      userName: "",
-      userId: "",
-      userEmail: "",
+      token: '',
+      userName: '',
+      userId: '',
+      userEmail: '',
       isAuthenticated: false,
       expiresAt: null,
     });
@@ -93,9 +89,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         get().setToken(response.accessToken);
         return;
       }
-      throw new Error("No access token returned");
+      throw new Error('No access token returned');
     } catch (error: any) {
-      console.error("Login error:", error);
+      console.error('Login error:', error);
       throw error;
     }
   },
@@ -105,7 +101,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await logoutApi();
       get().clearAuth();
     } catch (error) {
-      console.error("Logout error:", error);
+      console.error('Logout error:', error);
       throw error;
     }
   },
@@ -123,7 +119,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ isLoading: false });
       return false;
     } catch (error) {
-      console.error("Auth check error:", error);
+      console.error('Auth check error:', error);
       get().clearAuth();
       set({ isLoading: false });
       return false;
