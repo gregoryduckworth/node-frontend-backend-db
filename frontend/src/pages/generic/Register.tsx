@@ -1,8 +1,8 @@
 import { useState, FormEvent, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { register as registerApi } from '../api/auth';
-import { useNotificationStore } from '../store/useNotificationStore';
-import { NotificationType } from '../types/notification';
+import { register as registerApi } from '../../api/auth';
+import { useNotificationStore } from '../../store/useNotificationStore';
+import { NotificationType } from '../../types/notification';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
