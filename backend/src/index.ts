@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import UserRoute from "./routes/UserRoute";
+import UserRoute from "@routes/UserRoute";
 
 // Load environment variables
 dotenv.config();
