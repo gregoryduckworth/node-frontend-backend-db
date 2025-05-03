@@ -1,13 +1,11 @@
-'use client';
-
 import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles, User } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { NotificationType } from '../types/notification';
+import { NotificationType } from '@/types/notification';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -19,10 +17,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { useAuthStore } from '../store/useAuthStore';
-import { useNotificationStore } from '../store/useNotificationStore';
-import { useTranslation } from 'react-i18next';
-import { ROUTES } from '../config/auth';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useNotificationStore } from '@/store/useNotificationStore';
+import { ROUTES } from '@/config/auth';
+import { DropdownMenuGroup } from '@radix-ui/react-dropdown-menu';
 
 export function NavUser({
   user,

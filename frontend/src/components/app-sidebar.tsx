@@ -27,7 +27,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { COMPANY } from '@/config/settings';
-import { useAuthStore } from '../store/useAuthStore';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { t, i18n } = useTranslation();

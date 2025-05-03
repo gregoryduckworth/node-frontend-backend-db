@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import AuthenticatedLayout from '@/components/layouts/AuthenticatedLayout';
-import { useAuthStore } from '../../store/useAuthStore';
+import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useNotificationStore } from '@/store/useNotificationStore';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useTitle } from '@/hooks/use-title';
-import { useTranslation } from 'react-i18next';
-import { NotificationType } from '../../types/notification';
-import { useNotificationStore } from '@/store/useNotificationStore';
+import AuthenticatedLayout from '@/components/layouts/AuthenticatedLayout';
+import { NotificationType } from '@/types/notification';
+import useTitle from '@/hooks/use-title';
 
 const Profile = () => {
   const { firstName, lastName, email, dateOfBirth, isLoading, updateProfile } = useAuthStore();

@@ -1,9 +1,9 @@
-import { useState, FormEvent, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect, FormEvent } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { resetPassword } from '../../api/auth';
-import { useNotificationStore } from '../../store/useNotificationStore';
-import { NotificationType } from '../../types/notification';
+import { resetPassword } from '@/api/auth';
+import { useNotificationStore } from '@/store/useNotificationStore';
+import { NotificationType } from '@/types/notification';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';

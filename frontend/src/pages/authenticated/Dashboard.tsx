@@ -1,7 +1,7 @@
 import AuthenticatedLayout from '@/components/layouts/AuthenticatedLayout';
-import { useAuthStore } from '../../store/useAuthStore';
+import { useAuthStore } from '@/store/useAuthStore';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { useTitle } from '@/hooks/use-title';
+import useTitle from '@/hooks/use-title';
 import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {

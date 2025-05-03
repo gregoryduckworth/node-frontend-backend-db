@@ -1,11 +1,11 @@
 import { create } from 'zustand';
-import jwt_decode from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 import {
-  refreshToken,
   login as loginApi,
   logout as logoutApi,
+  refreshToken as refreshTokenApi,
   updateProfile as updateProfileApi,
-} from '../api/auth';
+} from '@/api/auth';
 
 interface JwtPayload {
   id: string;
@@ -68,7 +68,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
 
     try {
-      const decoded = jwt_decode<JwtPayload>(token);
+      const decoded = jwtDecode<JwtPayload>(token);
       set({
         token,
         firstName: decoded.firstName || '',
@@ -134,7 +134,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   checkAuth: async () => {
     set({ isLoading: true });
     try {
-      const response = await refreshToken();
+      const response = await refreshTokenApi();
       if (response && response.accessToken) {
         get().setToken(response.accessToken);
         set({ isLoading: false });

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { toast } from 'sonner';
-import { NotificationType } from '../types/notification';
+import { NotificationType } from '@/types/notification';
 
 export type { NotificationType };
 
