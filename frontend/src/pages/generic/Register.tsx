@@ -1,14 +1,14 @@
-import { useState, FormEvent, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { register as registerApi } from '../../api/auth';
-import { useNotificationStore } from '../../store/useNotificationStore';
-import { NotificationType } from '../../types/notification';
+import { useState, useEffect, FormEvent } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { register as registerApi } from '@/api/auth';
+import { useNotificationStore } from '@/store/useNotificationStore';
+import { NotificationType } from '@/types/notification';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import GenericLayout from '@/components/layouts/GenericLayout';
 import useTitle from '@/hooks/use-title';
-import { useTranslation } from 'react-i18next';
 
 const Register = () => {
   const [firstName, setFirstName] = useState('');

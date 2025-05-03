@@ -1,4 +1,4 @@
-import { API_ENDPOINTS } from '../config/auth';
+import { API_ENDPOINTS } from '@/config/auth';
 import { apiClient } from './apiClient';
 
 export type AuthResponse = {

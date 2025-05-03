@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Register from './pages/generic/Register';
-import Login from './pages/generic/Login';
-import Dashboard from './pages/authenticated/Dashboard';
-import ForgotPassword from './pages/generic/ForgotPassword';
-import ResetPassword from './pages/generic/ResetPassword';
-import Profile from './pages/authenticated/Profile';
-import { Toaster } from './components/ui/sonner';
-import { useAuthStore } from './store/useAuthStore';
-import { ROUTES } from './config/auth';
+import Register from '@/pages/generic/Register';
+import Login from '@/pages/generic/Login';
+import Dashboard from '@/pages/authenticated/Dashboard';
+import ForgotPassword from '@/pages/generic/ForgotPassword';
+import ResetPassword from '@/pages/generic/ResetPassword';
+import Profile from '@/pages/authenticated/Profile';
+import { Toaster } from '@/components/ui/sonner';
+import { useAuthStore } from '@/store/useAuthStore';
+import { ROUTES } from '@/config/auth';
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
