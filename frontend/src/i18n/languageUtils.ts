@@ -17,7 +17,9 @@ export const getCurrentLanguage = (
   currentLanguageCode: string,
   availableLanguages: Language[]
 ): Language => {
-  const code = currentLanguageCode.split('-')[0];
+  const code = currentLanguageCode.includes('-') 
+    ? currentLanguageCode.split('-')[0] 
+    : currentLanguageCode;
   const currentLanguage = availableLanguages.find((lang) => lang.code === code);
 
   return (
