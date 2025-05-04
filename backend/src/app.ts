@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/health", (_req: Request, res: Response) => {
-  res.sendStatus(200);
+  res.status(200).json({ message: "OK" });
 });
 
 app.use(UserRoute);
