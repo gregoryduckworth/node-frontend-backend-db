@@ -1,0 +1,172 @@
+{
+  "app": {
+    "title": "Acme Inc",
+    "description": "Application Modèle",
+    "imageAlt": "Logo de l'application"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "view": "Voir",
+    "submit": "Soumettre",
+    "back": "Retour",
+    "next": "Suivant",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "language": "Langue",
+    "and": "et",
+    "more": "Plus",
+    "toggle": "Basculer",
+    "saving": "Enregistrement..."
+  },
+  "languages": {
+    "en": "Anglais",
+    "es": "Espagnol",
+    "fr": "Français"
+  },
+  "login": {
+    "title": "Connexion"
+  },
+  "register": {
+    "title": "Inscription"
+  },
+  "forgotPassword": {
+    "title": "Mot de Passe Oublié"
+  },
+  "resetPassword": {
+    "title": "Réinitialiser le Mot de Passe"
+  },
+  "dashboard": {
+    "title": "Tableau de Bord",
+    "welcome": "Bienvenue, {{firstName}} {{lastName}} !",
+    "summary": "Résumé du Tableau de Bord",
+    "quickActions": "Actions Rapides",
+    "buildingApplication": "Construction de l'Application",
+    "dataFetching": "Récupération des Données"
+  },
+  "auth": {
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "register": "S'inscrire",
+    "forgotPassword": "Mot de passe oublié",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "dateOfBirth": "Date de naissance",
+    "dateOfBirthPlaceholder": "Sélectionnez votre date de naissance",
+    "name": "Nom",
+    "loginSuccess": "Connexion réussie",
+    "logoutSuccess": "Déconnexion réussie",
+    "registerSuccess": "Inscription réussie",
+    "passwordResetRequest": "Instructions de réinitialisation envoyées à votre e-mail",
+    "passwordResetSuccess": "Le mot de passe a été réinitialisé avec succès",
+    "newPassword": "Nouveau mot de passe",
+    "confirmNewPassword": "Confirmer le nouveau mot de passe",
+    "enterNewPassword": "Entrez votre nouveau mot de passe",
+    "enterEmailReset": "Entrez votre e-mail pour réinitialiser votre mot de passe",
+    "invalidResetLink": "Lien de réinitialisation invalide",
+    "linkExpired": "Le lien de réinitialisation est invalide ou a expiré.",
+    "requestNewLink": "Demander un nouveau lien",
+    "sendAgain": "Envoyer à nouveau",
+    "rememberPassword": "Vous vous souvenez de votre mot de passe ?",
+    "backToLogin": "Retour à la connexion",
+    "createAccount": "Créer un compte",
+    "signUpForAccount": "Inscrivez-vous pour votre compte",
+    "usernamePlaceholder": "nom d'utilisateur",
+    "firstNamePlaceholder": "Entrez votre prénom",
+    "lastNamePlaceholder": "Entrez votre nom",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "dontHaveAccount": "Vous n'avez pas de compte ?",
+    "termsNotice": "En cliquant sur continuer, vous acceptez nos",
+    "termsOfService": "Conditions d'utilisation",
+    "privacyPolicy": "Politique de confidentialité",
+    "confirmNewPasswordPlaceholder": "Confirmer le nouveau mot de passe",
+    "namePlaceholder": "Entrez votre nom",
+    "emailPlaceholder": "Entrez votre e-mail",
+    "errors": {
+      "emailNotRegistered": "L'e-mail n'est pas enregistré. Veuillez vous inscrire d'abord.",
+      "invalidCredentials": "E-mail ou mot de passe invalide",
+      "accountLocked": "Votre compte est verrouillé. Veuillez contacter le support.",
+      "serverError": "Erreur du serveur. Veuillez réessayer plus tard."
+    }
+  },
+  "validation": {
+    "required": "{{field}} est requis",
+    "email": "Veuillez entrer un e-mail valide",
+    "passwordMatch": "Les mots de passe ne correspondent pas",
+    "minLength": "{{field}} doit comporter au moins {{min}} caractères",
+    "maxLength": "{{field}} doit comporter au maximum {{max}} caractères",
+    "passwordRequirements": "Le mot de passe doit comporter au moins 8 caractères et inclure une lettre majuscule et un chiffre.",
+    "passwordUppercase": "Le mot de passe doit contenir au moins une lettre majuscule",
+    "passwordNumber": "Le mot de passe doit contenir au moins un chiffre",
+    "nameRequired": "Le nom est requis",
+    "firstNameRequired": "Le prénom est requis",
+    "lastNameRequired": "Le nom est requis",
+    "emailRequired": "L'e-mail est requis",
+    "invalidEmail": "Veuillez entrer une adresse e-mail valide",
+    "emailExists": "L'adresse e-mail existe déjà. Veuillez utiliser une adresse différente.",
+    "invalidDate": "Veuillez entrer une date valide"
+  },
+  "notifications": {
+    "success": "Succès",
+    "error": "Erreur",
+    "warning": "Avertissement",
+    "info": "Information",
+    "close": "Fermer la notification"
+  },
+  "sidebar": {
+    "playground": "Terrain de jeu",
+    "dashboard": "Tableau de bord",
+    "history": "Historique",
+    "starred": "Favoris",
+    "settings": "Paramètres",
+    "models": "Modèles",
+    "genesis": "Genèse",
+    "explorer": "Explorateur",
+    "quantum": "Quantique",
+    "documentation": "Documentation",
+    "introduction": "Introduction",
+    "getStarted": "Commencer",
+    "tutorials": "Tutoriels",
+    "changelog": "Journal des modifications",
+    "general": "Général",
+    "team": "Équipe",
+    "billing": "Facturation",
+    "limits": "Limites",
+    "support": "Support",
+    "feedback": "Commentaires",
+    "account": "Compte",
+    "notifications": "Notifications",
+    "upgradeToPro": "Passer à Pro",
+    "projectsLabel": "Projets",
+    "profile": "Profil",
+    "platform": "Plateforme",
+    "projects": {
+      "designEngineering": "Ingénierie de Conception",
+      "salesMarketing": "Ventes et Marketing",
+      "travel": "Voyage"
+    }
+  },
+  "projects": {
+    "viewProject": "Voir le projet",
+    "shareProject": "Partager le projet",
+    "deleteProject": "Supprimer le projet"
+  },
+  "profile": {
+    "title": "Profil utilisateur",
+    "personalInfo": "Informations personnelles",
+    "updateInfo": "Mettre à jour les informations",
+    "editProfile": "Modifier le profil",
+    "updateSuccess": "Profil mis à jour",
+    "profileUpdated": "Votre profil a été mis à jour avec succès",
+    "updateError": "Échec de la mise à jour du profil",
+    "dateOfBirthNeeded": "Veuillez définir votre date de naissance"
+  }
+}
