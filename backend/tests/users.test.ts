@@ -371,17 +371,16 @@ describe("User Endpoints", () => {
   describe("GET /token", () => {
     it("should fail with no refresh token", async () => {
       const res = await request(app).get("/token");
-      expect([204, 401, 403, 404]).toContain(res.status);
+      expect(res.status).toBe(204);
     });
 
     it("should succeed with valid refresh token", async () => {
       const res = await request(app)
         .get("/token")
         .set("Cookie", ["refreshToken=valid-refresh-token"]);
-      expect([200, 201]).toContain(res.status);
-      if (res.status === 200 || res.status === 201) {
-        expect(res.body).toHaveProperty("accessToken");
-      }
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("accessToken");
     });
   });
 });
