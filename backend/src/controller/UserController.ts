@@ -9,7 +9,6 @@ if (!accessTokenSecret || !refreshTokenSecret) {
   throw new Error("JWT secrets are not defined in environment variables");
 }
 
-// Password validation function to enforce security requirements
 const validatePassword = (
   password: string
 ): { isValid: boolean; message?: string } => {
@@ -85,7 +84,6 @@ export const register = async (
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Password doesn't match" });
 
-    // Validate password strength
     const validation = validatePassword(password);
     if (!validation.isValid) {
       return res.status(400).json({ message: validation.message });
@@ -118,7 +116,6 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
     if (!isMatched)
       return res.status(400).json({ message: "Password is wrong" });
 
-    // Format dateOfBirth as ISO string if it exists
     const dateOfBirthFormatted = user.dateOfBirth
       ? user.dateOfBirth.toISOString()
       : null;
@@ -264,6 +261,7 @@ export const forgotPassword = async (
 
     // In a real application, you would send an email with a link containing the token
     // For example: `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`
+    console.log(`forgotPassword function\n-------------------------`);
     console.log(`Reset token for ${email}: ${resetToken}`);
     console.log(
       `Reset link would be: http://localhost:5173/reset-password?token=${resetToken}`
@@ -293,7 +291,6 @@ export const resetPassword = async (
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Passwords don't match" });
 
-    // Validate password strength
     const validation = validatePassword(password);
     if (!validation.isValid) {
       return res.status(400).json({ message: validation.message });
