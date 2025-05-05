@@ -19,6 +19,8 @@ const Register = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [passwordTouched, setPasswordTouched] = useState(false);
+  const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false);
+  const [passwordMatchError, setPasswordMatchError] = useState(false);
 
   const navigate = useNavigate();
   const { addNotification } = useNotificationStore();
@@ -30,6 +32,12 @@ const Register = () => {
       validatePassword(password);
     }
   }, [password, passwordTouched]);
+
+  useEffect(() => {
+    if (password || confirmPassword) {
+      setPasswordMatchError(password !== confirmPassword);
+    }
+  }, [password, confirmPassword]);
 
   const validatePassword = (password: string): boolean => {
     const errors: string[] = [];
@@ -50,6 +58,7 @@ const Register = () => {
     e.preventDefault();
     const isPasswordValid = validatePassword(password);
     setPasswordTouched(true);
+    setConfirmPasswordTouched(true);
     if (!isPasswordValid) {
       return;
     }
@@ -74,7 +83,7 @@ const Register = () => {
 
   return (
     <GenericLayout title={t('auth.createAccount')} subtitle={t('auth.signUpForAccount')}>
-      <form onSubmit={handleRegister}>
+      <form onSubmit={handleRegister} data-testid="register-form">
         <div className="grid gap-3">
           <Label htmlFor="firstName">{t('auth.firstName')}</Label>
           <Input
@@ -83,6 +92,7 @@ const Register = () => {
             required
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
+            data-testid="first-name-input"
           />
         </div>
         <div className="grid gap-3 mt-6">
@@ -93,6 +103,7 @@ const Register = () => {
             required
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
+            data-testid="last-name-input"
           />
         </div>
         <div className="grid gap-3 mt-6">
@@ -104,6 +115,7 @@ const Register = () => {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            data-testid="email-input"
           />
         </div>
         <div className="grid gap-3 mt-6">
@@ -113,15 +125,21 @@ const Register = () => {
             type="password"
             required
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (!passwordTouched) setPasswordTouched(true);
+            }}
             onBlur={() => setPasswordTouched(true)}
             className={passwordTouched && passwordErrors.length > 0 ? 'border-red-500' : ''}
+            data-testid="password-input"
           />
           {passwordTouched && passwordErrors.length > 0 && (
-            <div className="text-red-500 text-sm mt-1">
+            <div className="text-red-500 text-sm mt-1" data-testid="password-errors">
               <ul className="list-disc pl-5">
                 {passwordErrors.map((error, index) => (
-                  <li key={index}>{error}</li>
+                  <li key={index} data-testid={`password-error-${index}`}>
+                    {error}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -135,23 +153,31 @@ const Register = () => {
             type="password"
             required
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className={password !== confirmPassword && confirmPassword ? 'border-red-500' : ''}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              if (!confirmPasswordTouched) setConfirmPasswordTouched(true);
+            }}
+            onBlur={() => setConfirmPasswordTouched(true)}
+            className={passwordMatchError && confirmPassword ? 'border-red-500' : ''}
+            data-testid="confirm-password-input"
           />
-          {password !== confirmPassword && confirmPassword && (
-            <div className="text-red-500 text-sm mt-1">{t('validation.passwordMatch')}</div>
+          {passwordMatchError && confirmPassword && (
+            <div className="text-red-500 text-sm mt-1" data-testid="password-match-error">
+              {t('validation.passwordMatch')}
+            </div>
           )}
         </div>
         <Button
           type="submit"
           className="w-full mt-6"
-          disabled={isSubmitting || passwordErrors.length > 0 || password !== confirmPassword}
+          disabled={isSubmitting || passwordErrors.length > 0 || passwordMatchError}
+          data-testid="register-button"
         >
           {isSubmitting ? t('common.loading') : t('auth.register')}
         </Button>
         <div className="text-center text-sm mt-6">
           {t('auth.alreadyHaveAccount')}{' '}
-          <Link to="/login" className="underline underline-offset-4">
+          <Link to="/login" className="underline underline-offset-4" data-testid="login-link">
             {t('auth.login')}
           </Link>
         </div>

@@ -72,9 +72,9 @@ const ResetPassword = () => {
   }
 
   return (
-    <GenericLayout title={t('auth.resetPassword')} subtitle={t('auth.enterNewPassword')}>
-      <form onSubmit={handleSubmit}>
-        {!isSuccess && (
+    <GenericLayout title={t('resetPassword.title')} subtitle={t('resetPassword.subtitle')}>
+      <form onSubmit={handleSubmit} data-testid="reset-password-form">
+        {!isSuccess ? (
           <>
             <div className="grid gap-3">
               <Label htmlFor="password">{t('auth.newPassword')}</Label>
@@ -85,6 +85,7 @@ const ResetPassword = () => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                data-testid="password-input"
               />
             </div>
 
@@ -97,17 +98,28 @@ const ResetPassword = () => {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                data-testid="confirm-password-input"
               />
             </div>
           </>
-        )}
+        ) : null}
 
         {!isSuccess ? (
-          <Button type="submit" className="w-full mt-6" disabled={isSubmitting}>
-            {isSubmitting ? t('common.loading') : t('auth.resetPassword')}
+          <Button
+            type="submit"
+            className="w-full mt-6"
+            disabled={isSubmitting}
+            data-testid="reset-button"
+          >
+            {isSubmitting ? t('common.loading') : t('resetPassword.resetPassword')}
           </Button>
         ) : (
-          <Button type="button" className="w-full mt-6" onClick={() => navigate('/login')}>
+          <Button
+            type="button"
+            className="w-full mt-6"
+            onClick={() => navigate('/login')}
+            data-testid="back-to-login-button"
+          >
             {t('auth.backToLogin')}
           </Button>
         )}

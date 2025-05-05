@@ -24,17 +24,18 @@ const LanguageSwitcher: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" data-testid="language-switcher-button">
           <Globe className="h-4 w-4 mr-2" />
           {currentLanguage.nativeName}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent data-testid="language-menu">
         {languages.map((language) => (
           <DropdownMenuItem
             key={language.code}
             onClick={() => changeLanguage(language.code)}
             className="flex items-center justify-between"
+            data-testid={`language-option-${language.code}`}
           >
             <span>{language.nativeName}</span>
             {currentLanguage.code === language.code && <Check className="h-4 w-4 ml-2" />}

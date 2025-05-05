@@ -115,15 +115,15 @@ const Profile = () => {
     <AuthenticatedLayout
       breadcrumbs={[{ label: t('profile.title'), href: '/profile', current: true }]}
     >
-      <Card>
+      <Card data-testid="profile-card">
         <CardHeader>
           <CardTitle>{t('profile.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <p>{t('common.loading')}</p>
+            <p data-testid="loading-indicator">{t('common.loading')}</p>
           ) : isEditMode ? (
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4" data-testid="profile-edit-form">
               <div className="space-y-2">
                 <Label htmlFor="firstName">{t('auth.firstName')}</Label>
                 <Input
@@ -132,8 +132,13 @@ const Profile = () => {
                   onChange={(e) => setFormFirstName(e.target.value)}
                   placeholder={t('auth.firstNamePlaceholder')}
                   className={errors.firstName ? 'border-red-500' : ''}
+                  data-testid="first-name-input"
                 />
-                {errors.firstName && <p className="text-sm text-red-500">{errors.firstName}</p>}
+                {errors.firstName && (
+                  <p className="text-sm text-red-500" data-testid="first-name-error">
+                    {errors.firstName}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -144,8 +149,13 @@ const Profile = () => {
                   onChange={(e) => setFormLastName(e.target.value)}
                   placeholder={t('auth.lastNamePlaceholder')}
                   className={errors.lastName ? 'border-red-500' : ''}
+                  data-testid="last-name-input"
                 />
-                {errors.lastName && <p className="text-sm text-red-500">{errors.lastName}</p>}
+                {errors.lastName && (
+                  <p className="text-sm text-red-500" data-testid="last-name-error">
+                    {errors.lastName}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -157,8 +167,13 @@ const Profile = () => {
                   onChange={(e) => setFormEmail(e.target.value)}
                   placeholder={t('auth.emailPlaceholder')}
                   className={errors.email ? 'border-red-500' : ''}
+                  data-testid="email-input"
                 />
-                {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
+                {errors.email && (
+                  <p className="text-sm text-red-500" data-testid="email-error">
+                    {errors.email}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -170,29 +185,37 @@ const Profile = () => {
                   onChange={(e) => setFormDateOfBirth(e.target.value)}
                   placeholder={t('auth.dateOfBirthPlaceholder')}
                   className={errors.dateOfBirth ? 'border-red-500' : ''}
+                  data-testid="date-of-birth-input"
                 />
-                {errors.dateOfBirth && <p className="text-sm text-red-500">{errors.dateOfBirth}</p>}
+                {errors.dateOfBirth && (
+                  <p className="text-sm text-red-500" data-testid="date-of-birth-error">
+                    {errors.dateOfBirth}
+                  </p>
+                )}
               </div>
             </form>
           ) : (
-            <div>
+            <div data-testid="profile-info">
               <h2 className="mb-4 text-lg font-semibold">{t('profile.personalInfo')}</h2>
               <div className="space-y-2">
-                <p>
+                <p data-testid="first-name-display">
                   <strong>{t('auth.firstName')}:</strong> {firstName}
                 </p>
-                <p>
+                <p data-testid="last-name-display">
                   <strong>{t('auth.lastName')}:</strong> {lastName}
                 </p>
-                <p>
+                <p data-testid="email-display">
                   <strong>{t('auth.email')}:</strong> {email}
                 </p>
-                <p>
+                <p data-testid="date-of-birth-display">
                   <strong>{t('auth.dateOfBirth')}:</strong>{' '}
                   {dateOfBirth ? (
                     formatDate(dateOfBirth)
                   ) : (
-                    <span className="text-amber-600 font-medium">
+                    <span
+                      className="text-amber-600 font-medium"
+                      data-testid="date-of-birth-missing"
+                    >
                       {t('profile.dateOfBirthNeeded')}
                     </span>
                   )}
@@ -204,7 +227,12 @@ const Profile = () => {
         <CardFooter>
           {isEditMode ? (
             <div className="flex gap-2">
-              <Button type="submit" onClick={handleSubmit} disabled={isSubmitting}>
+              <Button
+                type="submit"
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                data-testid="save-button"
+              >
                 {isSubmitting ? t('common.saving') : t('common.save')}
               </Button>
               <Button
@@ -212,12 +240,15 @@ const Profile = () => {
                 variant="outline"
                 onClick={handleCancel}
                 disabled={isSubmitting}
+                data-testid="cancel-button"
               >
                 {t('common.cancel')}
               </Button>
             </div>
           ) : (
-            <Button onClick={() => setIsEditMode(true)}>{t('profile.editProfile')}</Button>
+            <Button onClick={() => setIsEditMode(true)} data-testid="edit-profile-button">
+              {t('profile.editProfile')}
+            </Button>
           )}
         </CardFooter>
       </Card>

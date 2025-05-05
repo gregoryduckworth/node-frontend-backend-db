@@ -8,6 +8,7 @@ export interface Notification {
   id: string;
   message: string;
   type: NotificationType;
+  testId?: string; // Added for testing purposes
 }
 
 interface NotificationState {
@@ -22,24 +23,31 @@ export const useNotificationStore = create<NotificationState>((set) => ({
 
   addNotification: (message, type) => {
     const id = generateId();
-    // Use sonner toast API directly
+
     switch (type) {
       case NotificationType.SUCCESS:
-        toast.success(message);
+        toast.success(message, {
+          id,
+        });
         break;
       case NotificationType.ERROR:
-        toast.error(message);
+        toast.error(message, {
+          id,
+        });
         break;
       case NotificationType.WARNING:
-        toast.warning(message);
+        toast.warning(message, {
+          id,
+        });
         break;
       case NotificationType.INFO:
       default:
-        toast.info(message);
+        toast.info(message, {
+          id,
+        });
         break;
     }
 
-    // Still update the store for backward compatibility
     set((state) => ({
       notifications: [...state.notifications, { id, message, type }],
     }));

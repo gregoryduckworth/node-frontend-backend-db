@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { requestPasswordReset } from '@/api/auth';
 import { useNotificationStore } from '@/store/useNotificationStore';
@@ -16,6 +16,7 @@ const ForgotPassword = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const { addNotification } = useNotificationStore();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   useTitle('forgotPassword.title');
 
@@ -45,35 +46,53 @@ const ForgotPassword = () => {
   };
 
   return (
-    <GenericLayout title={t('auth.forgotPassword')} subtitle={t('auth.enterEmailReset')}>
-      <form onSubmit={handleSubmit}>
-        {!isSuccess && (
-          <div className="grid gap-3">
-            <Label htmlFor="email">{t('auth.email')}</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="email@example.com"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+    <GenericLayout title={t('forgotPassword.title')} subtitle={t('forgotPassword.subtitle')}>
+      <form onSubmit={handleSubmit} data-testid="forgot-password-form">
+        {!isSuccess ? (
+          <>
+            <div className="grid gap-3">
+              <Label htmlFor="email">{t('auth.email')}</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="email@example.com"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                data-testid="email-input"
+              />
+            </div>
+            <Button
+              type="submit"
+              className="w-full mt-6"
+              disabled={isSubmitting}
+              data-testid="submit-button"
+            >
+              {isSubmitting ? t('common.loading') : t('forgotPassword.resetPassword')}
+            </Button>
+          </>
+        ) : (
+          <div className="text-center" data-testid="success-message">
+            <p className="text-green-600 mb-4">{t('forgotPassword.successMessage')}</p>
+            <p className="text-muted-foreground mb-6">{t('forgotPassword.checkEmailMessage')}</p>
+            <Button
+              type="button"
+              onClick={() => navigate('/login')}
+              variant="outline"
+              className="w-full"
+              data-testid="back-to-login-button"
+            >
+              {t('auth.backToLogin')}
+            </Button>
           </div>
         )}
 
-        {!isSuccess ? (
-          <Button type="submit" className="w-full mt-6" disabled={isSubmitting}>
-            {isSubmitting ? t('common.loading') : t('auth.resetPassword')}
-          </Button>
-        ) : (
-          <Button type="button" className="w-full mt-6" onClick={handleSendAgain}>
-            {t('auth.sendAgain')}
-          </Button>
-        )}
-
         <div className="text-center text-sm mt-6">
-          {t('auth.rememberPassword')}{' '}
-          <Link to="/login" className="underline underline-offset-4">
+          <Link
+            to="/login"
+            className="text-primary underline underline-offset-4"
+            data-testid="login-link"
+          >
             {t('auth.backToLogin')}
           </Link>
         </div>
