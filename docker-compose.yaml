@@ -1,4 +1,22 @@
 services:
+  db:
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_USER: hruser
+      POSTGRES_PASSWORD: hrpass
+      POSTGRES_DB: hrapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        ["CMD-SHELL", "pg_isready -U hruser -d hrapp -h localhost || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   backend:
     image: node:lts
     working_dir: /app
@@ -35,24 +53,6 @@ services:
     depends_on:
       backend:
         condition: service_healthy
-
-  db:
-    image: postgres:17
-    restart: always
-    environment:
-      POSTGRES_USER: hruser
-      POSTGRES_PASSWORD: hrpass
-      POSTGRES_DB: hrapp
-    ports:
-      - "5432:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    healthcheck:
-      test:
-        ["CMD-SHELL", "pg_isready -U hruser -d hrapp -h localhost || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
 volumes:
   db_data: {}
