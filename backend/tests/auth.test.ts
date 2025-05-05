@@ -188,7 +188,7 @@ describe("Auth Endpoints", () => {
 
       expect(res.status).toBe(200);
       expect(res.body.accessToken).toBeDefined();
-      expect(jwt.sign).toHaveBeenCalledTimes(2); // Once for access token, once for refresh token
+      expect(jwt.sign).toHaveBeenCalledTimes(2);
       expect(prisma.user.update).toHaveBeenCalledWith({
         where: { id: testUser.id },
         data: { refresh_token: "mock-token" },
@@ -205,12 +205,9 @@ describe("Auth Endpoints", () => {
     });
 
     it("should successfully logout when logged in", async () => {
-      // Setup a mock request with a refresh token cookie
       const mockRequest = request(app)
         .delete(logoutEndpoint)
         .set("Cookie", ["refreshToken=valid-refresh-token"]);
-
-      // Mock finding the user with the refresh token
       setupUserMock({
         ...testUser,
         refresh_token: "valid-refresh-token",
@@ -325,7 +322,7 @@ describe("Auth Endpoints", () => {
       setupUserMock({
         ...testUser,
         reset_token: validToken,
-        reset_token_expires: new Date(Date.now() + 3600000), // 1 hour in the future
+        reset_token_expires: new Date(Date.now() + 3600000),
       });
 
       const res = await request(app)

@@ -261,11 +261,11 @@ export const forgotPassword = async (
 
     // In a real application, you would send an email with a link containing the token
     // For example: `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`
-    console.log(`forgotPassword function\n-------------------------`);
-    console.log(`Reset token for ${email}: ${resetToken}`);
-    console.log(
-      `Reset link would be: http://localhost:5173/reset-password?token=${resetToken}`
-    );
+    // console.log(`forgotPassword function\n-------------------------`);
+    // console.log(`Reset token for ${email}: ${resetToken}`);
+    // console.log(
+    //   `Reset link would be: http://localhost:5173/reset-password?token=${resetToken}`
+    // );
 
     return res
       .status(200)

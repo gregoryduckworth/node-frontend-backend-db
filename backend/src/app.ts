@@ -23,8 +23,11 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/health", (_req: Request, res: Response) => {
+app.get("/health", (_req: Request, res: Response) => {
   res.status(200).json({ message: "OK" });
+});
+app.all("/health", (_req: Request, res: Response) => {
+  res.status(405).json({ error: "Method not allowed" });
 });
 
 app.use(UserRoute);
