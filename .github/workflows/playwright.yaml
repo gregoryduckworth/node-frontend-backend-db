@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  playwright-tests:
+    name: Playwright Tests
+    runs-on: ubuntu-latest
+
+    env:
+      DATABASE_URL: postgresql://hruser:hrpass@db:5432/hrapp
+      PORT: 5000
+      ACCESS_TOKEN_SECRET: github_actions_test_secret
+      REFRESH_TOKEN_SECRET: github_actions_test_refresh_secret
+      PLAYWRIGHT_BASE_URL: http://localhost:5173
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          cache-dependency-path: frontend/package.json
+
+      - name: Create backend .env
+        run: |
+          cat << EOF > ./backend/.env
+          DATABASE_URL=$DATABASE_URL
+          PORT=$PORT
+          ACCESS_TOKEN_SECRET=$ACCESS_TOKEN_SECRET
+          REFRESH_TOKEN_SECRET=$REFRESH_TOKEN_SECRET
+          EOF
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose version
+
+      - name: Start services
+        run: docker-compose up -d
+
+      - name: Install frontend deps
+        run: |
+          docker-compose exec -T frontend sh -c "npm ci"
+        working-directory: ./frontend
+
+      - name: Install Playwright browsers
+        run: |
+          docker-compose exec -T frontend sh -c "npx playwright install --with-deps"
+        working-directory: ./frontend
+
+      - name: Run Playwright tests
+        run: |
+          docker-compose exec -T frontend sh -c "npm run test:e2e"
+        working-directory: ./frontend
