@@ -1,9 +1,12 @@
 import request from "supertest";
 import app from "../src/app";
 import jwt from "jsonwebtoken";
+import { generateAccessToken } from "../src/controller/refreshToken";
 
 const originalConsoleError = console.error;
 console.error = jest.fn();
+
+const originalEnv = process.env;
 
 jest.mock("jsonwebtoken", () => ({
   sign: jest.fn().mockImplementation(() => "mocked-token"),
@@ -42,6 +45,9 @@ jest.mock("../prisma/client", () => {
               refresh_token: "expired-token",
             });
           }
+          if (params?.where?.refresh_token === "error-token") {
+            throw new Error("Database error");
+          }
           return Promise.resolve(null);
         }),
       },
@@ -50,8 +56,14 @@ jest.mock("../prisma/client", () => {
 });
 
 describe("Token Endpoint", () => {
+  beforeEach(() => {
+    process.env = { ...originalEnv };
+    jest.clearAllMocks();
+  });
+
   afterAll(() => {
     console.error = originalConsoleError;
+    process.env = originalEnv;
   });
 
   describe("GET /token", () => {
@@ -96,6 +108,98 @@ describe("Token Endpoint", () => {
       );
 
       (jwt.verify as jest.Mock).mockImplementation(originalVerify);
+    });
+
+    it("should return 500 when JWT secrets are not defined", async () => {
+      const originalAccessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+      const originalRefreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+
+      delete process.env.ACCESS_TOKEN_SECRET;
+      delete process.env.REFRESH_TOKEN_SECRET;
+
+      const res = await request(app)
+        .get("/token")
+        .set("Cookie", ["refreshToken=valid-refresh-token"]);
+
+      expect(res.status).toBe(500);
+      expect(console.error).toHaveBeenCalledWith(
+        "JWT secrets are not defined in environment variables"
+      );
+
+      process.env.ACCESS_TOKEN_SECRET = originalAccessTokenSecret;
+      process.env.REFRESH_TOKEN_SECRET = originalRefreshTokenSecret;
+    });
+
+    it("should handle unexpected server errors", async () => {
+      const res = await request(app)
+        .get("/token")
+        .set("Cookie", ["refreshToken=error-token"]);
+
+      expect(res.status).toBe(500);
+      expect(console.error).toHaveBeenCalledWith(
+        "Error refreshing token:",
+        expect.any(Error)
+      );
+    });
+
+    it("should handle malformed cookie", async () => {
+      const res = await request(app)
+        .get("/token")
+        .set("Cookie", ["refreshToken"]);
+
+      expect(res.status).toBe(204);
+    });
+  });
+
+  describe("generateAccessToken function", () => {
+    it("should generate a token with correct user information", () => {
+      const mockUser = {
+        id: "user-123",
+        firstName: "John",
+        lastName: "Doe",
+        email: "john@example.com",
+        dateOfBirth: new Date("1990-01-01"),
+      };
+
+      const token = generateAccessToken(mockUser, "test-secret");
+
+      expect(token).toBe("mocked-token");
+      expect(jwt.sign).toHaveBeenCalledWith(
+        {
+          id: mockUser.id,
+          firstName: mockUser.firstName,
+          lastName: mockUser.lastName,
+          email: mockUser.email,
+          dateOfBirth: mockUser.dateOfBirth.toISOString(),
+        },
+        "test-secret",
+        { expiresIn: "30m" }
+      );
+    });
+
+    it("should handle null dateOfBirth", () => {
+      const mockUser = {
+        id: "user-123",
+        firstName: "John",
+        lastName: "Doe",
+        email: "john@example.com",
+        dateOfBirth: null,
+      };
+
+      const token = generateAccessToken(mockUser, "test-secret");
+
+      expect(token).toBe("mocked-token");
+      expect(jwt.sign).toHaveBeenCalledWith(
+        {
+          id: mockUser.id,
+          firstName: mockUser.firstName,
+          lastName: mockUser.lastName,
+          email: mockUser.email,
+          dateOfBirth: null,
+        },
+        "test-secret",
+        { expiresIn: "30m" }
+      );
     });
   });
 });
