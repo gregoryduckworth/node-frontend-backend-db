@@ -39,7 +39,7 @@ const Login = () => {
 
   return (
     <GenericLayout title={t('auth.login')} subtitle={t('app.description')}>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleLogin} data-testid="login-form">
         <div className="grid gap-3">
           <Label htmlFor="email">{t('auth.email')}</Label>
           <Input
@@ -49,6 +49,7 @@ const Login = () => {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            data-testid="email-input"
           />
         </div>
 
@@ -60,19 +61,29 @@ const Login = () => {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            data-testid="password-input"
           />
           <div className="flex justify-end">
-            <Link to="/forgot-password" className="text-sm underline-offset-2 hover:underline">
+            <Link
+              to="/forgot-password"
+              className="text-sm underline-offset-2 hover:underline"
+              data-testid="forgot-password-link"
+            >
               {t('auth.forgotPassword')}
             </Link>
           </div>
         </div>
-        <Button type="submit" className="w-full mt-6" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          className="w-full mt-6"
+          disabled={isSubmitting}
+          data-testid="login-button"
+        >
           {isSubmitting ? t('common.loading') : t('auth.login')}
         </Button>
         <div className="text-center text-sm mt-6">
           {t('auth.dontHaveAccount')}{' '}
-          <Link to="/register" className="underline underline-offset-4">
+          <Link to="/register" className="underline underline-offset-4" data-testid="register-link">
             {t('auth.register')}
           </Link>
         </div>
