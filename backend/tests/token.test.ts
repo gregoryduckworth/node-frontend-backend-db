@@ -2,11 +2,10 @@ import request from "supertest";
 import app from "../src/app";
 import jwt from "jsonwebtoken";
 import { generateAccessToken } from "../src/controller/refreshToken";
+import { setupTestEnv, removeJwtSecrets } from "./utils/testEnv";
 
 const originalConsoleError = console.error;
 console.error = jest.fn();
-
-const originalEnv = process.env;
 
 jest.mock("jsonwebtoken", () => ({
   sign: jest.fn().mockImplementation(() => "mocked-token"),
@@ -56,14 +55,16 @@ jest.mock("../prisma/client", () => {
 });
 
 describe("Token Endpoint", () => {
+  // Use the centralized test environment setup
+  const restoreEnv = setupTestEnv();
+
   beforeEach(() => {
-    process.env = { ...originalEnv };
     jest.clearAllMocks();
   });
 
   afterAll(() => {
     console.error = originalConsoleError;
-    process.env = originalEnv;
+    restoreEnv();
   });
 
   describe("GET /token", () => {
@@ -111,11 +112,8 @@ describe("Token Endpoint", () => {
     });
 
     it("should return 500 when JWT secrets are not defined", async () => {
-      const originalAccessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-      const originalRefreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
-
-      delete process.env.ACCESS_TOKEN_SECRET;
-      delete process.env.REFRESH_TOKEN_SECRET;
+      // Use the centralized function to remove JWT secrets
+      removeJwtSecrets();
 
       const res = await request(app)
         .get("/token")
@@ -125,9 +123,6 @@ describe("Token Endpoint", () => {
       expect(console.error).toHaveBeenCalledWith(
         "JWT secrets are not defined in environment variables"
       );
-
-      process.env.ACCESS_TOKEN_SECRET = originalAccessTokenSecret;
-      process.env.REFRESH_TOKEN_SECRET = originalRefreshTokenSecret;
     });
 
     it("should handle unexpected server errors", async () => {
