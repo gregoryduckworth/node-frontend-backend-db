@@ -10,9 +10,9 @@ export class LoginPage extends BasePage {
   constructor(page: Page) {
     super(page);
     this.page = page;
-    this.emailInput = page.getByTestId('email-input');
-    this.passwordInput = page.getByTestId('password-input');
-    this.loginButton = page.getByTestId('login-button');
+    this.emailInput = page.getByRole('textbox', { name: 'Email' });
+    this.passwordInput = page.getByRole('textbox', { name: 'Password' });
+    this.loginButton = page.getByRole('button', { name: 'Login' });
   }
 
   async goto() {
