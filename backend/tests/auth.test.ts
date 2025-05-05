@@ -3,6 +3,7 @@ import app from "../src/app";
 import { prisma } from "../prisma/client";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { setupTestEnv, mockJwtSecrets } from "./utils/testEnv";
 
 // Mock Prisma client
 jest.mock("../prisma/client", () => {
@@ -60,8 +61,16 @@ const setupPasswordComparison = (isMatch = true) => {
 };
 
 describe("Auth Endpoints", () => {
+  // Setup environment for tests
+  const restoreEnv = setupTestEnv();
+
   beforeEach(() => {
     jest.clearAllMocks();
+    mockJwtSecrets();
+  });
+
+  afterAll(() => {
+    restoreEnv();
   });
 
   describe("POST /auth/register", () => {

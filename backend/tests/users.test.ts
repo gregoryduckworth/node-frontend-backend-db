@@ -2,6 +2,7 @@ import request from "supertest";
 import app from "../src/app";
 import bcrypt from "bcrypt";
 import { Request, Response, NextFunction } from "express";
+import { setupTestEnv, mockJwtSecrets } from "./utils/testEnv";
 
 jest.mock("../prisma/client", () => {
   const actual = jest.requireActual("../prisma/client");
@@ -115,9 +116,14 @@ jest.mock("../src/middlewares/verifyToken", () => ({
 console.log = jest.fn();
 
 describe("User Endpoints", () => {
+  // Setup test environment with centralized utilities
+  const restoreEnv = setupTestEnv();
   let originalGet: PropertyDescriptor | undefined;
 
   beforeEach(() => {
+    // Setup JWT secrets for all tests
+    mockJwtSecrets();
+
     originalGet = Object.getOwnPropertyDescriptor(Object.prototype, "cookies");
     Object.defineProperty(Object.prototype, "cookies", {
       get: function () {
@@ -136,6 +142,11 @@ describe("User Endpoints", () => {
     } else {
       delete (Object.prototype as any).cookies;
     }
+  });
+
+  afterAll(() => {
+    // Restore original environment
+    restoreEnv();
   });
 
   describe("GET /users", () => {
