@@ -40,8 +40,24 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
 
-      - name: Start services
-        run: docker-compose up -d
+      - name: Start services and show logs
+        run: |
+          # Start services in the background
+          docker-compose up -d
+
+          # Wait a moment for services to initialize
+          sleep 5
+
+          # Show logs for all services
+          docker-compose logs
+
+          # If you want to specifically check the backend logs
+          echo "======== BACKEND LOGS ========"
+          docker-compose logs backend
+
+          # Check container status
+          echo "======== CONTAINER STATUS ========"
+          docker-compose ps
 
       - name: Install frontend deps
         run: |
