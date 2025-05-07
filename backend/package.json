@@ -4,13 +4,13 @@
   "description": "",
   "main": "dist/index.js",
   "prisma": {
-    "schema": "/shared/prisma/schema.prisma"
+    "schema": "../shared/prisma/schema.prisma"
   },
   "scripts": {
     "build": "tsc",
     "start": "node -r tsconfig-paths/register dist/src/index.js",
     "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/index.ts",
-    "postinstall": "prisma generate --schema=/shared/prisma/schema.prisma",
+    "postinstall": "prisma generate --schema=../shared/prisma/schema.prisma",
     "test": "jest --passWithNoTests"
   },
   "keywords": [],
