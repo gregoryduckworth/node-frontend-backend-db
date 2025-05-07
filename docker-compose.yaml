@@ -3,16 +3,19 @@ services:
     image: postgres:17
     restart: always
     environment:
-      POSTGRES_USER: hruser
-      POSTGRES_PASSWORD: hrpass
-      POSTGRES_DB: hrapp
+      POSTGRES_USER: postgresuser
+      POSTGRES_PASSWORD: postgrespass
+      POSTGRES_DB: postgresdb
     ports:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
       test:
-        ["CMD-SHELL", "pg_isready -U hruser -d hrapp -h localhost || exit 1"]
+        [
+          "CMD-SHELL",
+          "pg_isready -U postgresuser -d postgresdb -h localhost || exit 1",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
