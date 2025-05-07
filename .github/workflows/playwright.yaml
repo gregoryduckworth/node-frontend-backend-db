@@ -45,6 +45,9 @@ jobs:
           # Start services in the background
           docker-compose up -d
 
+      - name: Logs
+        if: always()
+        run: |
           # Wait a moment for services to initialize
           sleep 5
 
