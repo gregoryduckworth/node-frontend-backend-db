@@ -19,8 +19,9 @@
       "@routes/*": ["src/routes/*"],
       "@types/*": ["src/types/*"],
       "@prismaClient/*": ["../shared/prisma/*"]
-    }
+    },
+    "types": ["jest", "node"]
   },
-  "include": ["src/**/*.ts", "../shared/prisma/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "../shared/prisma/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

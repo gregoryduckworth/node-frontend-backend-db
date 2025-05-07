@@ -3,84 +3,48 @@ import app from "../src/app";
 import { prisma } from "../../shared/prisma/client";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { setupTestEnv, mockJwtSecrets } from "./utils/testEnv";
+import {
+  testUsers,
+  credentials,
+  endpoints,
+  setupUserMock,
+  setupPasswordComparison,
+  setupTestSuite,
+} from "./helpers";
 
-// Mock Prisma client
 jest.mock("../../shared/prisma/client", () => {
   return {
-    prisma: {
-      user: {
-        findFirst: jest.fn(),
-        findUnique: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
-      },
-    },
+    prisma: jest.requireActual("./__mocks__/prismaMock").default,
   };
 });
 
-// Mock JWT
 jest.mock("jsonwebtoken", () => {
-  return {
-    sign: jest.fn().mockReturnValue("mock-token"),
-    verify: jest
-      .fn()
-      .mockReturnValue({ userId: "test-user-id", email: "test@example.com" }),
-  };
+  return jest.requireActual("./__mocks__/jwtMock").default;
 });
 
-// Mock bcrypt
 jest.mock("bcrypt", () => {
-  return {
-    genSalt: jest.fn().mockResolvedValue("salt"),
-    hash: jest.fn().mockResolvedValue("hashed-password"),
-    compare: jest.fn(),
-  };
+  return jest.requireActual("./__mocks__/bcryptMock").default;
 });
-
-// Test fixtures
-const testUser = {
-  id: "user-id",
-  firstName: "John",
-  lastName: "Doe",
-  email: "test@example.com",
-  password: "hashed-password",
-};
-
-const validPassword = "Password123";
-const invalidPassword = "password";
-const wrongPassword = "WrongPassword123";
-
-// Helper functions
-const setupUserMock = (user: any = null) => {
-  (prisma.user.findFirst as jest.Mock).mockResolvedValue(user);
-};
-
-const setupPasswordComparison = (isMatch = true) => {
-  (bcrypt.compare as jest.Mock).mockResolvedValue(isMatch);
-};
 
 describe("Auth Endpoints", () => {
-  // Setup environment for tests
-  const restoreEnv = setupTestEnv();
+  const cleanup = setupTestSuite();
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockJwtSecrets();
   });
 
   afterAll(() => {
-    restoreEnv();
+    cleanup();
   });
 
   describe("POST /auth/register", () => {
-    const registerEndpoint = "/auth/register";
+    const registerEndpoint = endpoints.auth.register;
     const validRegisterData = {
       firstName: "John",
       lastName: "Doe",
       email: "john@example.com",
-      password: validPassword,
-      confirmPassword: validPassword,
+      password: credentials.valid.password,
+      confirmPassword: credentials.valid.confirmPassword,
     };
 
     it("should fail with missing fields", async () => {
@@ -105,11 +69,13 @@ describe("Auth Endpoints", () => {
         .post(registerEndpoint)
         .send({
           ...validRegisterData,
-          password: invalidPassword,
-          confirmPassword: invalidPassword,
+          password: credentials.invalid.password,
+          confirmPassword: credentials.invalid.password,
         });
       expect(res.status).toBe(400);
-      expect(res.body.message).toMatch(/Password must contain/);
+      expect(res.body.message).toMatch(
+        /Password must be at least 8 characters long/
+      );
     });
 
     it("should fail if email already exists", async () => {
@@ -150,10 +116,10 @@ describe("Auth Endpoints", () => {
   });
 
   describe("POST /auth/login", () => {
-    const loginEndpoint = "/auth/login";
+    const loginEndpoint = endpoints.auth.login;
     const validLoginData = {
-      email: testUser.email,
-      password: validPassword,
+      email: testUsers.standard.email,
+      password: credentials.valid.password,
     };
 
     it("should fail with missing fields", async () => {
@@ -167,7 +133,7 @@ describe("Auth Endpoints", () => {
 
       const res = await request(app).post(loginEndpoint).send({
         email: "nonexistent@example.com",
-        password: validPassword,
+        password: credentials.valid.password,
       });
 
       expect(res.status).toBe(400);
@@ -175,14 +141,14 @@ describe("Auth Endpoints", () => {
     });
 
     it("should fail with incorrect password", async () => {
-      setupUserMock(testUser);
+      setupUserMock(testUsers.standard);
       setupPasswordComparison(false);
 
       const res = await request(app)
         .post(loginEndpoint)
         .send({
           ...validLoginData,
-          password: wrongPassword,
+          password: credentials.invalid.password,
         });
 
       expect(res.status).toBe(400);
@@ -190,7 +156,7 @@ describe("Auth Endpoints", () => {
     });
 
     it("should succeed with valid credentials", async () => {
-      setupUserMock(testUser);
+      setupUserMock(testUsers.standard);
       setupPasswordComparison(true);
 
       const res = await request(app).post(loginEndpoint).send(validLoginData);
@@ -199,14 +165,14 @@ describe("Auth Endpoints", () => {
       expect(res.body.accessToken).toBeDefined();
       expect(jwt.sign).toHaveBeenCalledTimes(2);
       expect(prisma.user.update).toHaveBeenCalledWith({
-        where: { id: testUser.id },
-        data: { refresh_token: "mock-token" },
+        where: { id: testUsers.standard.id },
+        data: { refresh_token: "mocked-token" },
       });
     });
   });
 
   describe("DELETE /auth/logout", () => {
-    const logoutEndpoint = "/auth/logout";
+    const logoutEndpoint = endpoints.auth.logout;
 
     it("should return 204 if not logged in", async () => {
       const res = await request(app).delete(logoutEndpoint);
@@ -218,7 +184,7 @@ describe("Auth Endpoints", () => {
         .delete(logoutEndpoint)
         .set("Cookie", ["refreshToken=valid-refresh-token"]);
       setupUserMock({
-        ...testUser,
+        ...testUsers.standard,
         refresh_token: "valid-refresh-token",
       });
 
@@ -226,14 +192,14 @@ describe("Auth Endpoints", () => {
       expect(res.status).toBe(200);
       expect(res.body.message).toBe("OK");
       expect(prisma.user.update).toHaveBeenCalledWith({
-        where: { id: testUser.id },
+        where: { id: testUsers.standard.id },
         data: { refresh_token: null },
       });
     });
   });
 
   describe("POST /auth/forgot-password", () => {
-    const forgotPasswordEndpoint = "/auth/forgot-password";
+    const forgotPasswordEndpoint = endpoints.auth.forgotPassword;
 
     it("should fail with missing email", async () => {
       const res = await request(app).post(forgotPasswordEndpoint).send({});
@@ -256,10 +222,10 @@ describe("Auth Endpoints", () => {
     });
 
     it("should generate reset token for existing user", async () => {
-      setupUserMock(testUser);
+      setupUserMock(testUsers.standard);
 
       const res = await request(app).post(forgotPasswordEndpoint).send({
-        email: testUser.email,
+        email: testUsers.standard.email,
       });
 
       expect(res.status).toBe(200);
@@ -267,7 +233,7 @@ describe("Auth Endpoints", () => {
         "Password reset instructions sent to your email"
       );
       expect(jwt.sign).toHaveBeenCalledWith(
-        { userId: testUser.id, email: testUser.email },
+        { userId: testUsers.standard.id, email: testUsers.standard.email },
         expect.any(String),
         { expiresIn: "1h" }
       );
@@ -276,8 +242,8 @@ describe("Auth Endpoints", () => {
   });
 
   describe("POST /auth/reset-password", () => {
-    const resetPasswordEndpoint = "/auth/reset-password";
-    const validToken = "valid-token";
+    const resetPasswordEndpoint = endpoints.auth.resetPassword;
+    const validToken = "valid-reset-token";
     const newPassword = "NewPassword123";
     const validResetData = {
       token: validToken,
@@ -329,7 +295,7 @@ describe("Auth Endpoints", () => {
 
     it("should successfully reset password with valid token and data", async () => {
       setupUserMock({
-        ...testUser,
+        ...testUsers.standard,
         reset_token: validToken,
         reset_token_expires: new Date(Date.now() + 3600000),
       });
@@ -342,7 +308,7 @@ describe("Auth Endpoints", () => {
       expect(res.body.message).toBe("Password has been reset successfully");
       expect(bcrypt.hash).toHaveBeenCalledWith(newPassword, "salt");
       expect(prisma.user.update).toHaveBeenCalledWith({
-        where: { id: testUser.id },
+        where: { id: testUsers.standard.id },
         data: {
           password: "hashed-password",
           reset_token: null,

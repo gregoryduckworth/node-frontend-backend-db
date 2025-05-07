@@ -1,6 +1,12 @@
 /**
  * Test environment utilities for managing environment variables during tests
  */
+import { resetJwtMock } from "../__mocks__/jwtMock";
+import { resetBcryptMock } from "../__mocks__/bcryptMock";
+import {
+  resetPrismaMock,
+  setupStandardUserMockImplementations,
+} from "../__mocks__/prismaMock";
 
 // Store the original environment for restoration
 const originalEnv = process.env;
@@ -71,4 +77,27 @@ export const mockCommonEnvVars = (vars: Record<string, string>) => {
   Object.entries(vars).forEach(([key, value]) => {
     process.env[key] = value;
   });
+};
+
+/**
+ * Comprehensive test setup that configures all common mocks
+ * Returns a cleanup function to be used in afterEach or afterAll
+ */
+export const setupTestSuite = () => {
+  // Setup environment
+  const restoreEnv = setupTestEnv();
+
+  // Mock JWT secrets
+  mockJwtSecrets();
+
+  // Setup standard user mock implementations
+  setupStandardUserMockImplementations();
+
+  // Return cleanup function
+  return () => {
+    resetJwtMock();
+    resetBcryptMock();
+    resetPrismaMock();
+    restoreEnv();
+  };
 };

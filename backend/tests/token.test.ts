@@ -2,61 +2,23 @@ import request from "supertest";
 import app from "../src/app";
 import jwt from "jsonwebtoken";
 import { generateAccessToken } from "../src/controller/refreshToken";
-import { setupTestEnv, removeJwtSecrets } from "./utils/testEnv";
+import { setupTestSuite, removeJwtSecrets } from "./helpers";
 
 const originalConsoleError = console.error;
 console.error = jest.fn();
 
-jest.mock("jsonwebtoken", () => ({
-  sign: jest.fn().mockImplementation(() => "mocked-token"),
-  verify: jest.fn().mockImplementation((token, secret) => {
-    if (token === "valid-refresh-token") {
-      return {
-        userId: "test-user-id",
-        email: "test@example.com",
-        id: "test-user-id",
-        firstName: "Test",
-        lastName: "User",
-      };
-    }
-    throw new Error("Invalid token");
-  }),
-}));
-
 jest.mock("../../shared/prisma/client", () => {
   return {
-    prisma: {
-      user: {
-        findFirst: jest.fn().mockImplementation((params) => {
-          if (params?.where?.refresh_token === "valid-refresh-token") {
-            return Promise.resolve({
-              id: "test-user-id",
-              firstName: "Test",
-              lastName: "User",
-              email: "test@example.com",
-              refresh_token: "valid-refresh-token",
-              dateOfBirth: null,
-            });
-          }
-          if (params?.where?.refresh_token === "expired-token") {
-            return Promise.resolve({
-              id: "test-user-id",
-              refresh_token: "expired-token",
-            });
-          }
-          if (params?.where?.refresh_token === "error-token") {
-            throw new Error("Database error");
-          }
-          return Promise.resolve(null);
-        }),
-      },
-    },
+    prisma: jest.requireActual("./__mocks__/prismaMock").default,
   };
 });
 
+jest.mock("jsonwebtoken", () => {
+  return jest.requireActual("./__mocks__/jwtMock").default;
+});
+
 describe("Token Endpoint", () => {
-  // Use the centralized test environment setup
-  const restoreEnv = setupTestEnv();
+  const cleanup = setupTestSuite();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -64,7 +26,7 @@ describe("Token Endpoint", () => {
 
   afterAll(() => {
     console.error = originalConsoleError;
-    restoreEnv();
+    cleanup();
   });
 
   describe("GET /token", () => {
