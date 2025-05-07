@@ -24,6 +24,7 @@ services:
       - ./backend:/app
       - ./shared:/shared
       - /app/node_modules
+      - /shared/node_modules
     env_file:
       - ./backend/.env
     environment:
@@ -31,8 +32,9 @@ services:
     ports:
       - "5000:5000"
     command: >
-      sh -c "npm install &&
-             npx prisma generate --schema=../shared/prisma/schema.prisma &&
+      sh -c "cd /shared && npm install &&
+             cd /app && npm install &&
+             npx prisma generate --schema=../shared/prisma/schema.prisma --generator-output=../node_modules/@prisma/client &&
              npx prisma db push --schema=../shared/prisma/schema.prisma &&
              npm run dev"
     depends_on:
