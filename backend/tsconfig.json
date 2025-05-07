@@ -21,6 +21,7 @@
       "@prismaClient/*": ["prisma/*"]
     }
   },
-  "include": ["src/**/*.ts", "prisma/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "types": ["jest", "node"],
   "exclude": ["node_modules", "dist"]
 }
