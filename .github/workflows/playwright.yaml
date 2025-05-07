@@ -45,7 +45,7 @@ jobs:
 
       - name: Install frontend deps
         run: |
-          docker-compose exec -T frontend sh -c "npm ci"
+          docker-compose exec -T frontend sh -c "npm ci --platform=linux --arch=x64"
         working-directory: ./frontend
 
       - name: Install Playwright
