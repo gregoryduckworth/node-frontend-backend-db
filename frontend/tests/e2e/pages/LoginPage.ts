@@ -23,6 +23,5 @@ export class LoginPage extends BasePage {
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);
     await this.loginButton.click();
-    await this.page.waitForResponse((response) => response.url().includes('/api/auth/login'));
   }
 }
