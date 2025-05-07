@@ -48,9 +48,14 @@ jobs:
           docker-compose exec -T frontend sh -c "npm ci"
         working-directory: ./frontend
 
-      - name: Install Playwright browsers
+      - name: Install Playwright
         run: |
-          docker-compose exec -T frontend sh -c "npx playwright install --with-deps"
+          docker-compose exec -T frontend sh -c "npx playwright install"
+        working-directory: ./frontend
+
+      - name: Install Playwright dependencies
+        run: |
+          docker-compose exec -T frontend sh -c "npx playwright install-deps chromium"
         working-directory: ./frontend
 
       - name: Run Playwright tests
