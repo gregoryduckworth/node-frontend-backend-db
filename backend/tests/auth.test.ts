@@ -1,12 +1,12 @@
 import request from "supertest";
 import app from "../src/app";
-import { prisma } from "../prisma/client";
+import { prisma } from "../../shared/prisma/client";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { setupTestEnv, mockJwtSecrets } from "./utils/testEnv";
 
 // Mock Prisma client
-jest.mock("../prisma/client", () => {
+jest.mock("../../shared/prisma/client", () => {
   return {
     prisma: {
       user: {

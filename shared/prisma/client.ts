@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import type { Prisma } from "@prisma/client";
 
 function normalizeFields(
   configs: Array<{
@@ -7,7 +6,7 @@ function normalizeFields(
     field: string;
     transformFn: (val: string) => string;
   }>
-): Prisma.Middleware {
+): (params: any, next: (params: any) => Promise<any>) => Promise<any> {
   return async (params, next) => {
     configs.forEach(({ model, field, transformFn }) => {
       if (params.model === model) {

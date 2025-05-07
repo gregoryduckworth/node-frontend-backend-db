@@ -23,7 +23,7 @@ jest.mock("jsonwebtoken", () => ({
   }),
 }));
 
-jest.mock("../prisma/client", () => {
+jest.mock("../../shared/prisma/client", () => {
   return {
     prisma: {
       user: {

@@ -4,11 +4,8 @@ import bcrypt from "bcrypt";
 import { Request, Response, NextFunction } from "express";
 import { setupTestEnv, mockJwtSecrets } from "./utils/testEnv";
 
-jest.mock("../prisma/client", () => {
-  const actual = jest.requireActual("../prisma/client");
-
+jest.mock("../../shared/prisma/client", () => {
   return {
-    ...actual,
     prisma: {
       user: {
         findMany: jest.fn().mockResolvedValue([]),

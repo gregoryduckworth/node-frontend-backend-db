@@ -9,7 +9,7 @@ module.exports = {
     "^@middlewares/(.*)$": "<rootDir>/src/middlewares/$1",
     "^@routes/(.*)$": "<rootDir>/src/routes/$1",
     "^@types/(.*)$": "<rootDir>/src/types/$1",
-    "^@prismaClient/(.*)$": "<rootDir>/prisma/$1",
+    "^@prismaClient/(.*)$": "<rootDir>/../shared/prisma/$1",
   },
   setupFiles: ["dotenv/config"],
 };

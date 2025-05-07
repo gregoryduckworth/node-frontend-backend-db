@@ -10,7 +10,7 @@
     "sourceMap": true,
     "declaration": true,
     "resolveJsonModule": true,
-    "rootDir": ".",
+    "rootDir": "..",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
@@ -18,9 +18,9 @@
       "@middlewares/*": ["src/middlewares/*"],
       "@routes/*": ["src/routes/*"],
       "@types/*": ["src/types/*"],
-      "@prismaClient/*": ["prisma/*"]
+      "@prismaClient/*": ["../shared/prisma/*"]
     }
   },
-  "include": ["src/**/*.ts", "prisma/**/*.ts"],
+  "include": ["src/**/*.ts", "../shared/prisma/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
