@@ -23,10 +23,6 @@
     "toggle": "Toggle",
     "saving": "Saving..."
   },
-  "languages": {
-    "en": "English",
-    "es": "Spanish"
-  },
   "login": {
     "title": "Login"
   },
