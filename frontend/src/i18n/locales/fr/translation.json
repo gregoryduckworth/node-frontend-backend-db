@@ -23,11 +23,6 @@
     "toggle": "Basculer",
     "saving": "Enregistrement..."
   },
-  "languages": {
-    "en": "Anglais",
-    "es": "Espagnol",
-    "fr": "Français"
-  },
   "login": {
     "title": "Connexion"
   },
