@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import UserRoute from "@routes/UserRoute";
+import TestRoute from "@routes/TestRoute";
 
 dotenv.config();
 
@@ -31,5 +32,9 @@ app.all("/health", (_req: Request, res: Response) => {
 });
 
 app.use(UserRoute);
+
+if (process.env.NODE_ENV !== "production") {
+  app.use(TestRoute);
+}
 
 export default app;
