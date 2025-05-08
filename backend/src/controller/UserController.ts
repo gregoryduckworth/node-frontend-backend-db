@@ -9,6 +9,20 @@ if (!accessTokenSecret || !refreshTokenSecret) {
   throw new Error("JWT secrets are not defined in environment variables");
 }
 
+const getCookieOptions = () => ({
+  httpOnly: true,
+  maxAge: 24 * 60 * 60 * 1000,
+  path: "/",
+});
+
+const clearRefreshTokenCookie = (res: Response) => {
+  res.clearCookie("refreshToken", getCookieOptions());
+};
+
+const setRefreshTokenCookie = (res: Response, token: string) => {
+  res.cookie("refreshToken", token, getCookieOptions());
+};
+
 const validatePassword = (
   password: string
 ): { isValid: boolean; message?: string } => {
@@ -33,6 +47,20 @@ const validatePassword = (
   return { isValid: true };
 };
 
+const handleError = (res: Response, error: any, status = 400) => {
+  console.log(error);
+  return res.sendStatus(status);
+};
+
+const requireFields = (body: any, fields: string[]): string | null => {
+  for (const field of fields) {
+    if (!body[field]) {
+      return field;
+    }
+  }
+  return null;
+};
+
 export const getAllUsers = async (
   req: Request,
   res: Response
@@ -43,8 +71,7 @@ export const getAllUsers = async (
     });
     return res.status(200).json(users);
   } catch (error) {
-    console.log(error);
-    return res.sendStatus(400);
+    return handleError(res, error);
   }
 };
 
@@ -61,8 +88,7 @@ export const getUserById = async (
     if (!user) return res.status(404).json({ message: "User not found" });
     return res.status(200).json(user);
   } catch (error) {
-    console.log(error);
-    return res.sendStatus(400);
+    return handleError(res, error);
   }
 };
 
@@ -71,16 +97,20 @@ export const register = async (
   res: Response
 ): Promise<Response> => {
   try {
+    const missing = requireFields(req.body, [
+      "firstName",
+      "lastName",
+      "email",
+      "password",
+      "confirmPassword",
+    ]);
+    if (missing)
+      return res
+        .status(400)
+        .json({
+          message: `${missing.charAt(0).toUpperCase() + missing.slice(1)} is required`,
+        });
     const { firstName, lastName, email, password, confirmPassword } = req.body;
-    if (!firstName)
-      return res.status(400).json({ message: "First name is required" });
-    if (!lastName)
-      return res.status(400).json({ message: "Last name is required" });
-    if (!email) return res.status(400).json({ message: "Email is required" });
-    if (!password)
-      return res.status(400).json({ message: "Password is required" });
-    if (!confirmPassword)
-      return res.status(400).json({ message: "Confirm Password is required" });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Password doesn't match" });
 
@@ -99,17 +129,20 @@ export const register = async (
     });
     return res.status(201).json({ message: "Register Successful" });
   } catch (error) {
-    console.log(error);
-    return res.sendStatus(400);
+    return handleError(res, error);
   }
 };
 
 export const login = async (req: Request, res: Response): Promise<Response> => {
   try {
+    const missing = requireFields(req.body, ["email", "password"]);
+    if (missing)
+      return res
+        .status(400)
+        .json({
+          message: `${missing.charAt(0).toUpperCase() + missing.slice(1)} is required`,
+        });
     const { email, password } = req.body;
-    if (!email) return res.status(400).json({ message: "Email is required" });
-    if (!password)
-      return res.status(400).json({ message: "Password is required" });
     const user = await prisma.user.findFirst({ where: { email } });
     if (!user) return res.status(400).json({ message: "Email not found" });
     const isMatched = await bcrypt.compare(password, user.password);
@@ -146,14 +179,10 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
       where: { id: user.id },
       data: { refresh_token: refreshToken },
     });
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
+    setRefreshTokenCookie(res, refreshToken);
     return res.status(200).json({ accessToken });
   } catch (error) {
-    console.log(error);
-    return res.sendStatus(400);
+    return handleError(res, error);
   }
 };
 
@@ -201,8 +230,7 @@ export const updateUser = async (
     });
     return res.status(200).json({ message: "User updated" });
   } catch (error) {
-    console.log(error);
-    return res.sendStatus(400);
+    return handleError(res, error);
   }
 };
 
@@ -221,11 +249,10 @@ export const logout = async (
       where: { id: user.id },
       data: { refresh_token: null },
     });
-    res.clearCookie("refreshToken");
+    clearRefreshTokenCookie(res);
     return res.status(200).json({ message: "OK" });
   } catch (error) {
-    console.log(error);
-    return res.sendStatus(400);
+    return handleError(res, error);
   }
 };
 
@@ -271,8 +298,7 @@ export const forgotPassword = async (
       .status(200)
       .json({ message: "Password reset instructions sent to your email" });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Server error" });
+    return handleError(res, error, 500);
   }
 };
 
@@ -333,7 +359,6 @@ export const resetPassword = async (
       .status(200)
       .json({ message: "Password has been reset successfully" });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Server error" });
+    return handleError(res, error, 500);
   }
 };

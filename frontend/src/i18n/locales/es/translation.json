@@ -87,6 +87,8 @@
     "lastName": "Apellido",
     "dateOfBirth": "Fecha de Nacimiento",
     "dateOfBirthPlaceholder": "Selecciona tu fecha de nacimiento",
+    "firstNamePlaceholder": "Ingresa tu nombre",
+    "lastNamePlaceholder": "Ingresa tu apellido",
     "errors": {
       "emailNotRegistered": "El correo electrónico no está registrado. Por favor, regístrese primero.",
       "invalidCredentials": "Correo o contraseña inválidos",
