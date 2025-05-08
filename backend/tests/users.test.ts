@@ -191,7 +191,7 @@ describe("User Endpoints", () => {
       });
 
       expect(res.status).toBe(400);
-      expect(res.body).toHaveProperty("message", "Email not found");
+      expect(res.body).toHaveProperty("message", "Invalid email or password");
     });
 
     it("should fail with incorrect password", async () => {
@@ -204,7 +204,7 @@ describe("User Endpoints", () => {
       });
 
       expect(res.status).toBe(400);
-      expect(res.body).toHaveProperty("message", "Password is wrong");
+      expect(res.body).toHaveProperty("message", "Invalid email or password");
 
       // Reset password comparison to default behavior
       setupPasswordComparison(true);

@@ -87,7 +87,7 @@
     "lastNamePlaceholder": "Ingresa tu apellido",
     "errors": {
       "emailNotRegistered": "El correo electrónico no está registrado. Por favor, regístrese primero.",
-      "invalidCredentials": "Correo o contraseña inválidos",
+      "invalidCredentials": "Correo electrónico o contraseña inválidos.",
       "accountLocked": "Su cuenta está bloqueada. Por favor contacte a soporte.",
       "serverError": "Error del servidor. Por favor intente más tarde."
     }

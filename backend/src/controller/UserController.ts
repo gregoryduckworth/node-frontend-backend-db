@@ -52,15 +52,6 @@ const handleError = (res: Response, error: any, status = 400) => {
   return res.sendStatus(status);
 };
 
-const requireFields = (body: any, fields: string[]): string | null => {
-  for (const field of fields) {
-    if (!body[field]) {
-      return field;
-    }
-  }
-  return null;
-};
-
 export const getAllUsers = async (
   req: Request,
   res: Response
@@ -97,20 +88,16 @@ export const register = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const missing = requireFields(req.body, [
-      "firstName",
-      "lastName",
-      "email",
-      "password",
-      "confirmPassword",
-    ]);
-    if (missing)
-      return res
-        .status(400)
-        .json({
-          message: `${missing.charAt(0).toUpperCase() + missing.slice(1)} is required`,
-        });
     const { firstName, lastName, email, password, confirmPassword } = req.body;
+    if (!firstName)
+      return res.status(400).json({ message: "First name is required" });
+    if (!lastName)
+      return res.status(400).json({ message: "Last name is required" });
+    if (!email) return res.status(400).json({ message: "Email is required" });
+    if (!password)
+      return res.status(400).json({ message: "Password is required" });
+    if (!confirmPassword)
+      return res.status(400).json({ message: "Confirm Password is required" });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Password doesn't match" });
 
@@ -135,19 +122,16 @@ export const register = async (
 
 export const login = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const missing = requireFields(req.body, ["email", "password"]);
-    if (missing)
-      return res
-        .status(400)
-        .json({
-          message: `${missing.charAt(0).toUpperCase() + missing.slice(1)} is required`,
-        });
     const { email, password } = req.body;
+    if (!email) return res.status(400).json({ message: "Email is required" });
+    if (!password)
+      return res.status(400).json({ message: "Password is required" });
     const user = await prisma.user.findFirst({ where: { email } });
-    if (!user) return res.status(400).json({ message: "Email not found" });
-    const isMatched = await bcrypt.compare(password, user.password);
-    if (!isMatched)
-      return res.status(400).json({ message: "Password is wrong" });
+    const isMatched = user
+      ? await bcrypt.compare(password, user.password)
+      : false;
+    if (!user || !isMatched)
+      return res.status(400).json({ message: "Invalid email or password" });
 
     const dateOfBirthFormatted = user.dateOfBirth
       ? user.dateOfBirth.toISOString()
