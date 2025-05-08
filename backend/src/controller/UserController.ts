@@ -2,12 +2,9 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { prisma } from "@prismaClient/client";
+import { getJwtSecrets } from "../utils/jwtSecrets";
 
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
-if (!accessTokenSecret || !refreshTokenSecret) {
-  throw new Error("JWT secrets are not defined in environment variables");
-}
+const { accessTokenSecret, refreshTokenSecret } = getJwtSecrets();
 
 const getCookieOptions = () => ({
   httpOnly: true,

@@ -83,7 +83,8 @@ describe("Token Endpoint", () => {
 
       expect(res.status).toBe(500);
       expect(console.error).toHaveBeenCalledWith(
-        "JWT secrets are not defined in environment variables"
+        "Error refreshing token:",
+        expect.any(Error)
       );
     });
 
