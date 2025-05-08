@@ -1,8 +1,10 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { RegisterPage } from '../pages/RegisterPage';
+import { resetDb } from '../resetDb';
 
 test.describe('Register Page', () => {
   test.beforeEach(async ({ page }) => {
+    await resetDb();
     const registerPage = new RegisterPage(page);
     await registerPage.goto();
   });
@@ -19,5 +21,7 @@ test.describe('Register Page', () => {
     const registerPage = new RegisterPage(page);
     await registerPage.attemptRegister('Test', 'User', 'test@example.com', 'Password123');
     await registerPage.registerButton.click();
+    await registerPage.checkToastMessage('Registration successful');
+    await expect(page).toHaveURL(/\/login/);
   });
 });
