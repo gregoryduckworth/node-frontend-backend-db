@@ -87,7 +87,7 @@
     "emailPlaceholder": "Entrez votre e-mail",
     "errors": {
       "emailNotRegistered": "L'e-mail n'est pas enregistré. Veuillez vous inscrire d'abord.",
-      "invalidCredentials": "E-mail ou mot de passe invalide",
+      "invalidCredentials": "E-mail ou mot de passe invalide.",
       "accountLocked": "Votre compte est verrouillé. Veuillez contacter le support.",
       "serverError": "Erreur du serveur. Veuillez réessayer plus tard."
     }

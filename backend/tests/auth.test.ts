@@ -137,7 +137,7 @@ describe("Auth Endpoints", () => {
       });
 
       expect(res.status).toBe(400);
-      expect(res.body.message).toBe("Email not found");
+      expect(res.body.message).toBe("Invalid email or password");
     });
 
     it("should fail with incorrect password", async () => {
@@ -152,7 +152,7 @@ describe("Auth Endpoints", () => {
         });
 
       expect(res.status).toBe(400);
-      expect(res.body.message).toBe("Password is wrong");
+      expect(res.body.message).toBe("Invalid email or password");
     });
 
     it("should succeed with valid credentials", async () => {
