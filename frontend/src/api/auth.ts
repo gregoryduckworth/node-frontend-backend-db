@@ -42,8 +42,11 @@ export const refreshToken = async (): Promise<AuthResponse | { accessToken?: str
     return await apiClient<AuthResponse>(API_ENDPOINTS.REFRESH_TOKEN, {
       includeCredentials: true,
     });
-  } catch (error) {
-    console.error('Network error during token refresh:', error);
+  } catch (error: any) {
+    const status = error?.response?.status;
+    if (status !== 204 && status !== 403) {
+      console.error('Network error during token refresh:', error);
+    }
     return { accessToken: undefined };
   }
 };
