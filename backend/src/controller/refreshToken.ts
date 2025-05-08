@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { prisma } from "@prismaClient/client";
+import { getJwtSecrets } from "../utils/jwtSecrets";
 
 export const generateAccessToken = (user: any, secret: string) => {
   return jwt.sign(
@@ -33,13 +34,7 @@ export const refreshToken = async (
       return res.sendStatus(403);
     }
 
-    const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
-    const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-
-    if (!refreshTokenSecret || !accessTokenSecret) {
-      console.error("JWT secrets are not defined in environment variables");
-      return res.sendStatus(500);
-    }
+    const { refreshTokenSecret, accessTokenSecret } = getJwtSecrets();
 
     try {
       jwt.verify(refreshToken, refreshTokenSecret);
