@@ -1,5 +1,5 @@
-import { useNotificationStore } from '@/store/useNotificationStore';
-import { NotificationType } from '@/types/notification';
+import { useNotificationStore } from '@/features/notification/useNotificationStore';
+import { NotificationType } from '@/features/notification/types';
 
 /**
  * Handles API errors and shows a notification to the user.

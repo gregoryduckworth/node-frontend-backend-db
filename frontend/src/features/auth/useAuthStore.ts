@@ -5,7 +5,7 @@ import {
   logout as logoutApi,
   refreshToken as refreshTokenApi,
   updateProfile as updateProfileApi,
-} from '@/api/auth';
+} from './authApi';
 
 interface JwtPayload {
   id: string;
@@ -41,7 +41,6 @@ interface AuthState {
   ) => Promise<void>;
 }
 
-// Persist auth state in localStorage
 const AUTH_STORAGE_KEY = 'authState';
 
 function loadPersistedAuth() {
@@ -60,7 +59,6 @@ function persistAuthState(state: Partial<AuthState>) {
   } catch {}
 }
 
-// Utility for picking only the relevant auth state fields
 function pickAuthState(state: Partial<AuthState>): Partial<AuthState> {
   return {
     token: state.token,
@@ -75,7 +73,6 @@ function pickAuthState(state: Partial<AuthState>): Partial<AuthState> {
 }
 
 export const useAuthStore = create<AuthState>((set, get) => {
-  // Load persisted state, fallback to defaults
   const persisted = loadPersistedAuth() || {
     token: '',
     firstName: '',

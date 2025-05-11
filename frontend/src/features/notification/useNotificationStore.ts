@@ -1,14 +1,20 @@
+// This file was moved from src/store/useNotificationStore.ts as part of the feature-based refactor.
+// All notification state logic should live here.
+
 import { create } from 'zustand';
 import { toast } from 'sonner';
-import { NotificationType } from '@/types/notification';
+import { NotificationType } from './types';
+
+export type { NotificationType };
 
 export interface Notification {
   id: string;
   message: string;
   type: NotificationType;
+  testId?: string; // Added for testing purposes
 }
 
-export interface NotificationState {
+interface NotificationState {
   notifications: Notification[];
   addNotification: (message: string, type: NotificationType) => void;
   removeNotification: (id: string) => void;
@@ -50,17 +56,17 @@ export const useNotificationStore = create<NotificationState>((set, get) => {
         const id = generateId();
         switch (type) {
           case NotificationType.SUCCESS:
-            toast.success(message);
+            toast.success(message, { id });
             break;
           case NotificationType.ERROR:
-            toast.error(message);
+            toast.error(message, { id });
             break;
           case NotificationType.WARNING:
-            toast.warning(message);
+            toast.warning(message, { id });
             break;
           case NotificationType.INFO:
           default:
-            toast.info(message);
+            toast.info(message, { id });
             break;
         }
         const newState = {

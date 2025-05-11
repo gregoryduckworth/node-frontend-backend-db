@@ -7,7 +7,7 @@ import ForgotPassword from '@/pages/generic/ForgotPassword';
 import ResetPassword from '@/pages/generic/ResetPassword';
 import Profile from '@/pages/authenticated/Profile';
 import { Toaster } from '@/components/ui/sonner';
-import { useAuthStore } from '@/store/useAuthStore';
+import { useAuthStore } from '@/features/auth/useAuthStore';
 import { ROUTES } from '@/config/auth';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
