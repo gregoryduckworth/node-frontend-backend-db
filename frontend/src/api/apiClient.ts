@@ -1,28 +1,5 @@
 import { handleApiError } from './handleApiError';
-
-export type ApiErrorResponse = {
-  response: {
-    data: any;
-    status: number;
-    statusText?: string;
-  };
-  message?: string;
-};
-
-interface RequestOptions {
-  method?: string;
-  headers?: Record<string, string>;
-  body?: any;
-  includeCredentials?: boolean;
-  timeout?: number;
-  skipCache?: boolean;
-  cacheTime?: number;
-}
-
-interface CacheItem<T> {
-  data: T;
-  expiry: number;
-}
+import type { ApiErrorResponse, RequestOptions, CacheItem } from './types';
 
 const cache = new Map<string, CacheItem<any>>();
 
