@@ -163,5 +163,10 @@
     "profileUpdated": "Tu perfil ha sido actualizado exitosamente",
     "updateError": "Error al actualizar el perfil",
     "dateOfBirthNeeded": "Por favor establece tu fecha de nacimiento"
+  },
+  "errorBoundary": {
+    "title": "Algo salió mal",
+    "description": "Ocurrió un error inesperado. Por favor, intenta recargar la página. {{error}}",
+    "reload": "Recargar página"
   }
 }

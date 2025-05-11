@@ -19,15 +19,11 @@ export const register = async (
 };
 
 export const login = async (email: string, password: string): Promise<AuthResponse> => {
-  try {
-    return apiClient<AuthResponse>(API_ENDPOINTS.LOGIN, {
-      method: 'POST',
-      body: { email, password },
-      includeCredentials: true,
-    });
-  } catch (error) {
-    throw error;
-  }
+  return apiClient<AuthResponse>(API_ENDPOINTS.LOGIN, {
+    method: 'POST',
+    body: { email, password },
+    includeCredentials: true,
+  });
 };
 
 export const logout = async (): Promise<{ message: string }> => {
