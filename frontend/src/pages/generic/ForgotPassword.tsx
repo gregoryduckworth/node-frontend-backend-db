@@ -1,9 +1,9 @@
 import { useState, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { requestPasswordReset } from '@/api/auth';
-import { useNotificationStore } from '@/store/useNotificationStore';
-import { NotificationType } from '@/types/notification';
+import { requestPasswordReset } from '@/features/auth/authApi';
+import { useNotificationStore } from '@/features/notification/useNotificationStore';
+import { NotificationType } from '@/features/notification/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

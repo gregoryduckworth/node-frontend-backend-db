@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuthStore } from '@/store/useAuthStore';
-import { useNotificationStore } from '@/store/useNotificationStore';
+import { useAuthStore } from '@/features/auth/useAuthStore';
+import { useNotificationStore } from '@/features/notification/useNotificationStore';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthenticatedLayout from '@/components/layouts/AuthenticatedLayout';
-import { NotificationType } from '@/types/notification';
+import { NotificationType } from '@/features/notification/types';
 import useTitle from '@/hooks/use-title';
 
 const Profile = () => {

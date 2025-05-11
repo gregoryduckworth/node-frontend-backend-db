@@ -1,7 +1,7 @@
 import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles, User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { NotificationType } from '@/types/notification';
+import { NotificationType } from '@/features/notification/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -17,8 +17,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { useAuthStore } from '@/store/useAuthStore';
-import { useNotificationStore } from '@/store/useNotificationStore';
+import { useAuthStore } from '@/features/auth/useAuthStore';
+import { useNotificationStore } from '@/features/notification/useNotificationStore';
 import { ROUTES } from '@/config/auth';
 import { DropdownMenuGroup } from '@radix-ui/react-dropdown-menu';
 
