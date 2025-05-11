@@ -42,6 +42,13 @@ export const clearCache = (url?: string): void => {
   }
 };
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+
+function withBaseUrl(endpoint: string): string {
+  if (endpoint.startsWith('http')) return endpoint;
+  return API_BASE_URL.replace(/\/$/, '') + (endpoint.startsWith('/') ? endpoint : '/' + endpoint);
+}
+
 export const apiClient = async <T>(url: string, options: RequestOptions = {}): Promise<T> => {
   const {
     method = 'GET',
@@ -53,8 +60,10 @@ export const apiClient = async <T>(url: string, options: RequestOptions = {}): P
     cacheTime = 5 * 60 * 1000,
   } = options;
 
+  const fullUrl = withBaseUrl(url);
+
   if (method === 'GET' && !skipCache) {
-    const cacheKey = createCacheKey(url, options);
+    const cacheKey = createCacheKey(fullUrl, options);
     const cachedItem = cache.get(cacheKey);
 
     if (cachedItem && cachedItem.expiry > Date.now()) {
@@ -72,12 +81,12 @@ export const apiClient = async <T>(url: string, options: RequestOptions = {}): P
         'Content-Type': 'application/json',
         ...headers,
       },
-      ...(includeCredentials ? { credentials: 'include' } : {}),
+      credentials: includeCredentials ? 'include' : 'same-origin',
       ...(body ? { body: JSON.stringify(body) } : {}),
       signal: controller.signal,
     };
 
-    const response = await fetch(url, requestOptions);
+    const response = await fetch(fullUrl, requestOptions);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -106,7 +115,7 @@ export const apiClient = async <T>(url: string, options: RequestOptions = {}): P
     try {
       const data = JSON.parse(text) as T;
       if (method === 'GET' && !skipCache) {
-        const cacheKey = createCacheKey(url, options);
+        const cacheKey = createCacheKey(fullUrl, options);
         cache.set(cacheKey, {
           data,
           expiry: Date.now() + cacheTime,

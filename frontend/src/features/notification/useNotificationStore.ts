@@ -1,6 +1,3 @@
-// This file was moved from src/store/useNotificationStore.ts as part of the feature-based refactor.
-// All notification state logic should live here.
-
 import { create } from 'zustand';
 import { toast } from 'sonner';
 import { NotificationType } from './types';
@@ -11,7 +8,7 @@ export interface Notification {
   id: string;
   message: string;
   type: NotificationType;
-  testId?: string; // Added for testing purposes
+  testId?: string;
 }
 
 interface NotificationState {
