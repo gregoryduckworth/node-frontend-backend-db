@@ -6,40 +6,7 @@ import {
   refreshToken as refreshTokenApi,
   updateProfile as updateProfileApi,
 } from './authApi';
-
-interface JwtPayload {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  dateOfBirth?: string | null;
-  exp: number;
-  [key: string]: any;
-}
-
-interface AuthState {
-  token: string;
-  firstName: string;
-  lastName: string;
-  id: string;
-  email: string;
-  dateOfBirth: string | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  expiresAt: number | null;
-
-  setToken: (token: string) => void;
-  clearAuth: () => void;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  checkAuth: () => Promise<boolean>;
-  updateProfile: (
-    firstName: string,
-    lastName: string,
-    email: string,
-    dateOfBirth: string | null
-  ) => Promise<void>;
-}
+import type { AuthState, JwtPayload } from './types';
 
 const AUTH_STORAGE_KEY = 'authState';
 
