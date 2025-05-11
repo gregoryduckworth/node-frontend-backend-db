@@ -1,5 +1,6 @@
 import { API_ENDPOINTS } from '@/config/auth';
 import { apiClient } from '@/api/apiClient';
+import { useAuthStore } from './useAuthStore';
 import type { AuthResponse, ApiMessageResponse, RefreshTokenResponse } from './types';
 
 export const register = async (
@@ -45,15 +46,17 @@ export const refreshToken = async (): Promise<RefreshTokenResponse> => {
 };
 
 export const updateProfile = async (
-  id: string,
   firstName: string,
   lastName: string,
   email: string,
-  dateOfBirth: string | null,
-  token: string
+  dateOfBirth: string | null
 ): Promise<ApiMessageResponse> => {
+  const { id, token } = useAuthStore.getState();
   if (!id || typeof id !== 'string' || id.trim() === '') {
     throw new Error('User ID is required for profile update');
+  }
+  if (!token) {
+    throw new Error('Auth token is required for profile update');
   }
   return apiClient<ApiMessageResponse>(`${API_ENDPOINTS.UPDATE_PROFILE}/${id}`, {
     method: 'PUT',

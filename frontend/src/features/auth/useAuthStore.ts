@@ -156,12 +156,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
     },
     updateProfile: async (firstName, lastName, email, dateOfBirth) => {
       try {
-        const id = get().id;
-        const token = get().token;
-        if (!id) {
-          throw new Error('User not authenticated');
-        }
-        await updateProfileApi(id, firstName, lastName, email, dateOfBirth, token);
+        await updateProfileApi(firstName, lastName, email, dateOfBirth);
         set({
           firstName: firstName,
           lastName: lastName,
