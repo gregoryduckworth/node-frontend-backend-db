@@ -2,59 +2,88 @@ import { create } from 'zustand';
 import { toast } from 'sonner';
 import { NotificationType } from '@/types/notification';
 
-export type { NotificationType };
-
 export interface Notification {
   id: string;
   message: string;
   type: NotificationType;
-  testId?: string; // Added for testing purposes
 }
 
-interface NotificationState {
+export interface NotificationState {
   notifications: Notification[];
   addNotification: (message: string, type: NotificationType) => void;
   removeNotification: (id: string) => void;
   clearNotifications: () => void;
 }
 
-export const useNotificationStore = create<NotificationState>((set) => ({
-  notifications: [],
+function pickNotificationState(state: Partial<NotificationState>): Partial<NotificationState> {
+  return {
+    notifications: state.notifications,
+  };
+}
 
-  addNotification: (message, type) => {
-    // Only show one notification with the same message and type
-    set((state) => {
-      const exists = state.notifications.some((n) => n.message === message && n.type === type);
-      if (exists) return state;
-      const id = generateId();
-      switch (type) {
-        case NotificationType.SUCCESS:
-          toast.success(message, { id });
-          break;
-        case NotificationType.ERROR:
-          toast.error(message, { id });
-          break;
-        case NotificationType.WARNING:
-          toast.warning(message, { id });
-          break;
-        case NotificationType.INFO:
-        default:
-          toast.info(message, { id });
-          break;
-      }
-      return {
-        notifications: [...state.notifications, { id, message, type }],
-      };
-    });
-  },
+const NOTIFICATION_STORAGE_KEY = 'notificationState';
 
-  removeNotification: (id) =>
-    set((state) => ({
-      notifications: state.notifications.filter((notification) => notification.id !== id),
-    })),
+function loadPersistedNotifications() {
+  try {
+    const raw = localStorage.getItem(NOTIFICATION_STORAGE_KEY);
+    if (!raw) return undefined;
+    return JSON.parse(raw);
+  } catch {
+    return undefined;
+  }
+}
 
-  clearNotifications: () => set({ notifications: [] }),
-}));
+function persistNotificationState(state: Partial<NotificationState>) {
+  try {
+    localStorage.setItem(NOTIFICATION_STORAGE_KEY, JSON.stringify(pickNotificationState(state)));
+  } catch {}
+}
+
+export const useNotificationStore = create<NotificationState>((set, get) => {
+  const persisted = loadPersistedNotifications() || { notifications: [] };
+  return {
+    ...persisted,
+    addNotification: (message, type) => {
+      set((state) => {
+        const exists = state.notifications.some((n) => n.message === message && n.type === type);
+        if (exists) return state;
+        const id = generateId();
+        switch (type) {
+          case NotificationType.SUCCESS:
+            toast.success(message);
+            break;
+          case NotificationType.ERROR:
+            toast.error(message);
+            break;
+          case NotificationType.WARNING:
+            toast.warning(message);
+            break;
+          case NotificationType.INFO:
+          default:
+            toast.info(message);
+            break;
+        }
+        const newState = {
+          notifications: [...state.notifications, { id, message, type }],
+        };
+        persistNotificationState(newState);
+        return newState;
+      });
+    },
+    removeNotification: (id) =>
+      set((state) => {
+        const newState = {
+          notifications: state.notifications.filter((notification) => notification.id !== id),
+        };
+        persistNotificationState(newState);
+        return newState;
+      }),
+    clearNotifications: () => {
+      set({ notifications: [] });
+      persistNotificationState({ notifications: [] });
+    },
+  };
+});
 
 function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
