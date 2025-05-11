@@ -89,7 +89,6 @@ export const apiClient = async <T>(url: string, options: RequestOptions = {}): P
         },
         message: `Request failed with status ${response.status}: ${response.statusText}`,
       } as ApiErrorResponse;
-      handleApiError(errorObj);
       throw errorObj;
     }
 
