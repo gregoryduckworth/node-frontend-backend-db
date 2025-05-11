@@ -1,15 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Register from '@/pages/generic/Register';
 import Login from '@/pages/generic/Login';
-import Dashboard from '@/pages/authenticated/Dashboard';
 import ForgotPassword from '@/pages/generic/ForgotPassword';
 import ResetPassword from '@/pages/generic/ResetPassword';
-import Profile from '@/pages/authenticated/Profile';
 import { Toaster } from '@/components/ui/sonner';
 import { useAuthStore } from '@/features/auth/useAuthStore';
 import { ROUTES } from '@/config/auth';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+
+const Dashboard = lazy(() => import('@/pages/authenticated/Dashboard'));
+const Profile = lazy(() => import('@/pages/authenticated/Profile'));
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -41,29 +42,31 @@ const App = () => {
     <ErrorBoundary>
       <BrowserRouter>
         <Toaster />
-        <Routes>
-          <Route path={ROUTES.REGISTER} element={<Register />} />
-          <Route path={ROUTES.LOGIN} element={<Login />} />
-          <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
-          <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
-          <Route
-            path={ROUTES.DASHBOARD}
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTES.PROFILE}
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
-        </Routes>
+        <Suspense fallback={<div style={{ padding: 40, textAlign: 'center' }}>Loading...</div>}>
+          <Routes>
+            <Route path={ROUTES.REGISTER} element={<Register />} />
+            <Route path={ROUTES.LOGIN} element={<Login />} />
+            <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+            <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
+            <Route
+              path={ROUTES.DASHBOARD}
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={ROUTES.PROFILE}
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </ErrorBoundary>
   );
