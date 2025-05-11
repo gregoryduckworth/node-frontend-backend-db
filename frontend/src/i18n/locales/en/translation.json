@@ -163,5 +163,10 @@
     "profileUpdated": "Your profile has been updated successfully",
     "updateError": "Failed to update profile",
     "dateOfBirthNeeded": "Please set your date of birth"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. Please try reloading the page. {{error}}",
+    "reload": "Reload Page"
   }
 }

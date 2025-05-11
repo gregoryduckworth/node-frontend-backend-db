@@ -1,3 +1,5 @@
+import { handleApiError } from './handleApiError';
+
 export type ApiErrorResponse = {
   response: {
     data: any;
@@ -79,7 +81,7 @@ export const apiClient = async <T>(url: string, options: RequestOptions = {}): P
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw {
+      const errorObj = {
         response: {
           data: errorData,
           status: response.status,
@@ -87,6 +89,8 @@ export const apiClient = async <T>(url: string, options: RequestOptions = {}): P
         },
         message: `Request failed with status ${response.status}: ${response.statusText}`,
       } as ApiErrorResponse;
+      handleApiError(errorObj);
+      throw errorObj;
     }
 
     // Handle empty responses
@@ -121,6 +125,9 @@ export const apiClient = async <T>(url: string, options: RequestOptions = {}): P
         message: `Failed to parse JSON response: ${e instanceof Error ? e.message : String(e)}`,
       } as ApiErrorResponse;
     }
+  } catch (error) {
+    handleApiError(error);
+    throw error;
   } finally {
     clearTimeout(timeoutId);
   }

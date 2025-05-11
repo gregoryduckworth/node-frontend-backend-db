@@ -163,5 +163,10 @@
     "profileUpdated": "Votre profil a été mis à jour avec succès",
     "updateError": "Échec de la mise à jour du profil",
     "dateOfBirthNeeded": "Veuillez définir votre date de naissance"
+  },
+  "errorBoundary": {
+    "title": "Une erreur s'est produite",
+    "description": "Une erreur inattendue s'est produite. Veuillez recharger la page. {{error}}",
+    "reload": "Recharger la page"
   }
 }
