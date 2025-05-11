@@ -1,9 +1,6 @@
 import { API_ENDPOINTS } from '@/config/auth';
 import { apiClient } from '@/api/apiClient';
-
-export type AuthResponse = {
-  accessToken: string;
-};
+import type { AuthResponse, ApiMessageResponse, RefreshTokenResponse } from './types';
 
 export const register = async (
   firstName: string,
@@ -26,14 +23,14 @@ export const login = async (email: string, password: string): Promise<AuthRespon
   });
 };
 
-export const logout = async (): Promise<{ message: string }> => {
-  return apiClient<{ message: string }>(API_ENDPOINTS.LOGOUT, {
+export const logout = async (): Promise<ApiMessageResponse> => {
+  return apiClient<ApiMessageResponse>(API_ENDPOINTS.LOGOUT, {
     method: 'DELETE',
     includeCredentials: true,
   });
 };
 
-export const refreshToken = async (): Promise<AuthResponse | { accessToken?: string }> => {
+export const refreshToken = async (): Promise<RefreshTokenResponse> => {
   try {
     return await apiClient<AuthResponse>(API_ENDPOINTS.REFRESH_TOKEN, {
       includeCredentials: true,
@@ -54,8 +51,11 @@ export const updateProfile = async (
   email: string,
   dateOfBirth: string | null,
   token: string
-): Promise<{ message: string }> => {
-  return apiClient<{ message: string }>(`${API_ENDPOINTS.UPDATE_PROFILE}/${id}`, {
+): Promise<ApiMessageResponse> => {
+  if (!id || typeof id !== 'string' || id.trim() === '') {
+    throw new Error('User ID is required for profile update');
+  }
+  return apiClient<ApiMessageResponse>(`${API_ENDPOINTS.UPDATE_PROFILE}/${id}`, {
     method: 'PUT',
     body: { firstName, lastName, email, dateOfBirth },
     headers: {
@@ -64,8 +64,8 @@ export const updateProfile = async (
   });
 };
 
-export const requestPasswordReset = async (email: string): Promise<{ message: string }> => {
-  return apiClient<{ message: string }>(API_ENDPOINTS.FORGOT_PASSWORD, {
+export const requestPasswordReset = async (email: string): Promise<ApiMessageResponse> => {
+  return apiClient<ApiMessageResponse>(API_ENDPOINTS.FORGOT_PASSWORD, {
     method: 'POST',
     body: { email },
   });
@@ -75,8 +75,8 @@ export const resetPassword = async (
   token: string,
   password: string,
   confirmPassword: string
-): Promise<{ message: string }> => {
-  return apiClient<{ message: string }>(API_ENDPOINTS.RESET_PASSWORD, {
+): Promise<ApiMessageResponse> => {
+  return apiClient<ApiMessageResponse>(API_ENDPOINTS.RESET_PASSWORD, {
     method: 'POST',
     body: { token, password, confirmPassword },
   });

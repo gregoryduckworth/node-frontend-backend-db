@@ -1,25 +1,8 @@
-// This file was moved from src/store/useNotificationStore.ts as part of the feature-based refactor.
-// All notification state logic should live here.
-
 import { create } from 'zustand';
 import { toast } from 'sonner';
-import { NotificationType } from './types';
+import { NotificationType, NotificationState } from './types';
 
 export type { NotificationType };
-
-export interface Notification {
-  id: string;
-  message: string;
-  type: NotificationType;
-  testId?: string; // Added for testing purposes
-}
-
-interface NotificationState {
-  notifications: Notification[];
-  addNotification: (message: string, type: NotificationType) => void;
-  removeNotification: (id: string) => void;
-  clearNotifications: () => void;
-}
 
 function pickNotificationState(state: Partial<NotificationState>): Partial<NotificationState> {
   return {
