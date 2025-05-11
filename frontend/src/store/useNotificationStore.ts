@@ -22,37 +22,30 @@ export const useNotificationStore = create<NotificationState>((set) => ({
   notifications: [],
 
   addNotification: (message, type) => {
-    const id = generateId();
-
-    switch (type) {
-      case NotificationType.SUCCESS:
-        toast.success(message, {
-          id,
-        });
-        break;
-      case NotificationType.ERROR:
-        toast.error(message, {
-          id,
-        });
-        break;
-      case NotificationType.WARNING:
-        toast.warning(message, {
-          id,
-        });
-        break;
-      case NotificationType.INFO:
-      default:
-        toast.info(message, {
-          id,
-        });
-        break;
-    }
-
-    set((state) => ({
-      notifications: [...state.notifications, { id, message, type }],
-    }));
-
-    return id;
+    // Only show one notification with the same message and type
+    set((state) => {
+      const exists = state.notifications.some((n) => n.message === message && n.type === type);
+      if (exists) return state;
+      const id = generateId();
+      switch (type) {
+        case NotificationType.SUCCESS:
+          toast.success(message, { id });
+          break;
+        case NotificationType.ERROR:
+          toast.error(message, { id });
+          break;
+        case NotificationType.WARNING:
+          toast.warning(message, { id });
+          break;
+        case NotificationType.INFO:
+        default:
+          toast.info(message, { id });
+          break;
+      }
+      return {
+        notifications: [...state.notifications, { id, message, type }],
+      };
+    });
   },
 
   removeNotification: (id) =>
