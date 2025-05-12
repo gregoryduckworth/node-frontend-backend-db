@@ -1,5 +1,5 @@
 import { useState, useEffect, FormEvent } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { resetPassword } from '@/features/auth/authApi';
 import { useNotificationStore } from '@/features/notification/useNotificationStore';
@@ -46,12 +46,14 @@ const ResetPassword = () => {
       setIsSuccess(true);
       addNotification(t('auth.passwordResetSuccess'), NotificationType.SUCCESS);
       navigate('/login');
-    } catch (error: any) {
+    } catch (error: unknown) {
       setIsSuccess(false);
-      addNotification(
-        error?.response?.data?.message || t('auth.errors.serverError'),
-        NotificationType.ERROR
-      );
+      const errorMessage =
+        typeof error === 'object' && error && 'response' in error
+          ? (error as { response?: { data?: { message?: string } } }).response?.data?.message ||
+            t('auth.errors.serverError')
+          : t('auth.errors.serverError');
+      addNotification(errorMessage, NotificationType.ERROR);
     } finally {
       setIsSubmitting(false);
     }

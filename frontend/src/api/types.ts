@@ -1,6 +1,6 @@
 export type ApiErrorResponse = {
   response: {
-    data: any;
+    data: unknown;
     status: number;
     statusText?: string;
   };
@@ -10,7 +10,7 @@ export type ApiErrorResponse = {
 export interface RequestOptions {
   method?: string;
   headers?: Record<string, string>;
-  body?: any;
+  body?: unknown;
   includeCredentials?: boolean;
   timeout?: number;
   skipCache?: boolean;

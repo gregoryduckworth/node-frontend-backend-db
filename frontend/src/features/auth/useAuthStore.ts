@@ -23,7 +23,9 @@ function loadPersistedAuth() {
 function persistAuthState(state: Partial<AuthState>) {
   try {
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(pickAuthState(state)));
-  } catch {}
+  } catch {
+    // Optionally log or handle error
+  }
 }
 
 function pickAuthState(state: Partial<AuthState>): Partial<AuthState> {
@@ -121,7 +123,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
           return;
         }
         throw new Error('No access token returned');
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('Login error:', error);
         throw error;
       }
@@ -130,7 +132,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
       try {
         await logoutApi();
         get().clearAuth();
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('Logout error:', error);
         throw error;
       }
@@ -147,7 +149,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
         get().clearAuth();
         set({ isLoading: false });
         return false;
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('Auth check error:', error);
         get().clearAuth();
         set({ isLoading: false });
@@ -164,7 +166,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
           dateOfBirth: dateOfBirth,
         });
         await get().checkAuth();
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('Profile update error:', error);
         throw error;
       }

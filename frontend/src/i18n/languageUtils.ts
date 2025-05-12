@@ -15,10 +15,10 @@ export const getAvailableLanguages = (t: TFunction, languageCodes: string[]): La
 export const getCurrentLanguage = (
   t: TFunction,
   currentLanguageCode: string,
-  availableLanguages: Language[]
+  availableLanguages: Language[],
 ): Language => {
-  const code = currentLanguageCode.includes('-') 
-    ? currentLanguageCode.split('-')[0] 
+  const code = currentLanguageCode.includes('-')
+    ? currentLanguageCode.split('-')[0]
     : currentLanguageCode;
   const currentLanguage = availableLanguages.find((lang) => lang.code === code);
 

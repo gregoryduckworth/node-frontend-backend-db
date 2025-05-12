@@ -28,21 +28,17 @@ const ForgotPassword = () => {
       await requestPasswordReset(email);
       setIsSuccess(true);
       addNotification(t('auth.passwordResetRequest'), NotificationType.SUCCESS);
-    } catch (error: any) {
+    } catch (error: unknown) {
       setIsSuccess(false);
-      addNotification(
-        error?.response?.data?.message || t('auth.errors.serverError'),
-        NotificationType.ERROR
-      );
+      const errorMessage =
+        typeof error === 'object' && error && 'response' in error
+          ? (error as { response?: { data?: { message?: string } } }).response?.data?.message ||
+            t('auth.errors.serverError')
+          : t('auth.errors.serverError');
+      addNotification(errorMessage, NotificationType.ERROR);
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleSendAgain = () => {
-    setTimeout(() => {
-      setIsSuccess(false);
-    }, 100);
   };
 
   return (

@@ -79,8 +79,11 @@ const Profile = () => {
       await updateProfile(formFirstName, formLastName, formEmail, formDateOfBirth || null);
       addNotification(t('profile.profileUpdated'), NotificationType.SUCCESS);
       setIsEditMode(false);
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message;
+    } catch (error: unknown) {
+      const errorMessage =
+        typeof error === 'object' && error && 'response' in error
+          ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
+          : undefined;
       if (errorMessage === 'Email already exists') {
         addNotification(t('validation.emailExists'), NotificationType.ERROR);
         setErrors({ ...errors, email: t('validation.emailExists') });
@@ -106,7 +109,7 @@ const Profile = () => {
     if (!dateString) return '';
     try {
       return new Date(dateString).toLocaleDateString();
-    } catch (e) {
+    } catch {
       return '';
     }
   };

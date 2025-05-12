@@ -8,7 +8,7 @@ export const register = async (
   lastName: string,
   email: string,
   password: string,
-  confirmPassword: string
+  confirmPassword: string,
 ): Promise<AuthResponse> => {
   return apiClient<AuthResponse>(API_ENDPOINTS.REGISTER, {
     method: 'POST',
@@ -36,8 +36,14 @@ export const refreshToken = async (): Promise<RefreshTokenResponse> => {
     return await apiClient<AuthResponse>(API_ENDPOINTS.REFRESH_TOKEN, {
       includeCredentials: true,
     });
-  } catch (error: any) {
-    const status = error?.response?.status;
+  } catch (error: unknown) {
+    const status =
+      typeof error === 'object' &&
+      error &&
+      'response' in error &&
+      typeof (error as { response?: { status?: number } }).response?.status === 'number'
+        ? (error as { response: { status: number } }).response.status
+        : undefined;
     if (status !== 204 && status !== 403) {
       console.error('Network error during token refresh:', error);
     }
@@ -49,7 +55,7 @@ export const updateProfile = async (
   firstName: string,
   lastName: string,
   email: string,
-  dateOfBirth: string | null
+  dateOfBirth: string | null,
 ): Promise<ApiMessageResponse> => {
   const { id, token } = useAuthStore.getState();
   if (!id || typeof id !== 'string' || id.trim() === '') {
@@ -77,7 +83,7 @@ export const requestPasswordReset = async (email: string): Promise<ApiMessageRes
 export const resetPassword = async (
   token: string,
   password: string,
-  confirmPassword: string
+  confirmPassword: string,
 ): Promise<ApiMessageResponse> => {
   return apiClient<ApiMessageResponse>(API_ENDPOINTS.RESET_PASSWORD, {
     method: 'POST',

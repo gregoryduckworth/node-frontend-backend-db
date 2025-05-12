@@ -25,10 +25,12 @@ function loadPersistedNotifications() {
 function persistNotificationState(state: Partial<NotificationState>) {
   try {
     localStorage.setItem(NOTIFICATION_STORAGE_KEY, JSON.stringify(pickNotificationState(state)));
-  } catch {}
+  } catch {
+    // Optionally log or handle error
+  }
 }
 
-export const useNotificationStore = create<NotificationState>((set, get) => {
+export const useNotificationStore = create<NotificationState>((set) => {
   const persisted = loadPersistedNotifications() || { notifications: [] };
   return {
     ...persisted,

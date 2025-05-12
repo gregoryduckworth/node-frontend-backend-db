@@ -1,7 +1,7 @@
 import { handleApiError } from './handleApiError';
 import type { ApiErrorResponse, RequestOptions, CacheItem } from './types';
 
-const cache = new Map<string, CacheItem<any>>();
+const cache = new Map<string, CacheItem<unknown>>();
 
 const createCacheKey = (url: string, options: RequestOptions): string => {
   return `${url}:${options.includeCredentials}`;
@@ -69,7 +69,6 @@ export const apiClient = async <T>(url: string, options: RequestOptions = {}): P
       throw errorObj;
     }
 
-    // Handle empty responses
     const contentType = response.headers.get('content-type');
     if (response.status === 204 || !contentType || !contentType.includes('application/json')) {
       return {} as T;

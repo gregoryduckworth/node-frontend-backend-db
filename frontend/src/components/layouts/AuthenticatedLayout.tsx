@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { AppSidebar } from '@/components/app-sidebar';
 import LanguageSwitcher from '@/components/language-switcher';
 import {

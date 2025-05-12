@@ -29,8 +29,12 @@ const Login = () => {
       await login(email, password);
       addNotification(t('auth.loginSuccess'), NotificationType.SUCCESS);
       navigate('/dashboard');
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || t('auth.genericError');
+    } catch (error: unknown) {
+      const errorMessage =
+        typeof error === 'object' && error && 'response' in error
+          ? (error as { response?: { data?: { message?: string } } }).response?.data?.message ||
+            t('auth.genericError')
+          : t('auth.genericError');
       addNotification(errorMessage, NotificationType.ERROR);
     } finally {
       setIsSubmitting(false);
