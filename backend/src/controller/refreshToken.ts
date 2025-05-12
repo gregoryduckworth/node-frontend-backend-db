@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import { prisma } from "@prismaClient/client";
-import { getJwtSecrets } from "../utils/jwtSecrets";
+import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import { prisma } from '@prismaClient/client';
+import { getJwtSecrets } from '../utils/jwtSecrets';
 
 export const generateAccessToken = (user: any, secret: string) => {
   return jwt.sign(
@@ -13,14 +13,11 @@ export const generateAccessToken = (user: any, secret: string) => {
       dateOfBirth: user.dateOfBirth ? user.dateOfBirth.toISOString() : null,
     },
     secret,
-    { expiresIn: "30m" }
+    { expiresIn: '30m' },
   );
 };
 
-export const refreshToken = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const refreshToken = async (req: Request, res: Response): Promise<Response> => {
   try {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
@@ -39,14 +36,14 @@ export const refreshToken = async (
     try {
       jwt.verify(refreshToken, refreshTokenSecret);
     } catch (err) {
-      console.error("JWT verification failed:", err);
+      console.error('JWT verification failed:', err);
       return res.sendStatus(403);
     }
 
     const accessToken = generateAccessToken(user, accessTokenSecret);
     return res.json({ accessToken });
   } catch (error) {
-    console.error("Error refreshing token:", error);
+    console.error('Error refreshing token:', error);
     return res.sendStatus(500);
   }
 };

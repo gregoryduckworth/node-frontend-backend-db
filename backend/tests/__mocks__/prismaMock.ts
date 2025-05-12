@@ -2,7 +2,7 @@
  * Centralized Prisma mock for tests
  * Import this file in test files that need to mock Prisma functionality
  */
-import { testUsers } from "./testData";
+import { testUsers } from './testData';
 
 // Base mock implementation
 export const prismaMock = {
@@ -23,7 +23,7 @@ export const setupUserMock = (
   user: any = null,
   options?: {
     implementationFn?: (params: any) => Promise<any>;
-  }
+  },
 ) => {
   if (options?.implementationFn) {
     prismaMock.user.findFirst.mockImplementation(options.implementationFn);
@@ -52,32 +52,32 @@ export const setupStandardUserMockImplementations = () => {
     }
 
     // Find by refresh token
-    if (params?.where?.refresh_token === "valid-refresh-token") {
+    if (params?.where?.refresh_token === 'valid-refresh-token') {
       return Promise.resolve({
         ...testUsers.standard,
-        refresh_token: "valid-refresh-token",
+        refresh_token: 'valid-refresh-token',
       });
     }
 
     // Find by expired token
-    if (params?.where?.refresh_token === "expired-token") {
+    if (params?.where?.refresh_token === 'expired-token') {
       return Promise.resolve({
         id: testUsers.standard.id,
-        refresh_token: "expired-token",
+        refresh_token: 'expired-token',
       });
     }
 
     // Find by reset token
     if (
-      params?.where?.reset_token === "valid-reset-token" &&
+      params?.where?.reset_token === 'valid-reset-token' &&
       params?.where?.reset_token_expires?.gt
     ) {
       return Promise.resolve(testUsers.withResetToken);
     }
 
     // Error case
-    if (params?.where?.refresh_token === "error-token") {
-      throw new Error("Database error");
+    if (params?.where?.refresh_token === 'error-token') {
+      throw new Error('Database error');
     }
 
     return Promise.resolve(null);
@@ -91,10 +91,10 @@ export const setupStandardUserMockImplementations = () => {
  */
 export const setupUserCreateMock = (userData: any = null) => {
   const defaultData = {
-    id: "created-user-id",
-    firstName: "Created",
-    lastName: "User",
-    email: "created@example.com",
+    id: 'created-user-id',
+    firstName: 'Created',
+    lastName: 'User',
+    email: 'created@example.com',
   };
 
   prismaMock.user.create.mockResolvedValue(userData || defaultData);
@@ -105,10 +105,10 @@ export const setupUserCreateMock = (userData: any = null) => {
  */
 export const setupUserUpdateMock = (userData: any = null) => {
   const defaultData = {
-    id: "test-user-id",
-    firstName: "Updated",
-    lastName: "User",
-    email: "updated@example.com",
+    id: 'test-user-id',
+    firstName: 'Updated',
+    lastName: 'User',
+    email: 'updated@example.com',
   };
 
   prismaMock.user.update.mockResolvedValue(userData || defaultData);

@@ -5,10 +5,10 @@
 
 // Setup for jest.mock('bcrypt')
 export const bcryptMock = {
-  genSalt: jest.fn().mockResolvedValue("salt"),
-  hash: jest.fn().mockResolvedValue("hashed-password"),
+  genSalt: jest.fn().mockResolvedValue('salt'),
+  hash: jest.fn().mockResolvedValue('hashed-password'),
   compare: jest.fn().mockResolvedValue(true),
-  hashSync: jest.fn().mockReturnValue("hashed-password"),
+  hashSync: jest.fn().mockReturnValue('hashed-password'),
 };
 
 /**
@@ -23,10 +23,10 @@ export const setupPasswordComparison = (isMatch = true) => {
  * Reset the bcrypt mock to its default behavior
  */
 export const resetBcryptMock = () => {
-  bcryptMock.genSalt.mockResolvedValue("salt");
-  bcryptMock.hash.mockResolvedValue("hashed-password");
+  bcryptMock.genSalt.mockResolvedValue('salt');
+  bcryptMock.hash.mockResolvedValue('hashed-password');
   bcryptMock.compare.mockResolvedValue(true);
-  bcryptMock.hashSync.mockReturnValue("hashed-password");
+  bcryptMock.hashSync.mockReturnValue('hashed-password');
 };
 
 // Export for jest.mock setup
