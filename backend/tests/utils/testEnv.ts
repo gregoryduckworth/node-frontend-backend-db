@@ -1,12 +1,9 @@
 /**
  * Test environment utilities for managing environment variables during tests
  */
-import { resetJwtMock } from "../__mocks__/jwtMock";
-import { resetBcryptMock } from "../__mocks__/bcryptMock";
-import {
-  resetPrismaMock,
-  setupStandardUserMockImplementations,
-} from "../__mocks__/prismaMock";
+import { resetJwtMock } from '../__mocks__/jwtMock';
+import { resetBcryptMock } from '../__mocks__/bcryptMock';
+import { resetPrismaMock, setupStandardUserMockImplementations } from '../__mocks__/prismaMock';
 
 // Store the original environment for restoration
 const originalEnv = process.env;
@@ -28,8 +25,8 @@ export const setupTestEnv = () => {
  * Mock JWT secrets environment variables
  */
 export const mockJwtSecrets = (
-  accessSecret = "test-access-secret",
-  refreshSecret = "test-refresh-secret"
+  accessSecret = 'test-access-secret',
+  refreshSecret = 'test-refresh-secret',
 ) => {
   process.env.ACCESS_TOKEN_SECRET = accessSecret;
   process.env.REFRESH_TOKEN_SECRET = refreshSecret;
@@ -49,7 +46,7 @@ export const removeJwtSecrets = () => {
 export const withTemporaryJwtSecrets = (
   callback: () => void,
   accessSecret?: string,
-  refreshSecret?: string
+  refreshSecret?: string,
 ) => {
   const originalAccessSecret = process.env.ACCESS_TOKEN_SECRET;
   const originalRefreshSecret = process.env.REFRESH_TOKEN_SECRET;

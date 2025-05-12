@@ -1,44 +1,42 @@
-import { Request, Response } from "express";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { prisma } from "@prismaClient/client";
-import { getJwtSecrets } from "../utils/jwtSecrets";
+import { Request, Response } from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { prisma } from '@prismaClient/client';
+import { getJwtSecrets } from '../utils/jwtSecrets';
 
 const { accessTokenSecret, refreshTokenSecret } = getJwtSecrets();
 
 const getCookieOptions = () => ({
   httpOnly: true,
   maxAge: 24 * 60 * 60 * 1000,
-  path: "/",
+  path: '/',
 });
 
 const clearRefreshTokenCookie = (res: Response) => {
-  res.clearCookie("refreshToken", getCookieOptions());
+  res.clearCookie('refreshToken', getCookieOptions());
 };
 
 const setRefreshTokenCookie = (res: Response, token: string) => {
-  res.cookie("refreshToken", token, getCookieOptions());
+  res.cookie('refreshToken', token, getCookieOptions());
 };
 
-const validatePassword = (
-  password: string
-): { isValid: boolean; message?: string } => {
+const validatePassword = (password: string): { isValid: boolean; message?: string } => {
   if (password.length < 8) {
     return {
       isValid: false,
-      message: "Password must be at least 8 characters long",
+      message: 'Password must be at least 8 characters long',
     };
   }
   if (!/[A-Z]/.test(password)) {
     return {
       isValid: false,
-      message: "Password must contain at least one capital letter",
+      message: 'Password must contain at least one capital letter',
     };
   }
   if (!/\d/.test(password)) {
     return {
       isValid: false,
-      message: "Password must contain at least one number",
+      message: 'Password must contain at least one number',
     };
   }
   return { isValid: true };
@@ -49,10 +47,7 @@ const handleError = (res: Response, error: any, status = 400) => {
   return res.sendStatus(status);
 };
 
-export const getAllUsers = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const getAllUsers = async (req: Request, res: Response): Promise<Response> => {
   try {
     const users = await prisma.user.findMany({
       select: { id: true, firstName: true, lastName: true, email: true },
@@ -63,38 +58,28 @@ export const getAllUsers = async (
   }
 };
 
-export const getUserById = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const getUserById = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { userId } = req.params;
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: { id: true, firstName: true, lastName: true, email: true },
     });
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) return res.status(404).json({ message: 'User not found' });
     return res.status(200).json(user);
   } catch (error) {
     return handleError(res, error);
   }
 };
 
-export const register = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const register = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { firstName, lastName, email, password, confirmPassword } = req.body;
-    if (!firstName)
-      return res.status(400).json({ message: "First name is required" });
-    if (!lastName)
-      return res.status(400).json({ message: "Last name is required" });
-    if (!email) return res.status(400).json({ message: "Email is required" });
-    if (!password)
-      return res.status(400).json({ message: "Password is required" });
-    if (!confirmPassword)
-      return res.status(400).json({ message: "Confirm Password is required" });
+    if (!firstName) return res.status(400).json({ message: 'First name is required' });
+    if (!lastName) return res.status(400).json({ message: 'Last name is required' });
+    if (!email) return res.status(400).json({ message: 'Email is required' });
+    if (!password) return res.status(400).json({ message: 'Password is required' });
+    if (!confirmPassword) return res.status(400).json({ message: 'Confirm Password is required' });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Password doesn't match" });
 
@@ -104,14 +89,13 @@ export const register = async (
     }
 
     const isUserExist = await prisma.user.findFirst({ where: { email } });
-    if (isUserExist)
-      return res.status(400).json({ message: "Email already exists" });
+    if (isUserExist) return res.status(400).json({ message: 'Email already exists' });
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
     await prisma.user.create({
       data: { firstName, lastName, email, password: hashedPassword },
     });
-    return res.status(201).json({ message: "Register Successful" });
+    return res.status(201).json({ message: 'Register Successful' });
   } catch (error) {
     return handleError(res, error);
   }
@@ -120,19 +104,13 @@ export const register = async (
 export const login = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { email, password } = req.body;
-    if (!email) return res.status(400).json({ message: "Email is required" });
-    if (!password)
-      return res.status(400).json({ message: "Password is required" });
+    if (!email) return res.status(400).json({ message: 'Email is required' });
+    if (!password) return res.status(400).json({ message: 'Password is required' });
     const user = await prisma.user.findFirst({ where: { email } });
-    const isMatched = user
-      ? await bcrypt.compare(password, user.password)
-      : false;
-    if (!user || !isMatched)
-      return res.status(400).json({ message: "Invalid email or password" });
+    const isMatched = user ? await bcrypt.compare(password, user.password) : false;
+    if (!user || !isMatched) return res.status(400).json({ message: 'Invalid email or password' });
 
-    const dateOfBirthFormatted = user.dateOfBirth
-      ? user.dateOfBirth.toISOString()
-      : null;
+    const dateOfBirthFormatted = user.dateOfBirth ? user.dateOfBirth.toISOString() : null;
 
     const accessToken = jwt.sign(
       {
@@ -143,7 +121,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
         dateOfBirth: dateOfBirthFormatted,
       },
       accessTokenSecret,
-      { expiresIn: "30m" }
+      { expiresIn: '30m' },
     );
     const refreshToken = jwt.sign(
       {
@@ -154,7 +132,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
         dateOfBirth: dateOfBirthFormatted,
       },
       refreshTokenSecret,
-      { expiresIn: "1d" }
+      { expiresIn: '1d' },
     );
     await prisma.user.update({
       where: { id: user.id },
@@ -167,19 +145,14 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
   }
 };
 
-export const updateUser = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const updateUser = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { firstName, lastName, email, dateOfBirth } = req.body;
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.sendStatus(401);
-    if (!firstName)
-      return res.status(400).json({ message: "First name is required" });
-    if (!lastName)
-      return res.status(400).json({ message: "Last name is required" });
-    if (!email) return res.status(400).json({ message: "Email is required" });
+    if (!firstName) return res.status(400).json({ message: 'First name is required' });
+    if (!lastName) return res.status(400).json({ message: 'Last name is required' });
+    if (!email) return res.status(400).json({ message: 'Email is required' });
     try {
       jwt.verify(refreshToken, refreshTokenSecret);
     } catch (err) {
@@ -196,7 +169,7 @@ export const updateUser = async (
         where: { email },
       });
       if (existingUserWithEmail) {
-        return res.status(400).json({ message: "Email already exists" });
+        return res.status(400).json({ message: 'Email already exists' });
       }
     }
 
@@ -209,16 +182,13 @@ export const updateUser = async (
         dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
       },
     });
-    return res.status(200).json({ message: "User updated" });
+    return res.status(200).json({ message: 'User updated' });
   } catch (error) {
     return handleError(res, error);
   }
 };
 
-export const logout = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const logout = async (req: Request, res: Response): Promise<Response> => {
   try {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.sendStatus(204);
@@ -231,29 +201,24 @@ export const logout = async (
       data: { refresh_token: null },
     });
     clearRefreshTokenCookie(res);
-    return res.status(200).json({ message: "OK" });
+    return res.status(200).json({ message: 'OK' });
   } catch (error) {
     return handleError(res, error);
   }
 };
 
-export const forgotPassword = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const forgotPassword = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { email } = req.body;
-    if (!email) return res.status(400).json({ message: "Email is required" });
+    if (!email) return res.status(400).json({ message: 'Email is required' });
 
     const user = await prisma.user.findFirst({ where: { email } });
     if (!user) {
-      return res
-        .status(200)
-        .json({ message: "Password reset instructions sent to your email" });
+      return res.status(200).json({ message: 'Password reset instructions sent to your email' });
     }
 
     const resetToken = jwt.sign({ userId: user.id, email }, accessTokenSecret, {
-      expiresIn: "1h",
+      expiresIn: '1h',
     });
 
     const expiresAt = new Date();
@@ -275,26 +240,19 @@ export const forgotPassword = async (
     //   `Reset link would be: http://localhost:5173/reset-password?token=${resetToken}`
     // );
 
-    return res
-      .status(200)
-      .json({ message: "Password reset instructions sent to your email" });
+    return res.status(200).json({ message: 'Password reset instructions sent to your email' });
   } catch (error) {
     return handleError(res, error, 500);
   }
 };
 
-export const resetPassword = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const resetPassword = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { token, password, confirmPassword } = req.body;
 
-    if (!token) return res.status(400).json({ message: "Token is required" });
-    if (!password)
-      return res.status(400).json({ message: "Password is required" });
-    if (!confirmPassword)
-      return res.status(400).json({ message: "Confirm password is required" });
+    if (!token) return res.status(400).json({ message: 'Token is required' });
+    if (!password) return res.status(400).json({ message: 'Password is required' });
+    if (!confirmPassword) return res.status(400).json({ message: 'Confirm password is required' });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Passwords don't match" });
 
@@ -307,7 +265,7 @@ export const resetPassword = async (
     try {
       decoded = jwt.verify(token, accessTokenSecret);
     } catch (error) {
-      return res.status(400).json({ message: "Invalid or expired token" });
+      return res.status(400).json({ message: 'Invalid or expired token' });
     }
 
     const user = await prisma.user.findFirst({
@@ -321,7 +279,7 @@ export const resetPassword = async (
     });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid or expired token" });
+      return res.status(400).json({ message: 'Invalid or expired token' });
     }
 
     const salt = await bcrypt.genSalt();
@@ -336,9 +294,7 @@ export const resetPassword = async (
       },
     });
 
-    return res
-      .status(200)
-      .json({ message: "Password has been reset successfully" });
+    return res.status(200).json({ message: 'Password has been reset successfully' });
   } catch (error) {
     return handleError(res, error, 500);
   }

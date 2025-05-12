@@ -5,18 +5,18 @@
 
 // Setup for jest.mock('jsonwebtoken')
 export const jwtMock = {
-  sign: jest.fn().mockReturnValue("mocked-token"),
+  sign: jest.fn().mockReturnValue('mocked-token'),
   verify: jest.fn().mockImplementation((token, secret) => {
-    if (token === "valid-refresh-token" || token === "valid-reset-token") {
+    if (token === 'valid-refresh-token' || token === 'valid-reset-token') {
       return {
-        userId: "test-user-id",
-        email: "test@example.com",
-        id: "test-user-id",
-        firstName: "Test",
-        lastName: "User",
+        userId: 'test-user-id',
+        email: 'test@example.com',
+        id: 'test-user-id',
+        firstName: 'Test',
+        lastName: 'User',
       };
     }
-    throw new Error("Invalid token");
+    throw new Error('Invalid token');
   }),
 };
 
@@ -41,18 +41,18 @@ export const configureJwtMock = (options?: {
  * Reset the JWT mock to its default behavior
  */
 export const resetJwtMock = () => {
-  jwtMock.sign.mockReturnValue("mocked-token");
+  jwtMock.sign.mockReturnValue('mocked-token');
   jwtMock.verify.mockImplementation((token, secret) => {
-    if (token === "valid-refresh-token" || token === "valid-reset-token") {
+    if (token === 'valid-refresh-token' || token === 'valid-reset-token') {
       return {
-        userId: "test-user-id",
-        email: "test@example.com",
-        id: "test-user-id",
-        firstName: "Test",
-        lastName: "User",
+        userId: 'test-user-id',
+        email: 'test@example.com',
+        id: 'test-user-id',
+        firstName: 'Test',
+        lastName: 'User',
       };
     }
-    throw new Error("Invalid token");
+    throw new Error('Invalid token');
   });
 };
 
