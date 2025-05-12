@@ -1,14 +1,14 @@
-import { create } from 'zustand';
-import jwtDecode from 'jwt-decode';
+import { create } from "zustand";
+import jwtDecode from "jwt-decode";
 import {
   login as loginApi,
   logout as logoutApi,
   refreshToken as refreshTokenApi,
   updateProfile as updateProfileApi,
-} from './authApi';
-import type { AuthState, JwtPayload } from './types';
+} from "./authApi";
+import type { AuthState, JwtPayload } from "./types";
 
-const AUTH_STORAGE_KEY = 'authState';
+const AUTH_STORAGE_KEY = "authState";
 
 function loadPersistedAuth() {
   try {
@@ -22,7 +22,10 @@ function loadPersistedAuth() {
 
 function persistAuthState(state: Partial<AuthState>) {
   try {
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(pickAuthState(state)));
+    localStorage.setItem(
+      AUTH_STORAGE_KEY,
+      JSON.stringify(pickAuthState(state)),
+    );
   } catch {}
 }
 
@@ -41,11 +44,11 @@ function pickAuthState(state: Partial<AuthState>): Partial<AuthState> {
 
 export const useAuthStore = create<AuthState>((set, get) => {
   const persisted = loadPersistedAuth() || {
-    token: '',
-    firstName: '',
-    lastName: '',
-    id: '',
-    email: '',
+    token: "",
+    firstName: "",
+    lastName: "",
+    id: "",
+    email: "",
     dateOfBirth: null,
     isAuthenticated: false,
     expiresAt: null,
@@ -56,11 +59,11 @@ export const useAuthStore = create<AuthState>((set, get) => {
     setToken: (token) => {
       if (!token) {
         const cleared = {
-          token: '',
-          firstName: '',
-          lastName: '',
-          id: '',
-          email: '',
+          token: "",
+          firstName: "",
+          lastName: "",
+          id: "",
+          email: "",
           dateOfBirth: null,
           isAuthenticated: false,
           expiresAt: null,
@@ -73,10 +76,10 @@ export const useAuthStore = create<AuthState>((set, get) => {
         const decoded = jwtDecode<JwtPayload>(token);
         const newState = {
           token,
-          firstName: decoded.firstName || '',
-          lastName: decoded.lastName || '',
-          id: decoded.id || '',
-          email: decoded.email || '',
+          firstName: decoded.firstName || "",
+          lastName: decoded.lastName || "",
+          id: decoded.id || "",
+          email: decoded.email || "",
           dateOfBirth: decoded.dateOfBirth || null,
           isAuthenticated: true,
           expiresAt: decoded.exp * 1000,
@@ -84,13 +87,13 @@ export const useAuthStore = create<AuthState>((set, get) => {
         set(newState);
         persistAuthState(newState);
       } catch (error) {
-        console.error('Error decoding JWT token:', error);
+        console.error("Error decoding JWT token:", error);
         const cleared = {
-          token: '',
-          firstName: '',
-          lastName: '',
-          id: '',
-          email: '',
+          token: "",
+          firstName: "",
+          lastName: "",
+          id: "",
+          email: "",
           dateOfBirth: null,
           isAuthenticated: false,
           expiresAt: null,
@@ -101,11 +104,11 @@ export const useAuthStore = create<AuthState>((set, get) => {
     },
     clearAuth: () => {
       const cleared = {
-        token: '',
-        firstName: '',
-        lastName: '',
-        id: '',
-        email: '',
+        token: "",
+        firstName: "",
+        lastName: "",
+        id: "",
+        email: "",
         dateOfBirth: null,
         isAuthenticated: false,
         expiresAt: null,
@@ -120,9 +123,9 @@ export const useAuthStore = create<AuthState>((set, get) => {
           get().setToken(response.accessToken);
           return;
         }
-        throw new Error('No access token returned');
+        throw new Error("No access token returned");
       } catch (error: any) {
-        console.error('Login error:', error);
+        console.error("Login error:", error);
         throw error;
       }
     },
@@ -131,7 +134,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
         await logoutApi();
         get().clearAuth();
       } catch (error) {
-        console.error('Logout error:', error);
+        console.error("Logout error:", error);
         throw error;
       }
     },
@@ -148,7 +151,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
         set({ isLoading: false });
         return false;
       } catch (error) {
-        console.error('Auth check error:', error);
+        console.error("Auth check error:", error);
         get().clearAuth();
         set({ isLoading: false });
         return false;
@@ -165,7 +168,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
         });
         await get().checkAuth();
       } catch (error) {
-        console.error('Profile update error:', error);
+        console.error("Profile update error:", error);
         throw error;
       }
     },
