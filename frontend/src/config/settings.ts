@@ -1,4 +1,4 @@
 export const COMPANY = {
-  NAME: 'Acme Inc',
-  TYPE: 'Enterprise',
+  NAME: "Acme Inc",
+  TYPE: "Enterprise",
 };

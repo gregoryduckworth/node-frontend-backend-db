@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 export function useTitle(titleKey: string): void {
   const { t, i18n } = useTranslation();
@@ -10,7 +10,7 @@ export function useTitle(titleKey: string): void {
     const pageTitle = t(titleKey, {
       defaultValue: titleKey,
     });
-    const appTitle = t('app.title');
+    const appTitle = t("app.title");
     const formattedTitle = `${appTitle} | ${pageTitle}`;
     document.title = formattedTitle;
     return () => {

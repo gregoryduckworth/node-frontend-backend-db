@@ -40,7 +40,7 @@ export interface AuthState {
     firstName: string,
     lastName: string,
     email: string,
-    dateOfBirth: string | null
+    dateOfBirth: string | null,
   ) => Promise<void>;
 }
 
