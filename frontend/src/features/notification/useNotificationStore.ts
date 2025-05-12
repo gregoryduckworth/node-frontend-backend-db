@@ -1,18 +1,16 @@
-import { create } from "zustand";
-import { toast } from "sonner";
-import { NotificationType, NotificationState } from "./types";
+import { create } from 'zustand';
+import { toast } from 'sonner';
+import { NotificationType, NotificationState } from './types';
 
 export type { NotificationType };
 
-function pickNotificationState(
-  state: Partial<NotificationState>,
-): Partial<NotificationState> {
+function pickNotificationState(state: Partial<NotificationState>): Partial<NotificationState> {
   return {
     notifications: state.notifications,
   };
 }
 
-const NOTIFICATION_STORAGE_KEY = "notificationState";
+const NOTIFICATION_STORAGE_KEY = 'notificationState';
 
 function loadPersistedNotifications() {
   try {
@@ -26,10 +24,7 @@ function loadPersistedNotifications() {
 
 function persistNotificationState(state: Partial<NotificationState>) {
   try {
-    localStorage.setItem(
-      NOTIFICATION_STORAGE_KEY,
-      JSON.stringify(pickNotificationState(state)),
-    );
+    localStorage.setItem(NOTIFICATION_STORAGE_KEY, JSON.stringify(pickNotificationState(state)));
   } catch {}
 }
 
@@ -39,9 +34,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => {
     ...persisted,
     addNotification: (message, type) => {
       set((state) => {
-        const exists = state.notifications.some(
-          (n) => n.message === message && n.type === type,
-        );
+        const exists = state.notifications.some((n) => n.message === message && n.type === type);
         if (exists) return state;
         const id = generateId();
         switch (type) {
@@ -69,9 +62,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => {
     removeNotification: (id) =>
       set((state) => {
         const newState = {
-          notifications: state.notifications.filter(
-            (notification) => notification.id !== id,
-          ),
+          notifications: state.notifications.filter((notification) => notification.id !== id),
         };
         persistNotificationState(newState);
         return newState;

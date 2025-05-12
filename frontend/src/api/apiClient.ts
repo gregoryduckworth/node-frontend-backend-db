@@ -1,5 +1,5 @@
-import { handleApiError } from "./handleApiError";
-import type { ApiErrorResponse, RequestOptions, CacheItem } from "./types";
+import { handleApiError } from './handleApiError';
+import type { ApiErrorResponse, RequestOptions, CacheItem } from './types';
 
 const cache = new Map<string, CacheItem<any>>();
 
@@ -19,12 +19,9 @@ export const clearCache = (url?: string): void => {
   }
 };
 
-export const apiClient = async <T>(
-  url: string,
-  options: RequestOptions = {},
-): Promise<T> => {
+export const apiClient = async <T>(url: string, options: RequestOptions = {}): Promise<T> => {
   const {
-    method = "GET",
+    method = 'GET',
     headers = {},
     body,
     includeCredentials = false,
@@ -33,7 +30,7 @@ export const apiClient = async <T>(
     cacheTime = 5 * 60 * 1000,
   } = options;
 
-  if (method === "GET" && !skipCache) {
+  if (method === 'GET' && !skipCache) {
     const cacheKey = createCacheKey(url, options);
     const cachedItem = cache.get(cacheKey);
 
@@ -49,10 +46,10 @@ export const apiClient = async <T>(
     const requestOptions: RequestInit = {
       method,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...headers,
       },
-      ...(includeCredentials ? { credentials: "include" } : {}),
+      ...(includeCredentials ? { credentials: 'include' } : {}),
       ...(body ? { body: JSON.stringify(body) } : {}),
       signal: controller.signal,
     };
@@ -73,12 +70,8 @@ export const apiClient = async <T>(
     }
 
     // Handle empty responses
-    const contentType = response.headers.get("content-type");
-    if (
-      response.status === 204 ||
-      !contentType ||
-      !contentType.includes("application/json")
-    ) {
+    const contentType = response.headers.get('content-type');
+    if (response.status === 204 || !contentType || !contentType.includes('application/json')) {
       return {} as T;
     }
 
@@ -89,7 +82,7 @@ export const apiClient = async <T>(
 
     try {
       const data = JSON.parse(text) as T;
-      if (method === "GET" && !skipCache) {
+      if (method === 'GET' && !skipCache) {
         const cacheKey = createCacheKey(url, options);
         cache.set(cacheKey, {
           data,
@@ -99,7 +92,7 @@ export const apiClient = async <T>(
 
       return data;
     } catch (e) {
-      console.error("Failed to parse response:", e);
+      console.error('Failed to parse response:', e);
       throw {
         response: {
           data: { parseError: true },
