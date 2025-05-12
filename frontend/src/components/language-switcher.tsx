@@ -1,14 +1,14 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Globe, Check } from "lucide-react";
-import { LANGUAGES } from "@/i18n/languages";
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { Globe, Check } from 'lucide-react';
+import { LANGUAGES } from '@/i18n/languages';
 
 const LanguageSwitcher: React.FC = () => {
   const { i18n } = useTranslation();
@@ -19,20 +19,13 @@ const LanguageSwitcher: React.FC = () => {
 
   // Only show languages that are available in i18n resources
   const availableCodes = Object.keys(i18n.options.resources || {});
-  const languages = LANGUAGES.filter((lang) =>
-    availableCodes.includes(lang.code),
-  );
-  const currentLanguage =
-    languages.find((lang) => lang.code === i18n.language) || languages[0];
+  const languages = LANGUAGES.filter((lang) => availableCodes.includes(lang.code));
+  const currentLanguage = languages.find((lang) => lang.code === i18n.language) || languages[0];
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          data-testid="language-switcher-button"
-        >
+        <Button variant="outline" size="sm" data-testid="language-switcher-button">
           <Globe className="h-4 w-4 mr-2" />
           {currentLanguage.name}
         </Button>
@@ -46,9 +39,7 @@ const LanguageSwitcher: React.FC = () => {
             data-testid={`language-option-${language.code}`}
           >
             <span>{language.name}</span>
-            {currentLanguage.code === language.code && (
-              <Check className="h-4 w-4 ml-2" />
-            )}
+            {currentLanguage.code === language.code && <Check className="h-4 w-4 ml-2" />}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
