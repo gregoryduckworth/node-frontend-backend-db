@@ -23,7 +23,11 @@ function loadPersistedNotifications() {
 }
 
 function persistNotificationState(state: Partial<NotificationState>) {
-  localStorage.setItem(NOTIFICATION_STORAGE_KEY, JSON.stringify(pickNotificationState(state)));
+  try {
+    localStorage.setItem(NOTIFICATION_STORAGE_KEY, JSON.stringify(pickNotificationState(state)));
+  } catch (error: unknown) {
+    console.error('Failed to persist notification state:', error);
+  }
 }
 
 export const useNotificationStore = create<NotificationState>((set) => {

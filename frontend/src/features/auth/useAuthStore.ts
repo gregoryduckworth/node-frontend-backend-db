@@ -22,7 +22,11 @@ function loadPersistedAuth() {
 }
 
 function persistAuthState(state: Partial<AuthState>) {
-  localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(pickAuthState(state)));
+  try {
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(pickAuthState(state)));
+  } catch (error: unknown) {
+    console.error('Failed to persist auth state:', error);
+  }
 }
 
 function pickAuthState(state: Partial<AuthState>): Partial<AuthState> {
