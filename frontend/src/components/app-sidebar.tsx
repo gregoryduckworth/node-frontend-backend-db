@@ -30,7 +30,7 @@ import { COMPANY } from '@/config/settings';
 import { useAuthStore } from '@/features/auth/useAuthStore';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { firstName, lastName, email } = useAuthStore();
 
   const data = React.useMemo(
@@ -162,7 +162,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         },
       ],
     }),
-    [t, i18n.language, firstName, lastName, email],
+    [t, firstName, lastName, email],
   );
 
   return (
