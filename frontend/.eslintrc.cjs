@@ -16,7 +16,7 @@ module.exports = {
   settings: { react: { version: '18.2' } },
   plugins: ['@typescript-eslint', 'react-refresh', 'prettier'],
   rules: {
-    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    'react-refresh/only-export-components': 'off',
     'prettier/prettier': 'error',
   },
   overrides: [

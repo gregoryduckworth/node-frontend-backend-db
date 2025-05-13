@@ -39,12 +39,6 @@ const ForgotPassword = () => {
     }
   };
 
-  const handleSendAgain = () => {
-    setTimeout(() => {
-      setIsSuccess(false);
-    }, 100);
-  };
-
   return (
     <GenericLayout title={t('forgotPassword.title')} subtitle={t('forgotPassword.subtitle')}>
       <form onSubmit={handleSubmit} data-testid="forgot-password-form">

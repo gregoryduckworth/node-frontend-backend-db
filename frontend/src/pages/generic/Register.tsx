@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, FormEvent, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { register as registerApi } from '@/features/auth/authApi';
@@ -27,32 +27,35 @@ const Register = () => {
   const { t } = useTranslation();
   useTitle('register.title');
 
+  const validatePassword = useCallback(
+    (password: string): boolean => {
+      const errors: string[] = [];
+      if (password.length < 8) {
+        errors.push(t('validation.minLength', { field: t('auth.password'), min: 8 }));
+      }
+      if (!/[A-Z]/.test(password)) {
+        errors.push(t('validation.passwordUppercase'));
+      }
+      if (!/\d/.test(password)) {
+        errors.push(t('validation.passwordNumber'));
+      }
+      setPasswordErrors(errors);
+      return errors.length === 0;
+    },
+    [t],
+  );
+
   useEffect(() => {
     if (passwordTouched) {
       validatePassword(password);
     }
-  }, [password, passwordTouched]);
+  }, [password, passwordTouched, validatePassword]);
 
   useEffect(() => {
     if (password || confirmPassword) {
       setPasswordMatchError(password !== confirmPassword);
     }
   }, [password, confirmPassword]);
-
-  const validatePassword = (password: string): boolean => {
-    const errors: string[] = [];
-    if (password.length < 8) {
-      errors.push(t('validation.minLength', { field: t('auth.password'), min: 8 }));
-    }
-    if (!/[A-Z]/.test(password)) {
-      errors.push(t('validation.passwordUppercase'));
-    }
-    if (!/\d/.test(password)) {
-      errors.push(t('validation.passwordNumber'));
-    }
-    setPasswordErrors(errors);
-    return errors.length === 0;
-  };
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

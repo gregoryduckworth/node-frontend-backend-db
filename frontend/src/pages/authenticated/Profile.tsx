@@ -104,11 +104,7 @@ const Profile = () => {
   // Format date for display
   const formatDate = (dateString: string | null) => {
     if (!dateString) return '';
-    try {
-      return new Date(dateString).toLocaleDateString();
-    } catch (e) {
-      return '';
-    }
+    return new Date(dateString).toLocaleDateString();
   };
 
   return (
