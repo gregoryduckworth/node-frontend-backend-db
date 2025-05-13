@@ -37,7 +37,7 @@ const ResetPassword = () => {
     setIsSubmitting(true);
 
     if (password !== confirmPassword) {
-      addNotification(t('validation.passwordMatch'), NotificationType.ERROR);
+      addNotification(t('resetPassword.errors.passwordMatch'), NotificationType.ERROR);
       setIsSubmitting(false);
       return;
     }
@@ -45,12 +45,12 @@ const ResetPassword = () => {
     try {
       await resetPassword(token, password, confirmPassword);
       setIsSuccess(true);
-      addNotification(t('auth.passwordResetSuccess'), NotificationType.SUCCESS);
+      addNotification(t('resetPassword.passwordResetSuccess'), NotificationType.SUCCESS);
       navigate('/login');
     } catch (error: unknown) {
       setIsSuccess(false);
       addNotification(
-        getApiErrorMessage(error, t('auth.errors.serverError')),
+        getApiErrorMessage(error, t('resetPassword.errors.serverError')),
         NotificationType.ERROR,
       );
     } finally {
@@ -63,9 +63,11 @@ const ResetPassword = () => {
       <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
         <Card className="w-full max-w-sm p-6">
           <div className="flex flex-col gap-4 text-center">
-            <h1 className="text-2xl font-bold">{t('auth.invalidResetLink')}</h1>
-            <p className="text-muted-foreground">{t('auth.linkExpired')}</p>
-            <Button onClick={() => navigate('/forgot-password')}>{t('auth.requestNewLink')}</Button>
+            <h1 className="text-2xl font-bold">{t('resetPassword.invalidResetLink')}</h1>
+            <p className="text-muted-foreground">{t('resetPassword.linkExpired')}</p>
+            <Button onClick={() => navigate('/forgot-password')}>
+              {t('resetPassword.requestNewLink')}
+            </Button>
           </div>
         </Card>
       </div>
@@ -78,11 +80,11 @@ const ResetPassword = () => {
         {!isSuccess ? (
           <>
             <div className="grid gap-3">
-              <Label htmlFor="password">{t('auth.newPassword')}</Label>
+              <Label htmlFor="password">{t('resetPassword.newPassword')}</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder={t('auth.enterNewPassword')}
+                placeholder={t('resetPassword.enterNewPassword')}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -91,11 +93,11 @@ const ResetPassword = () => {
             </div>
 
             <div className="grid gap-3 mt-6">
-              <Label htmlFor="confirmPassword">{t('auth.confirmNewPassword')}</Label>
+              <Label htmlFor="confirmPassword">{t('resetPassword.confirmNewPassword')}</Label>
               <Input
                 id="confirmPassword"
                 type="password"
-                placeholder={t('auth.confirmNewPasswordPlaceholder')}
+                placeholder={t('resetPassword.confirmNewPasswordPlaceholder')}
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -121,7 +123,7 @@ const ResetPassword = () => {
             onClick={() => navigate('/login')}
             data-testid="back-to-login-button"
           >
-            {t('auth.backToLogin')}
+            {t('resetPassword.backToLogin')}
           </Button>
         )}
       </form>

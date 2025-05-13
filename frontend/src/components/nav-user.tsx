@@ -124,7 +124,7 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
-              {t('auth.logout')}
+              {t('authShared.logout')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

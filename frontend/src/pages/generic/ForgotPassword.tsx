@@ -28,11 +28,11 @@ const ForgotPassword = () => {
     try {
       await requestPasswordReset(email);
       setIsSuccess(true);
-      addNotification(t('auth.passwordResetRequest'), NotificationType.SUCCESS);
+      addNotification(t('forgotPassword.passwordResetRequest'), NotificationType.SUCCESS);
     } catch (error: unknown) {
       setIsSuccess(false);
       addNotification(
-        getApiErrorMessage(error, t('auth.errors.serverError')),
+        getApiErrorMessage(error, t('forgotPassword.errors.serverError')),
         NotificationType.ERROR,
       );
     } finally {
@@ -41,12 +41,12 @@ const ForgotPassword = () => {
   };
 
   return (
-    <GenericLayout title={t('forgotPassword.title')} subtitle={t('forgotPassword.subtitle')}>
+    <GenericLayout title={t('forgotPassword.title')} subtitle={t('forgotPassword.enterEmailReset')}>
       <form onSubmit={handleSubmit} data-testid="forgot-password-form">
         {!isSuccess ? (
           <>
             <div className="grid gap-3">
-              <Label htmlFor="email">{t('auth.email')}</Label>
+              <Label htmlFor="email">{t('forgotPassword.email')}</Label>
               <Input
                 id="email"
                 type="email"
@@ -63,7 +63,7 @@ const ForgotPassword = () => {
               disabled={isSubmitting}
               data-testid="submit-button"
             >
-              {isSubmitting ? t('common.loading') : t('forgotPassword.resetPassword')}
+              {isSubmitting ? t('common.loading') : t('forgotPassword.title')}
             </Button>
           </>
         ) : (
@@ -77,7 +77,7 @@ const ForgotPassword = () => {
               className="w-full"
               data-testid="back-to-login-button"
             >
-              {t('auth.backToLogin')}
+              {t('forgotPassword.backToLogin')}
             </Button>
           </div>
         )}
@@ -88,7 +88,7 @@ const ForgotPassword = () => {
             className="text-primary underline underline-offset-4"
             data-testid="login-link"
           >
-            {t('auth.backToLogin')}
+            {t('authShared.backToLogin')}
           </Link>
         </div>
       </form>

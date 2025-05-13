@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "Acme Inc",
-    "description": "Application Modèle",
+    "description": "Application modèle",
     "imageAlt": "Logo de l'application"
   },
   "common": {
@@ -10,7 +10,7 @@
     "save": "Enregistrer",
     "cancel": "Annuler",
     "delete": "Supprimer",
-    "edit": "Modifier",
+    "edit": "Éditer",
     "view": "Voir",
     "submit": "Soumettre",
     "back": "Retour",
@@ -24,73 +24,76 @@
     "saving": "Enregistrement..."
   },
   "login": {
-    "title": "Connexion"
+    "title": "Connexion",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "login": "Connexion",
+    "loginSuccess": "Connexion réussie",
+    "invalidCredentials": "E-mail ou mot de passe invalide.",
+    "backToRegister": "Vous n'avez pas de compte ?",
+    "forgotPassword": "Mot de passe oublié",
+    "rememberPassword": "Vous souvenez-vous de votre mot de passe ?",
+    "backToLogin": "Retour à la connexion"
   },
   "register": {
-    "title": "Inscription"
-  },
-  "forgotPassword": {
-    "title": "Mot de Passe Oublié"
-  },
-  "resetPassword": {
-    "title": "Réinitialiser le Mot de Passe"
-  },
-  "dashboard": {
-    "title": "Tableau de Bord",
-    "welcome": "Bienvenue, {{firstName}} {{lastName}} !",
-    "summary": "Résumé du Tableau de Bord",
-    "quickActions": "Actions Rapides",
-    "buildingApplication": "Construction de l'Application",
-    "dataFetching": "Récupération des Données"
-  },
-  "auth": {
-    "login": "Connexion",
-    "logout": "Déconnexion",
+    "title": "S'inscrire",
     "register": "S'inscrire",
-    "forgotPassword": "Mot de passe oublié",
-    "resetPassword": "Réinitialiser le mot de passe",
+    "registerSuccess": "Inscription réussie",
+    "firstName": "Prénom",
+    "lastName": "Nom",
     "email": "E-mail",
     "password": "Mot de passe",
     "confirmPassword": "Confirmer le mot de passe",
-    "firstName": "Prénom",
-    "lastName": "Nom",
+    "firstNamePlaceholder": "Entrez votre prénom",
+    "lastNamePlaceholder": "Entrez votre nom",
+    "emailPlaceholder": "Entrez votre e-mail",
+    "passwordPlaceholder": "Entrez votre mot de passe",
+    "confirmPasswordPlaceholder": "Confirmez votre mot de passe",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "signUpForAccount": "Inscrivez-vous pour votre compte"
+  },
+  "forgotPassword": {
+    "title": "Mot de passe oublié",
+    "email": "E-mail",
+    "enterEmailReset": "Entrez votre e-mail pour réinitialiser votre mot de passe",
+    "passwordResetRequest": "Les instructions de réinitialisation du mot de passe ont été envoyées à votre e-mail"
+  },
+  "resetPassword": {
+    "title": "Réinitialiser le mot de passe",
+    "subtitle": "Entrez votre nouveau mot de passe ci-dessous.",
+    "invalidResetLink": "Lien de réinitialisation invalide ou expiré",
+    "linkExpired": "Votre lien de réinitialisation a expiré ou n'est pas valide.",
+    "requestNewLink": "Demander un nouveau lien",
+    "newPassword": "Nouveau mot de passe",
+    "enterNewPassword": "Entrez votre nouveau mot de passe",
+    "confirmNewPassword": "Confirmer le nouveau mot de passe",
+    "confirmNewPasswordPlaceholder": "Saisissez à nouveau votre nouveau mot de passe",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "backToLogin": "Retour à la connexion",
+    "errors": {
+      "passwordMatch": "Les mots de passe ne correspondent pas.",
+      "serverError": "Une erreur s'est produite. Veuillez réessayer."
+    },
+    "passwordResetSuccess": "Votre mot de passe a été réinitialisé avec succès."
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bienvenue, {{firstName}} {{lastName}} !",
+    "summary": "Résumé du tableau de bord",
+    "quickActions": "Actions rapides",
+    "buildingApplication": "Construction de l'application",
+    "dataFetching": "Récupération des données"
+  },
+  "authShared": {
+    "logout": "Déconnexion",
     "dateOfBirth": "Date de naissance",
     "dateOfBirthPlaceholder": "Sélectionnez votre date de naissance",
     "name": "Nom",
-    "loginSuccess": "Connexion réussie",
-    "logoutSuccess": "Déconnexion réussie",
-    "registerSuccess": "Inscription réussie",
-    "passwordResetRequest": "Instructions de réinitialisation envoyées à votre e-mail",
-    "passwordResetSuccess": "Le mot de passe a été réinitialisé avec succès",
-    "newPassword": "Nouveau mot de passe",
-    "confirmNewPassword": "Confirmer le nouveau mot de passe",
-    "enterNewPassword": "Entrez votre nouveau mot de passe",
-    "enterEmailReset": "Entrez votre e-mail pour réinitialiser votre mot de passe",
-    "invalidResetLink": "Lien de réinitialisation invalide",
-    "linkExpired": "Le lien de réinitialisation est invalide ou a expiré.",
-    "requestNewLink": "Demander un nouveau lien",
-    "sendAgain": "Envoyer à nouveau",
-    "rememberPassword": "Vous vous souvenez de votre mot de passe ?",
-    "backToLogin": "Retour à la connexion",
-    "createAccount": "Créer un compte",
-    "signUpForAccount": "Inscrivez-vous pour votre compte",
-    "usernamePlaceholder": "nom d'utilisateur",
-    "firstNamePlaceholder": "Entrez votre prénom",
-    "lastNamePlaceholder": "Entrez votre nom de famille",
-    "alreadyHaveAccount": "Vous avez déjà un compte ?",
-    "dontHaveAccount": "Vous n'avez pas de compte ?",
     "termsNotice": "En cliquant sur continuer, vous acceptez nos",
     "termsOfService": "Conditions d'utilisation",
     "privacyPolicy": "Politique de confidentialité",
-    "confirmNewPasswordPlaceholder": "Confirmer le nouveau mot de passe",
-    "namePlaceholder": "Entrez votre nom",
-    "emailPlaceholder": "Entrez votre e-mail",
-    "errors": {
-      "emailNotRegistered": "L'e-mail n'est pas enregistré. Veuillez vous inscrire d'abord.",
-      "invalidCredentials": "E-mail ou mot de passe invalide.",
-      "accountLocked": "Votre compte est verrouillé. Veuillez contacter le support.",
-      "serverError": "Erreur du serveur. Veuillez réessayer plus tard."
-    }
+    "termsNoticeFull": "{{termsNotice}} <a1>{{termsOfService}}</a1> {{and}} <a2>{{privacyPolicy}}</a2>.",
+    "backToLogin": "Retour à la connexion"
   },
   "validation": {
     "required": "{{field}} est requis",
@@ -103,21 +106,14 @@
     "passwordNumber": "Le mot de passe doit contenir au moins un chiffre",
     "nameRequired": "Le nom est requis",
     "firstNameRequired": "Le prénom est requis",
-    "lastNameRequired": "Le nom est requis",
+    "lastNameRequired": "Le nom de famille est requis",
     "emailRequired": "L'e-mail est requis",
     "invalidEmail": "Veuillez entrer une adresse e-mail valide",
-    "emailExists": "L'adresse e-mail existe déjà. Veuillez utiliser une adresse différente.",
+    "emailExists": "L'adresse e-mail existe déjà. Veuillez en utiliser une autre.",
     "invalidDate": "Veuillez entrer une date valide"
   },
-  "notifications": {
-    "success": "Succès",
-    "error": "Erreur",
-    "warning": "Avertissement",
-    "info": "Information",
-    "close": "Fermer la notification"
-  },
   "sidebar": {
-    "playground": "Terrain de jeu",
+    "playground": "Playground",
     "dashboard": "Tableau de bord",
     "history": "Historique",
     "starred": "Favoris",
@@ -125,7 +121,7 @@
     "models": "Modèles",
     "genesis": "Genèse",
     "explorer": "Explorateur",
-    "quantum": "Quantique",
+    "quantum": "Quantum",
     "documentation": "Documentation",
     "introduction": "Introduction",
     "getStarted": "Commencer",
@@ -136,7 +132,7 @@
     "billing": "Facturation",
     "limits": "Limites",
     "support": "Support",
-    "feedback": "Commentaires",
+    "feedback": "Retour",
     "account": "Compte",
     "notifications": "Notifications",
     "upgradeToPro": "Passer à Pro",
@@ -144,8 +140,8 @@
     "profile": "Profil",
     "platform": "Plateforme",
     "projects": {
-      "designEngineering": "Ingénierie de Conception",
-      "salesMarketing": "Ventes et Marketing",
+      "designEngineering": "Ingénierie de conception",
+      "salesMarketing": "Ventes et marketing",
       "travel": "Voyage"
     }
   },
@@ -153,6 +149,13 @@
     "viewProject": "Voir le projet",
     "shareProject": "Partager le projet",
     "deleteProject": "Supprimer le projet"
+  },
+  "notifications": {
+    "success": "Succès",
+    "error": "Erreur",
+    "warning": "Avertissement",
+    "info": "Information",
+    "close": "Fermer la notification"
   },
   "profile": {
     "title": "Profil utilisateur",
@@ -162,11 +165,15 @@
     "updateSuccess": "Profil mis à jour",
     "profileUpdated": "Votre profil a été mis à jour avec succès",
     "updateError": "Échec de la mise à jour du profil",
-    "dateOfBirthNeeded": "Veuillez définir votre date de naissance"
+    "dateOfBirthNeeded": "Veuillez définir votre date de naissance",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "E-mail",
+    "dateOfBirth": "Date de naissance"
   },
   "errorBoundary": {
-    "title": "Une erreur s'est produite",
-    "description": "Une erreur inattendue s'est produite. Veuillez recharger la page. {{error}}",
+    "title": "Une erreur est survenue",
+    "description": "Une erreur inattendue s'est produite. Veuillez réessayer de recharger la page. {{error}}",
     "reload": "Recharger la page"
   }
 }

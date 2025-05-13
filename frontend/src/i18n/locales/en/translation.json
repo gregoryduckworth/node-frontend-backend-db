@@ -24,16 +24,56 @@
     "saving": "Saving..."
   },
   "login": {
-    "title": "Login"
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "login": "Login",
+    "loginSuccess": "Logged in successfully",
+    "invalidCredentials": "Invalid email or password.",
+    "backToRegister": "Don't have an account?",
+    "forgotPassword": "Forgot Password",
+    "rememberPassword": "Remember your password?"
   },
   "register": {
-    "title": "Register"
+    "title": "Register",
+    "register": "Register",
+    "registerSuccess": "Registration successful",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstNamePlaceholder": "Enter your first name",
+    "lastNamePlaceholder": "Enter your last name",
+    "emailPlaceholder": "Enter your email",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPasswordPlaceholder": "Confirm your password",
+    "alreadyHaveAccount": "Already have an account?",
+    "signUpForAccount": "Sign up for your account"
   },
   "forgotPassword": {
-    "title": "Forgot Password"
+    "title": "Forgot Password",
+    "email": "Email",
+    "enterEmailReset": "Enter your email to reset your password",
+    "passwordResetRequest": "Password reset instructions sent to your email"
   },
   "resetPassword": {
-    "title": "Reset Password"
+    "title": "Reset Password",
+    "subtitle": "Enter your new password below.",
+    "invalidResetLink": "Invalid or expired reset link",
+    "linkExpired": "Your reset link has expired or is invalid.",
+    "requestNewLink": "Request new link",
+    "newPassword": "New Password",
+    "enterNewPassword": "Enter your new password",
+    "confirmNewPassword": "Confirm New Password",
+    "confirmNewPasswordPlaceholder": "Re-enter your new password",
+    "resetPassword": "Reset Password",
+    "backToLogin": "Back to Login",
+    "errors": {
+      "passwordMatch": "Passwords do not match.",
+      "serverError": "An error occurred. Please try again."
+    },
+    "passwordResetSuccess": "Your password has been reset successfully."
   },
   "dashboard": {
     "title": "Dashboard",
@@ -43,54 +83,16 @@
     "buildingApplication": "Building Application",
     "dataFetching": "Fetching Data"
   },
-  "auth": {
-    "login": "Login",
+  "authShared": {
     "logout": "Logout",
-    "register": "Register",
-    "forgotPassword": "Forgot Password",
-    "resetPassword": "Reset Password",
-    "email": "Email",
-    "password": "Password",
-    "confirmPassword": "Confirm Password",
-    "firstName": "First Name",
-    "lastName": "Last Name",
     "dateOfBirth": "Date of Birth",
     "dateOfBirthPlaceholder": "Select your date of birth",
     "name": "Name",
-    "loginSuccess": "Logged in successfully",
-    "logoutSuccess": "Logged out successfully",
-    "registerSuccess": "Registration successful",
-    "passwordResetRequest": "Password reset instructions sent to your email",
-    "passwordResetSuccess": "Password has been reset successfully",
-    "newPassword": "New Password",
-    "confirmNewPassword": "Confirm New Password",
-    "enterNewPassword": "Enter your new password",
-    "enterEmailReset": "Enter your email to reset your password",
-    "invalidResetLink": "Invalid Reset Link",
-    "linkExpired": "The password reset link is invalid or has expired.",
-    "requestNewLink": "Request a new link",
-    "sendAgain": "Send Again",
-    "rememberPassword": "Remember your password?",
-    "backToLogin": "Back to Login",
-    "createAccount": "Create account",
-    "signUpForAccount": "Sign up for your account",
-    "usernamePlaceholder": "username",
-    "firstNamePlaceholder": "Enter your first name",
-    "lastNamePlaceholder": "Enter your last name",
-    "alreadyHaveAccount": "Already have an account?",
-    "dontHaveAccount": "Don't have an account?",
     "termsNotice": "By clicking continue, you agree to our",
     "termsOfService": "Terms of Service",
     "privacyPolicy": "Privacy Policy",
-    "confirmNewPasswordPlaceholder": "Confirm new password",
-    "namePlaceholder": "Enter your name",
-    "emailPlaceholder": "Enter your email",
-    "errors": {
-      "emailNotRegistered": "Email is not registered. Please register first.",
-      "invalidCredentials": "Invalid email or password.",
-      "accountLocked": "Your account is locked. Please contact support.",
-      "serverError": "Server error. Please try again later."
-    }
+    "termsNoticeFull": "{{termsNotice}} <a1>{{termsOfService}}</a1> {{and}} <a2>{{privacyPolicy}}</a2>.",
+    "backToLogin": "Back to Login"
   },
   "validation": {
     "required": "{{field}} is required",
@@ -108,13 +110,6 @@
     "invalidEmail": "Please enter a valid email address",
     "emailExists": "Email address already exists. Please use a different email.",
     "invalidDate": "Please enter a valid date"
-  },
-  "notifications": {
-    "success": "Success",
-    "error": "Error",
-    "warning": "Warning",
-    "info": "Information",
-    "close": "Close notification"
   },
   "sidebar": {
     "playground": "Playground",
@@ -154,6 +149,13 @@
     "shareProject": "Share Project",
     "deleteProject": "Delete Project"
   },
+  "notifications": {
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Information",
+    "close": "Close notification"
+  },
   "profile": {
     "title": "User Profile",
     "personalInfo": "Personal Information",
@@ -162,7 +164,11 @@
     "updateSuccess": "Profile Updated",
     "profileUpdated": "Your profile has been updated successfully",
     "updateError": "Failed to update profile",
-    "dateOfBirthNeeded": "Please set your date of birth"
+    "dateOfBirthNeeded": "Please set your date of birth",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "dateOfBirth": "Date of Birth"
   },
   "errorBoundary": {
     "title": "Something went wrong",
