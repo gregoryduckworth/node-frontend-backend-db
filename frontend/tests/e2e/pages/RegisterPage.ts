@@ -32,7 +32,7 @@ export class RegisterPage extends BasePage {
     lastName: string,
     email: string,
     password: string,
-    confirmPassword?: string
+    confirmPassword?: string,
   ) {
     await this.firstNameInput.fill(firstName);
     await this.lastNameInput.fill(lastName);
