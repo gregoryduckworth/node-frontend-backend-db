@@ -21,6 +21,7 @@ import { useAuthStore } from '@/features/auth/useAuthStore';
 import { useNotificationStore } from '@/features/notification/useNotificationStore';
 import { ROUTES } from '@/config/auth';
 import { DropdownMenuGroup } from '@radix-ui/react-dropdown-menu';
+import { getApiErrorMessage } from '@/api/handleApiError';
 
 export function NavUser({
   user,
@@ -43,9 +44,8 @@ export function NavUser({
       await logout();
       addNotification('Logged out successfully', NotificationType.SUCCESS);
       navigate('/login');
-    } catch (error) {
-      console.error('Logout error:', error);
-      addNotification('Failed to log out', NotificationType.ERROR);
+    } catch (error: unknown) {
+      addNotification(getApiErrorMessage(error, t('auth.logoutError')), NotificationType.ERROR);
     }
   };
 

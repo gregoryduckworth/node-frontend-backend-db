@@ -7,6 +7,7 @@ import {
   updateProfile as updateProfileApi,
 } from './authApi';
 import type { AuthState, JwtPayload } from './types';
+import type { ApiErrorResponse } from '@/api/types';
 
 const AUTH_STORAGE_KEY = 'authState';
 
@@ -81,7 +82,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
         };
         set(newState);
         persistAuthState(newState);
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('Error decoding JWT token:', error);
         const cleared = {
           token: '',
@@ -119,18 +120,20 @@ export const useAuthStore = create<AuthState>((set, get) => {
           return;
         }
         throw new Error('No access token returned');
-      } catch (error: any) {
-        console.error('Login error:', error);
-        throw error;
+      } catch (error: unknown) {
+        const err = error as { response?: ApiErrorResponse };
+        console.error('Login error:', err);
+        throw err;
       }
     },
     logout: async () => {
       try {
         await logoutApi();
         get().clearAuth();
-      } catch (error) {
-        console.error('Logout error:', error);
-        throw error;
+      } catch (error: unknown) {
+        const err = error as { response?: ApiErrorResponse };
+        console.error('Logout error:', err);
+        throw err;
       }
     },
     checkAuth: async () => {
@@ -145,8 +148,9 @@ export const useAuthStore = create<AuthState>((set, get) => {
         get().clearAuth();
         set({ isLoading: false });
         return false;
-      } catch (error) {
-        console.error('Auth check error:', error);
+      } catch (error: unknown) {
+        const err = error as { response?: ApiErrorResponse };
+        console.error('Auth check error:', err);
         get().clearAuth();
         set({ isLoading: false });
         return false;
@@ -162,9 +166,10 @@ export const useAuthStore = create<AuthState>((set, get) => {
           dateOfBirth: dateOfBirth,
         });
         await get().checkAuth();
-      } catch (error) {
-        console.error('Profile update error:', error);
-        throw error;
+      } catch (error: unknown) {
+        const err = error as { response?: ApiErrorResponse };
+        console.error('Profile update error:', err);
+        throw err;
       }
     },
   };

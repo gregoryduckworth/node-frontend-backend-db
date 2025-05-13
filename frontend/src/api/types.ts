@@ -1,16 +1,15 @@
-export type ApiErrorResponse = {
-  response: {
-    data: any;
-    status: number;
-    statusText?: string;
-  };
-  message?: string;
-};
+export interface ApiErrorResponse {
+  message: string;
+  code?: string | number;
+  errors?: Record<string, string[]>;
+  status?: number;
+  [key: string]: unknown;
+}
 
 export interface RequestOptions {
   method?: string;
   headers?: Record<string, string>;
-  body?: any;
+  body?: unknown;
   includeCredentials?: boolean;
   timeout?: number;
   skipCache?: boolean;

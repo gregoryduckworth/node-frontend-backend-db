@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import GenericLayout from '@/components/layouts/GenericLayout';
 import useTitle from '@/hooks/use-title';
+import { getApiErrorMessage } from '@/api/handleApiError';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -29,9 +30,8 @@ const Login = () => {
       await login(email, password);
       addNotification(t('auth.loginSuccess'), NotificationType.SUCCESS);
       navigate('/dashboard');
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || t('auth.genericError');
-      addNotification(errorMessage, NotificationType.ERROR);
+    } catch (error: unknown) {
+      addNotification(getApiErrorMessage(error, t('auth.genericError')), NotificationType.ERROR);
     } finally {
       setIsSubmitting(false);
     }

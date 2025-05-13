@@ -1,7 +1,7 @@
 import { handleApiError } from './handleApiError';
 import type { ApiErrorResponse, RequestOptions, CacheItem } from './types';
 
-const cache = new Map<string, CacheItem<any>>();
+const cache = new Map<string, CacheItem<unknown>>();
 
 const createCacheKey = (url: string, options: RequestOptions): string => {
   return `${url}:${options.includeCredentials}`;
@@ -101,7 +101,7 @@ export const apiClient = async <T>(url: string, options: RequestOptions = {}): P
         message: `Failed to parse JSON response: ${e instanceof Error ? e.message : String(e)}`,
       } as ApiErrorResponse;
     }
-  } catch (error) {
+  } catch (error: unknown) {
     handleApiError(error);
     throw error;
   } finally {

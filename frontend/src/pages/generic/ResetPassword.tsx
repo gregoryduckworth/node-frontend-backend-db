@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import GenericLayout from '@/components/layouts/GenericLayout';
 import useTitle from '@/hooks/use-title';
+import { getApiErrorMessage } from '@/api/handleApiError';
 
 const ResetPassword = () => {
   const [token, setToken] = useState('');
@@ -46,10 +47,10 @@ const ResetPassword = () => {
       setIsSuccess(true);
       addNotification(t('auth.passwordResetSuccess'), NotificationType.SUCCESS);
       navigate('/login');
-    } catch (error: any) {
+    } catch (error: unknown) {
       setIsSuccess(false);
       addNotification(
-        error?.response?.data?.message || t('auth.errors.serverError'),
+        getApiErrorMessage(error, t('auth.errors.serverError')),
         NotificationType.ERROR,
       );
     } finally {

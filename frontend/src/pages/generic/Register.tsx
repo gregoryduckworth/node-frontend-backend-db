@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import GenericLayout from '@/components/layouts/GenericLayout';
 import useTitle from '@/hooks/use-title';
+import { getApiErrorMessage } from '@/api/handleApiError';
 
 const Register = () => {
   const [firstName, setFirstName] = useState('');
@@ -76,8 +77,8 @@ const Register = () => {
       await registerApi(firstName, lastName, email, password, confirmPassword);
       addNotification(t('auth.registerSuccess'), NotificationType.SUCCESS);
       navigate('/login');
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || t('auth.errors.serverError');
+    } catch (error: unknown) {
+      const errorMessage = getApiErrorMessage(error, t('auth.errors.serverError'));
       addNotification(errorMessage, NotificationType.ERROR);
     } finally {
       setIsSubmitting(false);
