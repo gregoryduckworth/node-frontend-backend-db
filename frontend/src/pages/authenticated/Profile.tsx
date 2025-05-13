@@ -42,25 +42,25 @@ const Profile = () => {
     let isValid = true;
 
     if (!formFirstName.trim()) {
-      newErrors.firstName = t('validation.firstNameRequired');
+      newErrors.firstName = t('profile.validation.firstNameRequired');
       isValid = false;
     }
 
     if (!formLastName.trim()) {
-      newErrors.lastName = t('validation.lastNameRequired');
+      newErrors.lastName = t('profile.validation.lastNameRequired');
       isValid = false;
     }
 
     if (!formEmail.trim()) {
-      newErrors.email = t('validation.emailRequired');
+      newErrors.email = t('profile.validation.emailRequired');
       isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(formEmail)) {
-      newErrors.email = t('validation.invalidEmail');
+      newErrors.email = t('profile.validation.invalidEmail');
       isValid = false;
     }
 
     if (formDateOfBirth && isNaN(Date.parse(formDateOfBirth))) {
-      newErrors.dateOfBirth = t('validation.invalidDate');
+      newErrors.dateOfBirth = t('profile.validation.invalidDate');
       isValid = false;
     }
 
@@ -83,8 +83,8 @@ const Profile = () => {
     } catch (error: unknown) {
       const errorMessage = getApiErrorMessage(error, t('profile.updateError'));
       if (errorMessage === 'Email already exists') {
-        addNotification(t('validation.emailExists'), NotificationType.ERROR);
-        setErrors({ ...errors, email: t('validation.emailExists') });
+        addNotification(t('profile.validation.emailExists'), NotificationType.ERROR);
+        setErrors({ ...errors, email: t('profile.validation.emailExists') });
       } else {
         addNotification(errorMessage, NotificationType.ERROR);
       }
@@ -122,12 +122,12 @@ const Profile = () => {
           ) : isEditMode ? (
             <form onSubmit={handleSubmit} className="space-y-4" data-testid="profile-edit-form">
               <div className="space-y-2">
-                <Label htmlFor="firstName">{t('auth.firstName')}</Label>
+                <Label htmlFor="firstName">{t('profile.firstName')}</Label>
                 <Input
                   id="firstName"
                   value={formFirstName}
                   onChange={(e) => setFormFirstName(e.target.value)}
-                  placeholder={t('auth.firstNamePlaceholder')}
+                  placeholder={t('profile.firstNamePlaceholder')}
                   className={errors.firstName ? 'border-red-500' : ''}
                   data-testid="first-name-input"
                 />
@@ -139,12 +139,12 @@ const Profile = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="lastName">{t('auth.lastName')}</Label>
+                <Label htmlFor="lastName">{t('profile.lastName')}</Label>
                 <Input
                   id="lastName"
                   value={formLastName}
                   onChange={(e) => setFormLastName(e.target.value)}
-                  placeholder={t('auth.lastNamePlaceholder')}
+                  placeholder={t('profile.lastNamePlaceholder')}
                   className={errors.lastName ? 'border-red-500' : ''}
                   data-testid="last-name-input"
                 />
@@ -156,13 +156,13 @@ const Profile = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">{t('auth.email')}</Label>
+                <Label htmlFor="email">{t('profile.email')}</Label>
                 <Input
                   id="email"
                   type="email"
                   value={formEmail}
                   onChange={(e) => setFormEmail(e.target.value)}
-                  placeholder={t('auth.emailPlaceholder')}
+                  placeholder={t('profile.emailPlaceholder')}
                   className={errors.email ? 'border-red-500' : ''}
                   data-testid="email-input"
                 />
@@ -174,13 +174,13 @@ const Profile = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="dateOfBirth">{t('auth.dateOfBirth')}</Label>
+                <Label htmlFor="dateOfBirth">{t('profile.dateOfBirth')}</Label>
                 <Input
                   id="dateOfBirth"
                   type="date"
                   value={formDateOfBirth ? formDateOfBirth.substring(0, 10) : ''}
                   onChange={(e) => setFormDateOfBirth(e.target.value)}
-                  placeholder={t('auth.dateOfBirthPlaceholder')}
+                  placeholder={t('profile.dateOfBirthPlaceholder')}
                   className={errors.dateOfBirth ? 'border-red-500' : ''}
                   data-testid="date-of-birth-input"
                 />
@@ -196,16 +196,16 @@ const Profile = () => {
               <h2 className="mb-4 text-lg font-semibold">{t('profile.personalInfo')}</h2>
               <div className="space-y-2">
                 <p data-testid="first-name-display">
-                  <strong>{t('auth.firstName')}:</strong> {firstName}
+                  <strong>{t('profile.firstName')}:</strong> {firstName}
                 </p>
                 <p data-testid="last-name-display">
-                  <strong>{t('auth.lastName')}:</strong> {lastName}
+                  <strong>{t('profile.lastName')}:</strong> {lastName}
                 </p>
                 <p data-testid="email-display">
-                  <strong>{t('auth.email')}:</strong> {email}
+                  <strong>{t('profile.email')}:</strong> {email}
                 </p>
                 <p data-testid="date-of-birth-display">
-                  <strong>{t('auth.dateOfBirth')}:</strong>{' '}
+                  <strong>{t('profile.dateOfBirth')}:</strong>{' '}
                   {dateOfBirth ? (
                     formatDate(dateOfBirth)
                   ) : (

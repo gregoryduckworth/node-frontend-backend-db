@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { useAuthStore } from '@/features/auth/useAuthStore';
 import { useNotificationStore } from '@/features/notification/useNotificationStore';
 import { NotificationType } from '@/features/notification/types';
@@ -28,20 +28,20 @@ const Login = () => {
 
     try {
       await login(email, password);
-      addNotification(t('auth.loginSuccess'), NotificationType.SUCCESS);
+      addNotification(t('login.loginSuccess'), NotificationType.SUCCESS);
       navigate('/dashboard');
     } catch (error: unknown) {
-      addNotification(getApiErrorMessage(error, t('auth.genericError')), NotificationType.ERROR);
+      addNotification(getApiErrorMessage(error, t('login.genericError')), NotificationType.ERROR);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <GenericLayout title={t('auth.login')} subtitle={t('app.description')}>
+    <GenericLayout title={t('login.title')} subtitle={t('app.description')}>
       <form onSubmit={handleLogin} data-testid="login-form">
         <div className="grid gap-3">
-          <Label htmlFor="email">{t('auth.email')}</Label>
+          <Label htmlFor="email">{t('login.email')}</Label>
           <Input
             id="email"
             type="email"
@@ -54,7 +54,7 @@ const Login = () => {
         </div>
 
         <div className="grid gap-3 mt-4">
-          <Label htmlFor="password">{t('auth.password')}</Label>
+          <Label htmlFor="password">{t('login.password')}</Label>
           <Input
             id="password"
             type="password"
@@ -69,7 +69,7 @@ const Login = () => {
               className="text-sm underline-offset-2 hover:underline"
               data-testid="forgot-password-link"
             >
-              {t('auth.forgotPassword')}
+              {t('login.forgotPassword')}
             </Link>
           </div>
         </div>
@@ -79,19 +79,31 @@ const Login = () => {
           disabled={isSubmitting}
           data-testid="login-button"
         >
-          {isSubmitting ? t('common.loading') : t('auth.login')}
+          {isSubmitting ? t('common.loading') : t('login.login')}
         </Button>
         <div className="text-center text-sm mt-6">
-          {t('auth.dontHaveAccount')}{' '}
+          {t('login.backToRegister')}{' '}
           <Link to="/register" className="underline underline-offset-4" data-testid="register-link">
-            {t('auth.register')}
+            {t('register.register')}
           </Link>
         </div>
       </form>
-      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        {t('auth.termsNotice')} <a href="#">{t('auth.termsOfService')}</a> {t('common.and')}{' '}
-        <a href="#">{t('auth.privacyPolicy')}</a>.
-      </div>
+      <p className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance">
+        <Trans
+          i18nKey="authShared.termsNoticeFull"
+          t={t}
+          components={{
+            a1: <a href="#" className="underline underline-offset-4" />,
+            a2: <a href="#" className="underline underline-offset-4" />,
+          }}
+          values={{
+            termsNotice: t('authShared.termsNotice'),
+            termsOfService: t('authShared.termsOfService'),
+            and: t('common.and'),
+            privacyPolicy: t('authShared.privacyPolicy'),
+          }}
+        />
+      </p>
     </GenericLayout>
   );
 };
