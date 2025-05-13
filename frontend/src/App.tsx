@@ -10,12 +10,14 @@ import { Toaster } from '@/components/ui/sonner';
 import { useAuthStore } from '@/features/auth/useAuthStore';
 import { ROUTES } from '@/config/auth';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useTranslation } from 'react-i18next';
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
 };
 
-const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+const ProtectedRoute = ({ children }: ProtectedRouteProps): JSX.Element | null => {
+  const { t } = useTranslation();
   const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
 
   useEffect(() => {
@@ -24,49 +26,41 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     }
   }, [isAuthenticated, isLoading, checkAuth]);
 
-  if (isLoading) return null;
+  if (isLoading) return <div>{t('common.loading')}</div>;
   if (!isAuthenticated) return <Navigate to={ROUTES.LOGIN} replace />;
 
   return <>{children}</>;
 };
 
-const App = () => {
-  const { checkAuth } = useAuthStore();
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
-  return (
-    <ErrorBoundary>
-      <BrowserRouter>
-        <Toaster />
-        <Routes>
-          <Route path={ROUTES.REGISTER} element={<Register />} />
-          <Route path={ROUTES.LOGIN} element={<Login />} />
-          <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
-          <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
-          <Route
-            path={ROUTES.DASHBOARD}
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTES.PROFILE}
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
-        </Routes>
-      </BrowserRouter>
-    </ErrorBoundary>
-  );
-};
+const App = (): JSX.Element => (
+  <ErrorBoundary>
+    <BrowserRouter>
+      <Toaster />
+      <Routes>
+        <Route path={ROUTES.REGISTER} element={<Register />} />
+        <Route path={ROUTES.LOGIN} element={<Login />} />
+        <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+        <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
+        <Route
+          path={ROUTES.DASHBOARD}
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.PROFILE}
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
+      </Routes>
+    </BrowserRouter>
+  </ErrorBoundary>
+);
 
 export default App;
