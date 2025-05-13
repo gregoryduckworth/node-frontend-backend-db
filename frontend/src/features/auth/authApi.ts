@@ -2,6 +2,7 @@ import { API_ENDPOINTS } from '@/config/auth';
 import { apiClient } from '@/api/apiClient';
 import { useAuthStore } from './useAuthStore';
 import type { AuthResponse, ApiMessageResponse, RefreshTokenResponse } from './types';
+import type { ApiErrorResponse } from '@/api/types';
 
 export const register = async (
   firstName: string,
@@ -36,10 +37,11 @@ export const refreshToken = async (): Promise<RefreshTokenResponse> => {
     return await apiClient<AuthResponse>(API_ENDPOINTS.REFRESH_TOKEN, {
       includeCredentials: true,
     });
-  } catch (error: any) {
-    const status = error?.response?.status;
+  } catch (error: unknown) {
+    const err = error as { response?: ApiErrorResponse };
+    const status = err?.response?.status;
     if (status !== 204 && status !== 403) {
-      console.error('Network error during token refresh:', error);
+      console.error('Network error during token refresh:', err);
     }
     return { accessToken: undefined };
   }

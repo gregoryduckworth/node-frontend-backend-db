@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import AuthenticatedLayout from '@/components/layouts/AuthenticatedLayout';
 import { NotificationType } from '@/features/notification/types';
 import useTitle from '@/hooks/use-title';
+import { getApiErrorMessage } from '@/api/handleApiError';
 
 const Profile = () => {
   const { firstName, lastName, email, dateOfBirth, isLoading, updateProfile } = useAuthStore();
@@ -79,13 +80,13 @@ const Profile = () => {
       await updateProfile(formFirstName, formLastName, formEmail, formDateOfBirth || null);
       addNotification(t('profile.profileUpdated'), NotificationType.SUCCESS);
       setIsEditMode(false);
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message;
+    } catch (error: unknown) {
+      const errorMessage = getApiErrorMessage(error, t('profile.updateError'));
       if (errorMessage === 'Email already exists') {
         addNotification(t('validation.emailExists'), NotificationType.ERROR);
         setErrors({ ...errors, email: t('validation.emailExists') });
       } else {
-        addNotification(t('profile.updateError'), NotificationType.ERROR);
+        addNotification(errorMessage, NotificationType.ERROR);
       }
     } finally {
       setIsSubmitting(false);

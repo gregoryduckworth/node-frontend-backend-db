@@ -23,7 +23,7 @@ type AuthenticatedLayoutProps = {
   breadcrumbs?: BreadcrumbItem[];
 };
 
-const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ children, breadcrumbs }) => {
+const AuthenticatedLayout = ({ children, breadcrumbs }: AuthenticatedLayoutProps) => {
   return (
     <SidebarProvider>
       <AppSidebar />

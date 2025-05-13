@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import GenericLayout from '@/components/layouts/GenericLayout';
 import useTitle from '@/hooks/use-title';
+import { getApiErrorMessage } from '@/api/handleApiError';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -28,10 +29,10 @@ const ForgotPassword = () => {
       await requestPasswordReset(email);
       setIsSuccess(true);
       addNotification(t('auth.passwordResetRequest'), NotificationType.SUCCESS);
-    } catch (error: any) {
+    } catch (error: unknown) {
       setIsSuccess(false);
       addNotification(
-        error?.response?.data?.message || t('auth.errors.serverError'),
+        getApiErrorMessage(error, t('auth.errors.serverError')),
         NotificationType.ERROR,
       );
     } finally {

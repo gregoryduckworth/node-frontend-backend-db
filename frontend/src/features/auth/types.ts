@@ -17,7 +17,7 @@ export interface JwtPayload {
   email: string;
   dateOfBirth?: string | null;
   exp: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface AuthState {
