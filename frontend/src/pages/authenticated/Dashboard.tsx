@@ -15,7 +15,7 @@ const Dashboard = () => {
     >
       <Card>
         <CardHeader>
-          <CardTitle>
+          <CardTitle data-testid="dashboard-title">
             {isLoading ? t('common.loading') : t('dashboard.welcome', { firstName, lastName })}
           </CardTitle>
         </CardHeader>

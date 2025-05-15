@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { BasePage } from './BasePage';
+import { DashboardPage } from './DashboardPage';
 
 export class LoginPage extends BasePage {
   readonly page: Page;
@@ -23,5 +24,6 @@ export class LoginPage extends BasePage {
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);
     await this.loginButton.click();
+    return new DashboardPage(this.page);
   }
 }

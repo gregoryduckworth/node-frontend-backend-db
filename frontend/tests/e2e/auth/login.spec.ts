@@ -1,5 +1,6 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
+import { createTestUser } from '../testUtils';
 
 test.describe('Login Page', () => {
   test.beforeEach(async ({ page }) => {
@@ -14,7 +15,10 @@ test.describe('Login Page', () => {
   });
 
   test('should be able to login', async ({ page }) => {
+    const { email } = await createTestUser();
     const loginPage = new LoginPage(page);
-    await loginPage.login('test@example.com', 'Password1');
+    const dashboardPage = await loginPage.login(email, 'Password1');
+    await dashboardPage.checkToastMessage('Logged in successfully');
+    await expect(dashboardPage.title).toBeVisible();
   });
 });

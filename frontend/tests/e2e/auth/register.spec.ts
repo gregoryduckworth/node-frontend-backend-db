@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { RegisterPage } from '../pages/RegisterPage';
-import { resetDb } from '../resetDb';
+import { resetDb } from '../testUtils';
 
 test.describe('Register Page', () => {
   test.beforeEach(async ({ page }) => {
