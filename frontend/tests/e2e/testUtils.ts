@@ -2,17 +2,23 @@ import { request } from '@playwright/test';
 import { playwrightBaseUrl } from '../../playwright.config';
 import type { RegisterRequest } from '../../src/features/auth/types';
 
+async function getBaseAPIUrl() {
+  if (!playwrightBaseUrl) {
+    throw new Error('playwrightBaseUrl is not defined in the environment variables');
+  }
+  const basePort = process.env.VITE_PORT || '5173';
+  const apiPort = process.env.VITE_API_PORT || '3001';
+  const apiBase = playwrightBaseUrl.replace(basePort, apiPort);
+  return apiBase;
+}
+
 /**
  * Resets the test database to a clean state.
  */
 export async function resetDb(): Promise<void> {
-  if (!playwrightBaseUrl) {
-    throw new Error('playwrightBaseUrl is not defined in the environment variables');
-  }
-  const apiBase = playwrightBaseUrl.replace('5173', '3001');
   const context = await request.newContext();
   try {
-    const response = await context.post(`${apiBase}/test/reset-db`);
+    const response = await context.post(`${await getBaseAPIUrl()}/test/reset-db`);
     if (!response.ok()) {
       throw new Error('Failed to reset database');
     }
@@ -28,10 +34,6 @@ export async function resetDb(): Promise<void> {
 export async function createTestUser(
   user?: Partial<RegisterRequest>,
 ): Promise<RegisterRequest & { confirmPassword: string }> {
-  if (!playwrightBaseUrl) {
-    throw new Error('playwrightBaseUrl is not defined in the environment variables');
-  }
-  const apiBase = playwrightBaseUrl.replace('5173', '3001');
   const context = await request.newContext();
   try {
     const body: RegisterRequest & { confirmPassword: string } = {
@@ -42,7 +44,7 @@ export async function createTestUser(
       confirmPassword: user?.password ?? 'Password1',
       ...(user?.dateOfBirth ? { dateOfBirth: user.dateOfBirth } : {}),
     };
-    const response = await context.post(`${apiBase}/auth/register`, {
+    const response = await context.post(`${await getBaseAPIUrl()}/auth/register`, {
       data: body,
     });
     if (!response.ok()) {

@@ -10,6 +10,7 @@ export interface Notification {
   message: string;
   type: NotificationType;
   testId?: string;
+  timestamp?: number;
 }
 
 export interface NotificationState {

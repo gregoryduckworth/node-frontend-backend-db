@@ -49,7 +49,8 @@
     "passwordPlaceholder": "Enter your password",
     "confirmPasswordPlaceholder": "Confirm your password",
     "alreadyHaveAccount": "Already have an account?",
-    "signUpForAccount": "Sign up for your account"
+    "signUpForAccount": "Sign up for your account",
+    "passwordRequirementsNotMet": "Password requirements have not been met"
   },
   "forgotPassword": {
     "title": "Forgot Password",

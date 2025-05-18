@@ -9,7 +9,7 @@ export class RegisterPage extends BasePage {
   readonly passwordInput: Locator;
   readonly confirmPasswordInput: Locator;
   readonly registerButton: Locator;
-  readonly passwordValidation: (text: string) => Locator;
+  readonly passwordRequirements: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -20,8 +20,7 @@ export class RegisterPage extends BasePage {
     this.passwordInput = this.page.getByTestId('password-input');
     this.confirmPasswordInput = this.page.getByTestId('confirm-password-input');
     this.registerButton = this.page.getByTestId('register-button');
-    this.passwordValidation = (text: string) =>
-      this.page.getByTestId('password-errors').getByText(text);
+    this.passwordRequirements = this.page.getByTestId('password-requirements');
   }
 
   async goto() {
@@ -41,7 +40,7 @@ export class RegisterPage extends BasePage {
     await this.confirmPasswordInput.fill(confirmPassword || password);
   }
 
-  async passwordValidate(text: string) {
-    await expect(this.passwordValidation(text)).toBeVisible();
+  async passwordValidationError() {
+    await expect(this.passwordRequirements).toContainClass('error');
   }
 }
