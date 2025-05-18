@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { toast } from 'sonner';
 import { NotificationType, NotificationState } from './types';
+import { DUPLICATE_NOTIFICATION_WINDOW_MS } from '@/config/settings';
 
 export type { NotificationType };
 
@@ -37,13 +38,12 @@ export const useNotificationStore = create<NotificationState>((set) => {
     addNotification: (message, type) => {
       const id = generateId();
       const now = Date.now();
-      const DUPLICATE_WINDOW_MS = 5000;
       set((state) => {
         const recentDuplicate = state.notifications.find(
           (n) =>
             n.message === message &&
             n.type === type &&
-            now - (n.timestamp ?? 0) < DUPLICATE_WINDOW_MS,
+            now - (n.timestamp ?? 0) < DUPLICATE_NOTIFICATION_WINDOW_MS,
         );
         if (recentDuplicate) return state;
         switch (type) {
