@@ -2,6 +2,13 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import tailwindcss from '@tailwindcss/vite';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const apiBase = process.env.VITE_API_BASE || 'http://localhost';
+const apiPort = process.env.VITE_API_PORT || '3001';
+const apiUrl = process.env.VITE_API_URL || `${apiBase}:${apiPort}`;
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
@@ -20,10 +27,11 @@ export default defineConfig({
     },
   },
   server: {
-    host: true,
+    host: process.env.VITE_HOST || '0.0.0.0',
+    port: process.env.VITE_PORT ? Number(process.env.VITE_PORT) : 5173,
     proxy: {
       '/api': {
-        target: process.env.VITE_API_URL,
+        target: apiUrl,
         changeOrigin: true,
         rewrite: (path: string) => path.replace(/^\/api/, ''),
       },

@@ -3,7 +3,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const playwrightBaseUrl = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:5173';
+const host = 'localhost';
+const port = process.env.VITE_PORT || '5173';
+export const playwrightBaseUrl = `http://${host}:${port}`;
 
 export default defineConfig({
   testDir: './tests/e2e',

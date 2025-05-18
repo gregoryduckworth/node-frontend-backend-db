@@ -2,19 +2,17 @@ services:
   db:
     image: postgres:17
     restart: always
-    environment:
-      POSTGRES_USER: postgresuser
-      POSTGRES_PASSWORD: postgrespass
-      POSTGRES_DB: postgresdb
+    env_file:
+      - ./backend/.env
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}"
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "pg_isready -U postgresuser -d postgresdb -h localhost || exit 1",
+          "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER} -h localhost || exit 1",
         ]
       interval: 10s
       timeout: 5s
@@ -29,13 +27,14 @@ services:
     env_file:
       - ./backend/.env
     ports:
-      - "3001:3001"
+      - "${PORT:-3001}:${PORT:-3001}"
     command: sh -c "npm install && npx prisma generate && npx prisma db push && npm run dev"
     depends_on:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3001/health || exit 1"]
+      test:
+        ["CMD-SHELL", "curl -f http://localhost:${PORT:-3001}/health || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -48,11 +47,10 @@ services:
       - ./frontend:/app
       - /app/node_modules
     ports:
-      - "5173:5173"
+      - "${VITE_PORT:-5173}:${VITE_PORT:-5173}"
     command: sh -c "npm install && npm run dev"
-    environment:
-      - VITE_API_URL=http://backend:3001
-      - PLAYWRIGHT_BASE_URL=http://localhost:5173
+    env_file:
+      - ./frontend/.env
     depends_on:
       backend:
         condition: service_healthy

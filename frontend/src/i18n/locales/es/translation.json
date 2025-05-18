@@ -49,7 +49,8 @@
     "passwordPlaceholder": "Ingresa tu contraseña",
     "confirmPasswordPlaceholder": "Confirma tu contraseña",
     "alreadyHaveAccount": "¿Ya tienes una cuenta?",
-    "signUpForAccount": "Regístrate para tu cuenta"
+    "signUpForAccount": "Regístrate para tu cuenta",
+    "passwordRequirementsNotMet": "No se han cumplido los requisitos de la contraseña"
   },
   "forgotPassword": {
     "title": "Olvidé mi contraseña",

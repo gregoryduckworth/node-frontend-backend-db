@@ -35,10 +35,17 @@ export const useNotificationStore = create<NotificationState>((set) => {
   return {
     ...persisted,
     addNotification: (message, type) => {
+      const id = generateId();
+      const now = Date.now();
+      const DUPLICATE_WINDOW_MS = 5000;
       set((state) => {
-        const exists = state.notifications.some((n) => n.message === message && n.type === type);
-        if (exists) return state;
-        const id = generateId();
+        const recentDuplicate = state.notifications.find(
+          (n) =>
+            n.message === message &&
+            n.type === type &&
+            now - (n.timestamp ?? 0) < DUPLICATE_WINDOW_MS,
+        );
+        if (recentDuplicate) return state;
         switch (type) {
           case NotificationType.SUCCESS:
             toast.success(message, { id });
@@ -55,7 +62,7 @@ export const useNotificationStore = create<NotificationState>((set) => {
             break;
         }
         const newState = {
-          notifications: [...state.notifications, { id, message, type }],
+          notifications: [...state.notifications, { id, message, type, timestamp: now }],
         };
         persistNotificationState(newState);
         return newState;
