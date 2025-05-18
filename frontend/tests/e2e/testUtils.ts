@@ -2,14 +2,18 @@ import { request } from '@playwright/test';
 import { playwrightBaseUrl } from '../../playwright.config';
 import type { RegisterRequest } from '../../src/features/auth/types';
 
-async function getBaseAPIUrl() {
+function getBaseAPIUrlSync() {
   if (!playwrightBaseUrl) {
     throw new Error('playwrightBaseUrl is not defined in the environment variables');
   }
-  const basePort = process.env.VITE_PORT || '5173';
-  const apiPort = process.env.VITE_API_PORT || '3001';
-  const apiBase = playwrightBaseUrl.replace(basePort, apiPort);
-  return apiBase;
+  const url = new URL(playwrightBaseUrl);
+  url.port = process.env.VITE_API_PORT || '3001';
+  if (process.env.VITE_API_PATH) {
+    url.pathname = process.env.VITE_API_PATH;
+  } else {
+    url.pathname = '';
+  }
+  return url.origin + url.pathname.replace(/\/$/, '');
 }
 
 /**
@@ -18,7 +22,7 @@ async function getBaseAPIUrl() {
 export async function resetDb(): Promise<void> {
   const context = await request.newContext();
   try {
-    const response = await context.post(`${await getBaseAPIUrl()}/test/reset-db`);
+    const response = await context.post(`${getBaseAPIUrlSync()}/test/reset-db`);
     if (!response.ok()) {
       throw new Error('Failed to reset database');
     }
@@ -44,7 +48,7 @@ export async function createTestUser(
       confirmPassword: user?.password ?? 'Password1',
       ...(user?.dateOfBirth ? { dateOfBirth: user.dateOfBirth } : {}),
     };
-    const response = await context.post(`${await getBaseAPIUrl()}/auth/register`, {
+    const response = await context.post(`${getBaseAPIUrlSync()}/auth/register`, {
       data: body,
     });
     if (!response.ok()) {
