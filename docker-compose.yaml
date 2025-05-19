@@ -28,7 +28,7 @@ services:
       - ./backend/.env
     ports:
       - "${PORT:-3001}:${PORT:-3001}"
-    command: sh -c "npm install && npx prisma generate && npx prisma db push && npm run dev"
+    command: sh -c "npm install && npx prisma generate && npx prisma db push && npx ts-node prisma/seed.ts && npm run dev"
     depends_on:
       db:
         condition: service_healthy
@@ -51,6 +51,21 @@ services:
     command: sh -c "npm install && npm run dev"
     env_file:
       - ./frontend/.env
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  admin-frontend:
+    image: node:lts
+    working_dir: /app
+    volumes:
+      - ./admin-frontend:/app
+      - /app/node_modules
+    ports:
+      - "${VITE_PORT:-5174}:${VITE_PORT:-5174}"
+    command: sh -c "npm install && npm run dev"
+    env_file:
+      - ./admin-frontend/.env
     depends_on:
       backend:
         condition: service_healthy
