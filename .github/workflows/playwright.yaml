@@ -27,12 +27,14 @@ jobs:
 
     env:
       DATABASE_URL: postgresql://postgresuser:postgrespass@localhost:5432/postgresdb
-      PORT: 3001
       ACCESS_TOKEN_SECRET: github_actions_test_secret
       REFRESH_TOKEN_SECRET: github_actions_test_refresh_secret
-      PLAYWRIGHT_BASE_URL: http://localhost:5173
-      VITE_API_URL: http://localhost:3001
+      VITE_API_URL: http://backend:3001
       NODE_ENV: test
+      VITE_API_BASE: http://backend
+      VITE_API_PORT: 3001
+      VITE_PORT: 5173
+      VITE_HOST: 0.0.0.0
 
     steps:
       - name: Checkout Code
