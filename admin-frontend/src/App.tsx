@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from '@/pages/generic/Login';
 import Dashboard from '@/pages/authenticated/Dashboard';
@@ -15,27 +14,14 @@ type ProtectedRouteProps = {
 };
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
 
-  useEffect(() => {
-    if (!isAuthenticated && !isLoading) {
-      checkAuth();
-    }
-  }, [isAuthenticated, isLoading, checkAuth]);
-
-  if (isLoading) return null;
   if (!isAuthenticated) return <Navigate to={ROUTES.LOGIN} replace />;
 
   return <>{children}</>;
 };
 
 const App = () => {
-  const { checkAuth } = useAuthStore();
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
   return (
     <ErrorBoundary>
       <BrowserRouter>

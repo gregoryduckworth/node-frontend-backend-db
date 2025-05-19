@@ -1,21 +1,8 @@
 import * as React from 'react';
-import {
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  LifeBuoy,
-  Map,
-  PieChart,
-  Send,
-  Settings2,
-  SquareTerminal,
-} from 'lucide-react';
+import { Command, SquareTerminal } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { NavMain } from '@/components/nav-main';
-import { NavProjects } from '@/components/nav-projects';
-import { NavSecondary } from '@/components/nav-secondary';
 import { NavUser } from '@/components/nav-user';
 import {
   Sidebar,
@@ -38,129 +25,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       user: {
         firstName,
         lastName,
-        email: email || 'm@example.com',
+        email: email,
         avatar: '/avatars/shadcn.jpg',
       },
       navMain: [
         {
-          title: t('sidebar.playground'),
-          url: '#',
+          title: t('sidebar.userManagement'),
+          url: '/user-management',
           icon: SquareTerminal,
           isActive: true,
-          items: [
-            {
-              title: t('sidebar.dashboard'),
-              url: 'dashboard',
-            },
-            {
-              title: t('sidebar.history'),
-              url: '#',
-            },
-            {
-              title: t('sidebar.starred'),
-              url: '#',
-            },
-            {
-              title: t('sidebar.settings'),
-              url: '#',
-            },
-          ],
-        },
-        {
-          title: t('sidebar.models'),
-          url: '#',
-          icon: Bot,
-          items: [
-            {
-              title: t('sidebar.genesis'),
-              url: '#',
-            },
-            {
-              title: t('sidebar.explorer'),
-              url: '#',
-            },
-            {
-              title: t('sidebar.quantum'),
-              url: '#',
-            },
-          ],
-        },
-        {
-          title: t('sidebar.documentation'),
-          url: '#',
-          icon: BookOpen,
-          items: [
-            {
-              title: t('sidebar.introduction'),
-              url: '#',
-            },
-            {
-              title: t('sidebar.getStarted'),
-              url: '#',
-            },
-            {
-              title: t('sidebar.tutorials'),
-              url: '#',
-            },
-            {
-              title: t('sidebar.changelog'),
-              url: '#',
-            },
-          ],
-        },
-        {
-          title: t('sidebar.settings'),
-          url: '#',
-          icon: Settings2,
-          items: [
-            {
-              title: t('sidebar.general'),
-              url: '#',
-            },
-            {
-              title: t('sidebar.team'),
-              url: '#',
-            },
-            {
-              title: t('sidebar.billing'),
-              url: '#',
-            },
-            {
-              title: t('sidebar.limits'),
-              url: '#',
-            },
-          ],
+          items: [],
         },
       ],
-      navSecondary: [
-        {
-          title: t('sidebar.support'),
-          url: '#',
-          icon: LifeBuoy,
-        },
-        {
-          title: t('sidebar.feedback'),
-          url: '#',
-          icon: Send,
-        },
-      ],
-      projects: [
-        {
-          name: t('sidebar.projects.designEngineering'),
-          url: '#',
-          icon: Frame,
-        },
-        {
-          name: t('sidebar.projects.salesMarketing'),
-          url: '#',
-          icon: PieChart,
-        },
-        {
-          name: t('sidebar.projects.travel'),
-          url: '#',
-          icon: Map,
-        },
-      ],
+      navSecondary: [],
+      projects: [],
     }),
     [t, firstName, lastName, email],
   );
@@ -186,8 +64,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
