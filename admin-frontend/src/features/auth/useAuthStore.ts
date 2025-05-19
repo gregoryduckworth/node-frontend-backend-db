@@ -9,7 +9,7 @@ import {
 import type { AuthState, JwtPayload } from './types';
 import type { ApiErrorResponse } from '@/api/types';
 
-const AUTH_STORAGE_KEY = 'authState';
+const AUTH_STORAGE_KEY = 'adminAuthState';
 
 function loadPersistedAuth() {
   try {
@@ -55,7 +55,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
   };
   return {
     ...persisted,
-    isLoading: true,
+    isLoading: false,
     setToken: (token) => {
       if (!token) {
         const cleared = {
