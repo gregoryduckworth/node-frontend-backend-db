@@ -1,0 +1,179 @@
+{
+  "app": {
+    "title": "Acme Inc",
+    "description": "Aplicación de ejemplo",
+    "imageAlt": "Logo de la aplicación"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver",
+    "submit": "Enviar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "language": "Idioma",
+    "and": "y",
+    "more": "Más",
+    "toggle": "Alternar",
+    "saving": "Guardando..."
+  },
+  "login": {
+    "title": "Iniciar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "login": "Iniciar sesión",
+    "loginSuccess": "Inicio de sesión exitoso",
+    "invalidCredentials": "Correo electrónico o contraseña inválidos.",
+    "backToRegister": "¿No tienes una cuenta?",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "rememberPassword": "¿Recuerdas tu contraseña?"
+  },
+  "register": {
+    "title": "Registrarse",
+    "register": "Registrarse",
+    "registerSuccess": "Registro exitoso",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "firstNamePlaceholder": "Ingresa tu nombre",
+    "lastNamePlaceholder": "Ingresa tu apellido",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "confirmPasswordPlaceholder": "Confirma tu contraseña",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "signUpForAccount": "Regístrate para tu cuenta",
+    "passwordRequirementsNotMet": "No se han cumplido los requisitos de la contraseña"
+  },
+  "forgotPassword": {
+    "title": "Olvidé mi contraseña",
+    "email": "Correo electrónico",
+    "enterEmailReset": "Ingresa tu correo electrónico para restablecer tu contraseña",
+    "passwordResetRequest": "Las instrucciones para restablecer la contraseña se enviaron a tu correo electrónico"
+  },
+  "resetPassword": {
+    "title": "Restablecer contraseña",
+    "subtitle": "Ingrese su nueva contraseña a continuación.",
+    "invalidResetLink": "Enlace de restablecimiento inválido o caducado",
+    "linkExpired": "Su enlace de restablecimiento ha caducado o no es válido.",
+    "requestNewLink": "Solicitar nuevo enlace",
+    "newPassword": "Nueva contraseña",
+    "enterNewPassword": "Ingrese su nueva contraseña",
+    "confirmNewPassword": "Confirmar nueva contraseña",
+    "confirmNewPasswordPlaceholder": "Vuelva a ingresar su nueva contraseña",
+    "resetPassword": "Restablecer contraseña",
+    "backToLogin": "Volver al inicio de sesión",
+    "errors": {
+      "passwordMatch": "Las contraseñas no coinciden.",
+      "serverError": "Ocurrió un error. Por favor, inténtelo de nuevo."
+    },
+    "passwordResetSuccess": "Su contraseña ha sido restablecida exitosamente."
+  },
+  "dashboard": {
+    "title": "Panel de control",
+    "welcome": "¡Bienvenido, {{firstName}} {{lastName}}!",
+    "summary": "Resumen del panel",
+    "quickActions": "Acciones rápidas",
+    "buildingApplication": "Construyendo aplicación",
+    "dataFetching": "Obteniendo datos"
+  },
+  "authShared": {
+    "logout": "Cerrar sesión",
+    "dateOfBirth": "Fecha de nacimiento",
+    "dateOfBirthPlaceholder": "Selecciona tu fecha de nacimiento",
+    "name": "Nombre",
+    "termsNotice": "Al hacer clic en continuar, aceptas nuestros",
+    "termsOfService": "Términos de servicio",
+    "privacyPolicy": "Política de privacidad",
+    "termsNoticeFull": "{{termsNotice}} <a1>{{termsOfService}}</a1> {{and}} <a2>{{privacyPolicy}}</a2>.",
+    "backToLogin": "Volver al inicio de sesión"
+  },
+  "validation": {
+    "required": "{{field}} es obligatorio",
+    "email": "Por favor, introduce un correo electrónico válido",
+    "passwordMatch": "Las contraseñas no coinciden",
+    "minLength": "{{field}} debe tener al menos {{min}} caracteres",
+    "maxLength": "{{field}} debe tener como máximo {{max}} caracteres",
+    "passwordRequirements": "La contraseña debe tener al menos 8 caracteres e incluir una letra mayúscula y un número.",
+    "passwordUppercase": "La contraseña debe contener al menos una letra mayúscula",
+    "passwordNumber": "La contraseña debe contener al menos un número",
+    "nameRequired": "El nombre es obligatorio",
+    "firstNameRequired": "El nombre es obligatorio",
+    "lastNameRequired": "El apellido es obligatorio",
+    "emailRequired": "El correo electrónico es obligatorio",
+    "invalidEmail": "Por favor, introduce una dirección de correo electrónico válida",
+    "emailExists": "La dirección de correo electrónico ya existe. Por favor, utiliza otra.",
+    "invalidDate": "Por favor, introduce una fecha válida"
+  },
+  "sidebar": {
+    "playground": "Playground",
+    "dashboard": "Panel de control",
+    "history": "Historial",
+    "starred": "Destacados",
+    "settings": "Configuración",
+    "models": "Modelos",
+    "genesis": "Génesis",
+    "explorer": "Explorador",
+    "quantum": "Quantum",
+    "documentation": "Documentación",
+    "introduction": "Introducción",
+    "getStarted": "Comenzar",
+    "tutorials": "Tutoriales",
+    "changelog": "Registro de cambios",
+    "general": "General",
+    "team": "Equipo",
+    "billing": "Facturación",
+    "limits": "Límites",
+    "support": "Soporte",
+    "feedback": "Comentarios",
+    "account": "Cuenta",
+    "notifications": "Notificaciones",
+    "upgradeToPro": "Actualizar a Pro",
+    "projectsLabel": "Proyectos",
+    "profile": "Perfil",
+    "platform": "Plataforma",
+    "projects": {
+      "designEngineering": "Ingeniería de diseño",
+      "salesMarketing": "Ventas y marketing",
+      "travel": "Viajes"
+    }
+  },
+  "projects": {
+    "viewProject": "Ver proyecto",
+    "shareProject": "Compartir proyecto",
+    "deleteProject": "Eliminar proyecto"
+  },
+  "notifications": {
+    "success": "Éxito",
+    "error": "Error",
+    "warning": "Advertencia",
+    "info": "Información",
+    "close": "Cerrar notificación"
+  },
+  "profile": {
+    "title": "Perfil de usuario",
+    "personalInfo": "Información personal",
+    "updateInfo": "Actualizar información",
+    "editProfile": "Editar perfil",
+    "updateSuccess": "Perfil actualizado",
+    "profileUpdated": "Tu perfil ha sido actualizado exitosamente",
+    "updateError": "Error al actualizar el perfil",
+    "dateOfBirthNeeded": "Por favor, establece tu fecha de nacimiento",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "email": "Correo electrónico",
+    "dateOfBirth": "Fecha de nacimiento"
+  },
+  "errorBoundary": {
+    "title": "Algo salió mal",
+    "description": "Ocurrió un error inesperado. Por favor, intenta recargar la página. {{error}}",
+    "reload": "Recargar página"
+  }
+}
