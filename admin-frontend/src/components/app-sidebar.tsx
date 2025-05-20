@@ -31,13 +31,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       navMain: [
         {
+          title: t('sidebar.dashboard'),
+          url: ROUTES.DASHBOARD,
+          icon: Command,
+          isActive: false,
+          items: [],
+        },
+        {
           title: t('sidebar.userManagement'),
           url: '#',
           icon: SquareTerminal,
           isActive: false,
           items: [
             {
-              title: 'All Users',
+              title: t('users.all'),
               url: ROUTES.LIST_USERS,
             },
           ],

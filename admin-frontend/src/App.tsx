@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from '@/pages/generic/Login';
-import Dashboard from '@/pages/authenticated/Dashboard';
+import Dashboard from '@/features/dashboard/Dashboard';
 import ForgotPassword from '@/pages/generic/ForgotPassword';
 import ResetPassword from '@/pages/generic/ResetPassword';
-import Profile from '@/pages/authenticated/Profile';
+import Profile from '@/features/profile/Profile';
 import { Toaster } from '@/components/ui/sonner';
 import { useAuthStore } from '@/features/auth/useAuthStore';
 import { ROUTES } from '@/config/auth';

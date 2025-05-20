@@ -1,3 +1,4 @@
+import { API_ENDPOINTS } from '@/config/auth';
 import { handleApiError } from './handleApiError';
 import type { ApiErrorResponse, RequestOptions, CacheItem } from './types';
 
@@ -55,6 +56,11 @@ export const apiClient = async <T>(url: string, options: RequestOptions = {}): P
     };
 
     const response = await fetch(url, requestOptions);
+
+    // Suppress notification for 403 from /api/token
+    if (response.status === 403 && url.endsWith(API_ENDPOINTS.REFRESH_TOKEN)) {
+      return {} as T;
+    }
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
