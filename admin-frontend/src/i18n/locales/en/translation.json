@@ -139,6 +139,7 @@
     "projectsLabel": "Projects",
     "profile": "Profile",
     "platform": "Platform",
+    "userManagement": "User Management",
     "projects": {
       "designEngineering": "Design Engineering",
       "salesMarketing": "Sales & Marketing",
@@ -149,6 +150,16 @@
     "viewProject": "View Project",
     "shareProject": "Share Project",
     "deleteProject": "Delete Project"
+  },
+  "users": {
+    "all": "All Users",
+    "title": "Users",
+    "id": "ID",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "createdAt": "Created At",
+    "search": "Search users..."
   },
   "notifications": {
     "success": "Success",
