@@ -13,15 +13,7 @@ import { API_ENDPOINTS } from '@/config/auth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslation } from 'react-i18next';
 import useTitle from '@/hooks/use-title';
-
-export interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
+import { User } from './types';
 
 const UsersListPage = () => {
   const [users, setUsers] = useState<User[]>([]);
