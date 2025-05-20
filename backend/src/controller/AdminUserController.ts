@@ -12,8 +12,8 @@ const getCookieOptions = () => ({
   path: '/',
 });
 
-const setRefreshTokenCookie = (res: Response, token: string) => {
-  res.cookie('refreshToken', token, getCookieOptions());
+const setAdminRefreshTokenCookie = (res: Response, token: string) => {
+  res.cookie('adminRefreshToken', token, getCookieOptions());
 };
 
 const handleError = (res: Response, error: any, status = 400) => {
@@ -56,7 +56,7 @@ export const adminLogin = async (req: Request, res: Response): Promise<Response 
       where: { id: admin.id },
       data: { refresh_token: refreshToken },
     });
-    setRefreshTokenCookie(res, refreshToken);
+    setAdminRefreshTokenCookie(res, refreshToken);
     return res.status(200).json({ accessToken });
   } catch (error) {
     return handleError(res, error);

@@ -19,7 +19,7 @@ export const generateAdminAccessToken = (admin: any, secret: string) => {
 
 export const adminRefreshToken = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const refreshToken = req.cookies.refreshToken;
+    const refreshToken = req.cookies.adminRefreshToken;
     if (!refreshToken) {
       return res.sendStatus(204);
     }
