@@ -41,7 +41,11 @@ const Dashboard = () => {
           </div>
           <div>
             <div className="text-2xl font-bold">
-              {userCountLoading ? t('common.loading') : userCountError ? '—' : userCount}
+              {userCountLoading
+                ? t('common.loading')
+                : userCountError
+                  ? '—'
+                  : `${userCount} ${t('users.title')}`}
             </div>
             <div className="text-muted-foreground text-xs">{t('users.all')}</div>
           </div>

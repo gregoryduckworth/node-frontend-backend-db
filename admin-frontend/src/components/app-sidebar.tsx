@@ -39,15 +39,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         },
         {
           title: t('sidebar.userManagement'),
-          url: '#',
+          url: ROUTES.LIST_USERS,
           icon: SquareTerminal,
           isActive: false,
-          items: [
-            {
-              title: t('users.all'),
-              url: ROUTES.LIST_USERS,
-            },
-          ],
+          items: [],
         },
       ],
       navSecondary: [],
