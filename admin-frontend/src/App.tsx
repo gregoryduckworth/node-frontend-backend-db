@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from '@/pages/generic/Login';
 import Dashboard from '@/pages/authenticated/Dashboard';
@@ -8,20 +9,28 @@ import { Toaster } from '@/components/ui/sonner';
 import { useAuthStore } from '@/features/auth/useAuthStore';
 import { ROUTES } from '@/config/auth';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import UsersListPage from '@/features/users/UsersListPage';
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
 };
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, isLoading } = useAuthStore();
 
+  if (isLoading) return null;
   if (!isAuthenticated) return <Navigate to={ROUTES.LOGIN} replace />;
 
   return <>{children}</>;
 };
 
 const App = () => {
+  const { checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
   return (
     <ErrorBoundary>
       <BrowserRouter>
@@ -43,6 +52,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.LIST_USERS}
+            element={
+              <ProtectedRoute>
+                <UsersListPage />
               </ProtectedRoute>
             }
           />
