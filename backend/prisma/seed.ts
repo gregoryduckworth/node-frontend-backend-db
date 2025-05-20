@@ -14,6 +14,32 @@ async function main() {
     },
   });
   console.log('Default admin user created: admin@example.com / password');
+
+  // Seed regular users
+  const userPassword = await bcrypt.hash('password', 10);
+  await prisma.user.createMany({
+    data: [
+      {
+        email: 'user1@example.com',
+        password: userPassword,
+        firstName: 'User',
+        lastName: 'One',
+      },
+      {
+        email: 'user2@example.com',
+        password: userPassword,
+        firstName: 'User',
+        lastName: 'Two',
+      },
+      {
+        email: 'user3@example.com',
+        password: userPassword,
+        firstName: 'User',
+        lastName: 'Three',
+      },
+    ],
+    skipDuplicates: true,
+  });
 }
 
 main()

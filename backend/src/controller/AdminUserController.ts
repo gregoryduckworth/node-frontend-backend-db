@@ -62,3 +62,21 @@ export const adminLogin = async (req: Request, res: Response): Promise<Response 
     return handleError(res, error);
   }
 };
+
+export const listAllUsers = async (req: Request, res: Response): Promise<Response | void> => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return res.status(200).json({ users });
+  } catch (error) {
+    return handleError(res, error);
+  }
+};

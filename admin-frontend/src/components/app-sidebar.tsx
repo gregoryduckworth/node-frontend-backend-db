@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/sidebar';
 import { COMPANY } from '@/config/settings';
 import { useAuthStore } from '@/features/auth/useAuthStore';
+import { ROUTES } from '@/config/auth';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { t } = useTranslation();
@@ -31,10 +32,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       navMain: [
         {
           title: t('sidebar.userManagement'),
-          url: '/user-management',
+          url: '#',
           icon: SquareTerminal,
-          isActive: true,
-          items: [],
+          isActive: false,
+          items: [
+            {
+              title: 'All Users',
+              url: ROUTES.LIST_USERS,
+            },
+          ],
         },
       ],
       navSecondary: [],
