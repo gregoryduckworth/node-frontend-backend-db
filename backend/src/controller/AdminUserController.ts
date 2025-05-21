@@ -80,3 +80,35 @@ export const listAllUsers = async (req: Request, res: Response): Promise<Respons
     return handleError(res, error);
   }
 };
+
+export const createAdminUser = async (req: Request, res: Response): Promise<Response | void> => {
+  try {
+    const { firstName, lastName, email, password } = req.body;
+    if (!firstName || !lastName || !email || !password) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+    const existing = await prisma.adminUser.findFirst({ where: { email } });
+    if (existing) {
+      return res.status(409).json({ message: 'Admin user with this email already exists' });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const admin = await prisma.adminUser.create({
+      data: {
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        createdAt: true,
+      },
+    });
+    return res.status(201).json({ admin });
+  } catch (error) {
+    return handleError(res, error);
+  }
+};
