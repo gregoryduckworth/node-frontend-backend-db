@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import UserRoute from '@routes/UserRoute';
 import TestRoute from '@routes/TestRoute';
 import AdminUserRoute from '@routes/AdminUserRoute';
+import { requireAdmin } from './middlewares/requireAdmin';
 
 dotenv.config();
 
@@ -33,7 +34,7 @@ app.all('/health', (_req: Request, res: Response) => {
 });
 
 app.use(UserRoute);
-app.use('/admin', AdminUserRoute);
+app.use('/admin', requireAdmin, AdminUserRoute);
 
 if (process.env.NODE_ENV !== 'production') {
   app.use(TestRoute);
