@@ -1,6 +1,6 @@
 import { expressjwt } from 'express-jwt';
 import { Request } from 'express';
-import { getJwtSecrets } from '../utils/jwtSecrets';
+import { getJwtSecrets } from '@/utils/jwtSecrets';
 
 const { accessTokenSecret } = getJwtSecrets();
 

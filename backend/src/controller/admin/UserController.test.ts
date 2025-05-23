@@ -1,4 +1,4 @@
-import { adminLogin, listAllUsers, createAdminUser } from './AdminUserController';
+import { adminLogin, listAllUsers, createAdminUser } from './UserController';
 import { getJwtSecrets } from '@/utils/jwtSecrets';
 import bcrypt from 'bcrypt';
 

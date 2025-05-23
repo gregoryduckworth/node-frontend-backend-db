@@ -1,10 +1,10 @@
-import { refreshToken, generateAccessToken } from './refreshToken';
+import { adminRefreshToken, generateAdminAccessToken } from './RefreshToken';
 import { getJwtSecrets } from '@/utils/jwtSecrets';
 import jwt from 'jsonwebtoken';
 
 jest.mock('@prismaClient/client', () => ({
   prisma: {
-    user: {
+    adminUser: {
       findFirst: jest.fn(),
     },
   },
@@ -20,37 +20,28 @@ const mockRes = () => {
   return res;
 };
 
-describe('generateAccessToken', () => {
-  it('should generate a JWT with user info', () => {
+describe('generateAdminAccessToken', () => {
+  it('should generate a JWT with isAdmin true', () => {
     const { accessTokenSecret } = getJwtSecrets();
-    const user = {
-      id: 1,
-      firstName: 'A',
-      lastName: 'B',
-      email: 'a@b.com',
-      dateOfBirth: new Date(),
-    };
-    const token = generateAccessToken(user, accessTokenSecret);
+    const admin = { id: 1, firstName: 'A', lastName: 'B', email: 'a@b.com' };
+    const token = generateAdminAccessToken(admin, accessTokenSecret);
     const decoded: any = jwt.verify(token, accessTokenSecret);
-    expect(decoded.id).toBe(user.id);
-    expect(decoded.email).toBe(user.email);
-    expect(decoded.firstName).toBe(user.firstName);
-    expect(decoded.lastName).toBe(user.lastName);
-    expect(decoded.dateOfBirth).toBe(user.dateOfBirth.toISOString());
+    expect(decoded.isAdmin).toBe(true);
+    expect(decoded.id).toBe(admin.id);
+    expect(decoded.email).toBe(admin.email);
   });
 });
 
-describe('refreshToken', () => {
+describe('adminRefreshToken', () => {
   const { refreshTokenSecret, accessTokenSecret } = getJwtSecrets();
-  const user = {
+  const admin = {
     id: 1,
     firstName: 'A',
     lastName: 'B',
     email: 'a@b.com',
-    dateOfBirth: new Date(),
     refresh_token: 'valid-refresh-token',
   };
-  const validRefreshToken = jwt.sign({ id: user.id }, refreshTokenSecret, { expiresIn: '1h' });
+  const validRefreshToken = jwt.sign({ id: admin.id }, refreshTokenSecret, { expiresIn: '1h' });
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -59,41 +50,41 @@ describe('refreshToken', () => {
   it('should return 204 if no refresh token cookie', async () => {
     const req: any = { cookies: {} };
     const res = mockRes();
-    await refreshToken(req, res);
+    await adminRefreshToken(req, res);
     expect(res.sendStatus).toHaveBeenCalledWith(204);
   });
 
-  it('should return 403 if user not found', async () => {
-    const req: any = { cookies: { refreshToken: 'some-token' } };
+  it('should return 403 if admin not found', async () => {
+    const req: any = { cookies: { adminRefreshToken: 'some-token' } };
     const res = mockRes();
-    prisma.user.findFirst.mockResolvedValue(null);
-    await refreshToken(req, res);
+    prisma.adminUser.findFirst.mockResolvedValue(null);
+    await adminRefreshToken(req, res);
     expect(res.sendStatus).toHaveBeenCalledWith(403);
   });
 
   it('should return 403 if refresh token is invalid', async () => {
-    const req: any = { cookies: { refreshToken: 'invalid-token' } };
+    const req: any = { cookies: { adminRefreshToken: 'invalid-token' } };
     const res = mockRes();
-    prisma.user.findFirst.mockResolvedValue(user);
-    await refreshToken(req, res);
+    prisma.adminUser.findFirst.mockResolvedValue(admin);
+    await adminRefreshToken(req, res);
     expect(res.sendStatus).toHaveBeenCalledWith(403);
   });
 
   it('should return accessToken if refresh token is valid', async () => {
-    const req: any = { cookies: { refreshToken: validRefreshToken } };
+    const req: any = { cookies: { adminRefreshToken: validRefreshToken } };
     const res = mockRes();
-    prisma.user.findFirst.mockResolvedValue(user);
-    await refreshToken(req, res);
+    prisma.adminUser.findFirst.mockResolvedValue(admin);
+    await adminRefreshToken(req, res);
     expect(res.json).toHaveBeenCalledWith(
       expect.objectContaining({ accessToken: expect.any(String) }),
     );
   });
 
   it('should return 500 on unexpected error', async () => {
-    const req: any = { cookies: { refreshToken: validRefreshToken } };
+    const req: any = { cookies: { adminRefreshToken: validRefreshToken } };
     const res = mockRes();
-    prisma.user.findFirst.mockRejectedValue(new Error('DB error'));
-    await refreshToken(req, res);
+    prisma.adminUser.findFirst.mockRejectedValue(new Error('DB error'));
+    await adminRefreshToken(req, res);
     expect(res.sendStatus).toHaveBeenCalledWith(500);
   });
 });
