@@ -1,8 +1,8 @@
 import express from 'express';
 import request from 'supertest';
 import jwt from 'jsonwebtoken';
-import { requireAdmin } from '../src/middlewares/requireAdmin';
-import { getJwtSecrets } from '../src/utils/jwtSecrets';
+import { requireAdmin } from './requireAdmin';
+import { getJwtSecrets } from '@/utils/jwtSecrets';
 
 const { accessTokenSecret } = getJwtSecrets();
 
