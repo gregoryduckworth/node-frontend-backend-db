@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { prisma } from '@prismaClient/client';
-import { getJwtSecrets } from '../utils/jwtSecrets';
+import { getJwtSecrets } from '@/utils/jwtSecrets';
 
 export const generateAdminAccessToken = (admin: any, secret: string) => {
   return jwt.sign(

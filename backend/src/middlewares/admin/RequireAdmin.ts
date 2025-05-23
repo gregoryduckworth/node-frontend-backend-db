@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { getJwtSecrets } from '../utils/jwtSecrets';
+import { getJwtSecrets } from '@/utils/jwtSecrets';
 
 declare global {
   namespace Express {

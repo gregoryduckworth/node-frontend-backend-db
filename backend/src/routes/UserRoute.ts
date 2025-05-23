@@ -8,9 +8,9 @@ import {
   updateUser,
   forgotPassword,
   resetPassword,
-} from '@controller/UserController';
-import { verifyToken } from '@middlewares/verifyToken';
-import { refreshToken } from '@controller/refreshToken';
+} from '@controller/user/UserController';
+import { verifyToken } from '@/middlewares/auth/VerifyToken';
+import { refreshToken } from '@/controller/auth/RefreshToken';
 
 const router = express.Router();
 

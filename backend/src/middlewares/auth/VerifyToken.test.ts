@@ -1,4 +1,4 @@
-import { verifyToken } from './verifyToken';
+import { verifyToken } from './VerifyToken';
 import { getJwtSecrets } from '@/utils/jwtSecrets';
 import jwt from 'jsonwebtoken';
 import express from 'express';
