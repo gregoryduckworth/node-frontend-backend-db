@@ -2,7 +2,8 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { prisma } from '@prismaClient/client';
-import { getJwtSecrets } from '../utils/jwtSecrets';
+import { getJwtSecrets } from '@/utils/jwtSecrets';
+import { logger } from '@/utils/logger';
 
 const { accessTokenSecret, refreshTokenSecret } = getJwtSecrets();
 
@@ -17,7 +18,7 @@ const setAdminRefreshTokenCookie = (res: Response, token: string) => {
 };
 
 const handleError = (res: Response, error: any, status = 400) => {
-  console.log(error);
+  logger.error(error);
   return res.sendStatus(status);
 };
 
