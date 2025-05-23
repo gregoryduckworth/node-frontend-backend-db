@@ -5,7 +5,7 @@ const config: Config = {
   testEnvironment: 'node',
   testMatch: [
     '**/?(*.)+(test).[jt]s?(x)', // allow tests next to source files
-    '**/tests/**/*.test.ts',     // keep support for central tests folder
+    '**/tests/**/*.test.ts', // keep support for central tests folder
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
