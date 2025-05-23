@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import routes from './routes';
-import { requireAdmin } from './middlewares/requireAdmin';
 
 dotenv.config();
 

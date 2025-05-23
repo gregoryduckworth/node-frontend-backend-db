@@ -2,7 +2,7 @@ import { Router } from 'express';
 import UserRoute from './UserRoute';
 import TestRoute from './TestRoute';
 import AdminUserRoute from './AdminUserRoute';
-import { requireAdmin } from '@/middlewares/requireAdmin';
+import { requireAdmin } from '@/middlewares';
 
 const router = Router();
 
