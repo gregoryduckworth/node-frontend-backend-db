@@ -3,7 +3,10 @@ import type { Config } from 'jest';
 const config: Config = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: ['**/tests/**/*.test.ts'],
+  testMatch: [
+    '**/?(*.)+(test).[jt]s?(x)', // allow tests next to source files
+    '**/tests/**/*.test.ts',     // keep support for central tests folder
+  ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@controller/(.*)$': '<rootDir>/src/controller/$1',

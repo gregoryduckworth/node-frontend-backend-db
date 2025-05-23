@@ -2,9 +2,7 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import UserRoute from '@routes/UserRoute';
-import TestRoute from '@routes/TestRoute';
-import AdminUserRoute from '@routes/AdminUserRoute';
+import routes from './routes';
 import { requireAdmin } from './middlewares/requireAdmin';
 
 dotenv.config();
@@ -33,11 +31,6 @@ app.all('/health', (_req: Request, res: Response) => {
   res.status(405).json({ error: 'Method not allowed' });
 });
 
-app.use(UserRoute);
-app.use('/admin', requireAdmin, AdminUserRoute);
-
-if (process.env.NODE_ENV !== 'production') {
-  app.use(TestRoute);
-}
+app.use(routes);
 
 export default app;
