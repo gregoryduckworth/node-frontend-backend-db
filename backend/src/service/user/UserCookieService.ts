@@ -2,7 +2,12 @@ import { Response } from 'express';
 
 export const getCookieOptions = (rememberMe?: boolean) => ({
   httpOnly: true,
-  maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : undefined, // 30 days if rememberMe, else session cookie
+  maxAge:
+    rememberMe === undefined
+      ? 24 * 60 * 60 * 1000
+      : rememberMe
+        ? 30 * 24 * 60 * 60 * 1000
+        : undefined, // 1 day by default, 30 days if rememberMe, else session cookie
   path: '/',
 });
 
