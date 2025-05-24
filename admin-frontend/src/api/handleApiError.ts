@@ -4,7 +4,9 @@ import { NotificationType } from '@/features/notification/types';
 
 export function getApiErrorMessage(error: unknown, fallback: string): string {
   const err = error as { response?: { data?: ApiErrorResponse } };
-  return err?.response?.data?.message || fallback;
+  const message = err?.response?.data?.message;
+  if (message === 'No token provided') return '';
+  return message || fallback;
 }
 
 export function handleApiError(
@@ -13,6 +15,8 @@ export function handleApiError(
 ) {
   const { addNotification } = useNotificationStore.getState();
   const errorMessage = getApiErrorMessage(error, fallbackMessage);
-  addNotification(errorMessage, NotificationType.ERROR);
+  if (errorMessage) {
+    addNotification(errorMessage, NotificationType.ERROR);
+  }
   return errorMessage;
 }

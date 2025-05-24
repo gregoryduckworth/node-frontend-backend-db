@@ -4,6 +4,13 @@ import type { ApiErrorResponse, RequestOptions, CacheItem } from './types';
 
 const cache = new Map<string, CacheItem<unknown>>();
 
+let getAccessToken: (() => string) | null = null;
+
+// Allow injection of a token getter for SSR or testability
+export function setAccessTokenGetter(fn: () => string) {
+  getAccessToken = fn;
+}
+
 const createCacheKey = (url: string, options: RequestOptions): string => {
   return `${url}:${options.includeCredentials}`;
 };
@@ -43,12 +50,22 @@ export const apiClient = async <T>(url: string, options: RequestOptions = {}): P
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
+  let authToken = '';
+  if (getAccessToken) {
+    authToken = getAccessToken();
+  } else {
+    // Dynamically import to avoid circular dependency
+    const mod = await import('@/features/auth/useAuthStore');
+    authToken = mod.useAuthStore.getState().token;
+  }
+
   try {
     const requestOptions: RequestInit = {
       method,
       headers: {
         'Content-Type': 'application/json',
         ...headers,
+        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
       },
       ...(includeCredentials ? { credentials: 'include' } : {}),
       ...(body ? { body: JSON.stringify(body) } : {}),
