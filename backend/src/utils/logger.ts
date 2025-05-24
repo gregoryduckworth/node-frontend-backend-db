@@ -10,15 +10,23 @@ export interface Logger {
 export const logger: Logger = {
   info: (...args) => {
     // Replace with metrics provider integration
-    console.info('[INFO]', ...args);
+    if (!process.env.JEST) {
+      console.info('[INFO]', ...args);
+    }
   },
   warn: (...args) => {
-    console.warn('[WARN]', ...args);
+    if (!process.env.JEST) {
+      console.warn('[WARN]', ...args);
+    }
   },
   error: (...args) => {
-    console.error('[ERROR]', ...args);
+    if (!process.env.JEST) {
+      console.error('[ERROR]', ...args);
+    }
   },
   debug: (...args) => {
-    console.debug('[DEBUG]', ...args);
+    if (!process.env.JEST) {
+      console.debug('[DEBUG]', ...args);
+    }
   },
 };
