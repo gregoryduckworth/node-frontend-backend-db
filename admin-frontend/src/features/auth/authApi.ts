@@ -27,7 +27,7 @@ export const refreshToken = async (): Promise<RefreshTokenResponse> => {
   } catch (error: unknown) {
     const err = error as { response?: ApiErrorResponse };
     const status = err?.response?.status;
-    if (status !== 204 && status !== 403) {
+    if (status !== 204 && status !== 401 && status !== 403) {
       console.error('Network error during token refresh:', err);
     }
     return { accessToken: undefined };
