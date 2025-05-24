@@ -26,7 +26,7 @@ jobs:
           - 5432:5432
 
     env:
-      DATABASE_URL: postgresql://postgresuser:postgrespass@localhost:5432/postgresdb
+      DATABASE_URL: postgresql://postgresuser:postgrespass@postgres:5432/postgresdb
       ACCESS_TOKEN_SECRET: github_actions_test_secret
       REFRESH_TOKEN_SECRET: github_actions_test_refresh_secret
       VITE_API_URL: http://backend:3001
@@ -47,7 +47,7 @@ jobs:
         run: |
           cat << EOF > ./backend/.env
           DATABASE_URL=$DATABASE_URL
-          PORT=$PORT
+          PORT=$VITE_API_PORT
           ACCESS_TOKEN_SECRET=$ACCESS_TOKEN_SECRET
           REFRESH_TOKEN_SECRET=$REFRESH_TOKEN_SECRET
           EOF
@@ -55,6 +55,14 @@ jobs:
       - name: Install backend dependencies
         run: npm ci
         working-directory: ./backend
+
+      - name: Wait for Postgres
+        run: |
+          for i in {1..15}; do
+            pg_isready -h postgres -p 5432 -U postgresuser && break
+            echo "Waiting for Postgres..."
+            sleep 3
+          done
 
       - name: Generate Prisma client and push schema
         run: |
