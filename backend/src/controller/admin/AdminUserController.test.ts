@@ -1,4 +1,4 @@
-import { adminLogin, listAllUsers, createAdminUser } from './UserController';
+import { adminLogin, listAllUsers, createAdminUser } from './AdminUserController';
 import { getJwtSecrets } from '@/utils/jwtSecrets';
 import bcrypt from 'bcrypt';
 
@@ -51,6 +51,7 @@ describe('AdminUserController', () => {
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({ message: 'Email is required' });
     });
+
     it('should return 400 if password is missing', async () => {
       const req: any = { body: { email: 'a@b.com' } };
       const res = mockRes();
@@ -58,6 +59,7 @@ describe('AdminUserController', () => {
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({ message: 'Password is required' });
     });
+
     it('should return 400 if admin not found', async () => {
       const req: any = { body: { email: 'a@b.com', password: 'pass' } };
       const res = mockRes();
@@ -66,6 +68,7 @@ describe('AdminUserController', () => {
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({ message: 'Invalid email or password' });
     });
+
     it('should return 400 if password does not match', async () => {
       const req: any = { body: { email: 'a@b.com', password: 'wrong' } };
       const res = mockRes();
@@ -75,6 +78,7 @@ describe('AdminUserController', () => {
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({ message: 'Invalid email or password' });
     });
+
     it('should return 200 and tokens if credentials are valid', async () => {
       const req: any = { body: { email: 'a@b.com', password: 'pass' } };
       const res = mockRes();
@@ -109,6 +113,7 @@ describe('AdminUserController', () => {
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ users });
     });
+
     it('should return 200 and empty array if no users', async () => {
       const req: any = {};
       const res = mockRes();
@@ -117,12 +122,14 @@ describe('AdminUserController', () => {
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ users: [] });
     });
+
     it('should return 400 on error', async () => {
       const req: any = {};
       const res = mockRes();
       prisma.user.findMany.mockRejectedValue(new Error('fail'));
       await listAllUsers(req, res);
-      expect(res.sendStatus).toHaveBeenCalledWith(400);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ message: 'fail' });
     });
   });
 
@@ -134,6 +141,7 @@ describe('AdminUserController', () => {
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({ message: 'All fields are required' });
     });
+
     it('should return 409 if admin already exists', async () => {
       const req: any = {
         body: { firstName: 'A', lastName: 'B', email: 'a@b.com', password: 'pass' },
@@ -146,6 +154,7 @@ describe('AdminUserController', () => {
         message: 'Admin user with this email already exists',
       });
     });
+
     it('should return 201 and admin if created', async () => {
       const req: any = {
         body: { firstName: 'A', lastName: 'B', email: 'a@b.com', password: 'pass' },
@@ -165,6 +174,7 @@ describe('AdminUserController', () => {
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({ admin: created });
     });
+
     it('should return 400 on error', async () => {
       const req: any = {
         body: { firstName: 'A', lastName: 'B', email: 'a@b.com', password: 'pass' },
@@ -172,7 +182,8 @@ describe('AdminUserController', () => {
       const res = mockRes();
       prisma.adminUser.findFirst.mockRejectedValue(new Error('fail'));
       await createAdminUser(req, res);
-      expect(res.sendStatus).toHaveBeenCalledWith(400);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ message: 'fail' });
     });
   });
 });

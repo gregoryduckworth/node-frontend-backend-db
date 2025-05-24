@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { resetDatabase } from '@/controller/TestController';
+import { resetDatabase } from '@/controller/test/TestController';
 
 const router = Router();
 

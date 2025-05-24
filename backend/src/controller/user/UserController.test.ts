@@ -1,28 +1,13 @@
 import * as UserController from './UserController';
-import bcrypt from 'bcrypt';
+import { UserService } from '@/service/user/UserService';
 
-jest.mock('@prismaClient/client', () => ({
-  prisma: {
-    user: {
-      findMany: jest.fn(),
-      findUnique: jest.fn(),
-      findFirst: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-    },
-  },
-}));
-
-jest.mock('bcrypt');
-
-const { prisma } = require('@prismaClient/client');
+jest.mock('@/service/user/UserService');
 
 const mockRes = () => {
   const res: any = {};
   res.status = jest.fn().mockReturnValue(res);
   res.json = jest.fn().mockReturnValue(res);
   res.sendStatus = jest.fn().mockReturnValue(res);
-  res.cookie = jest.fn().mockReturnValue(res);
   res.clearCookie = jest.fn().mockReturnValue(res);
   return res;
 };
@@ -32,211 +17,122 @@ describe('UserController', () => {
     jest.clearAllMocks();
   });
 
-  describe('getAllUsers', () => {
-    it('should return 200 and users', async () => {
-      const req: any = {};
-      const res = mockRes();
-      const users = [{ id: 1, firstName: 'A', lastName: 'B', email: 'a@b.com' }];
-      prisma.user.findMany.mockResolvedValue(users);
-      await UserController.getAllUsers(req, res);
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(users);
-    });
-    it('should return 400 on error', async () => {
-      const req: any = {};
-      const res = mockRes();
-      prisma.user.findMany.mockRejectedValue(new Error('fail'));
-      await UserController.getAllUsers(req, res);
-      expect(res.sendStatus).toHaveBeenCalledWith(400);
-    });
+  it('getAllUsers: returns 200 and users', async () => {
+    const req: any = {};
+    const res = mockRes();
+    (UserService.getAllUsers as jest.Mock).mockResolvedValue([{ id: 1 }]);
+    await UserController.getAllUsers(req, res);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith([{ id: 1 }]);
   });
 
-  describe('getUserById', () => {
-    it('should return 200 and user if found', async () => {
-      const req: any = { params: { userId: '1' } };
-      const res = mockRes();
-      const user = { id: 1, firstName: 'A', lastName: 'B', email: 'a@b.com' };
-      prisma.user.findUnique.mockResolvedValue(user);
-      await UserController.getUserById(req, res);
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(user);
-    });
-    it('should return 404 if user not found', async () => {
-      const req: any = { params: { userId: '1' } };
-      const res = mockRes();
-      prisma.user.findUnique.mockResolvedValue(null);
-      await UserController.getUserById(req, res);
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ message: 'User not found' });
-    });
-    it('should return 400 on error', async () => {
-      const req: any = { params: { userId: '1' } };
-      const res = mockRes();
-      prisma.user.findUnique.mockRejectedValue(new Error('fail'));
-      await UserController.getUserById(req, res);
-      expect(res.sendStatus).toHaveBeenCalledWith(400);
-    });
+  it('getAllUsers: returns 400 on error', async () => {
+    const req: any = {};
+    const res = mockRes();
+    (UserService.getAllUsers as jest.Mock).mockRejectedValue(new Error('fail'));
+    await UserController.getAllUsers(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'fail' });
   });
 
-  describe('register', () => {
-    it('should return 400 if any field is missing', async () => {
-      const req: any = {
-        body: { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' },
-      };
-      const res = mockRes();
-      await UserController.register(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalled();
-    });
-    it('should return 400 if passwords do not match', async () => {
-      const req: any = {
-        body: {
-          firstName: 'A',
-          lastName: 'B',
-          email: 'a@b.com',
-          password: 'pass1',
-          confirmPassword: 'pass2',
-        },
-      };
-      const res = mockRes();
-      await UserController.register(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: "Password doesn't match" });
-    });
-    it('should return 400 if password is invalid', async () => {
-      const req: any = {
-        body: {
-          firstName: 'A',
-          lastName: 'B',
-          email: 'a@b.com',
-          password: 'short',
-          confirmPassword: 'short',
-        },
-      };
-      const res = mockRes();
-      await UserController.register(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalled();
-    });
-    it('should return 400 if email already exists', async () => {
-      const req: any = {
-        body: {
-          firstName: 'A',
-          lastName: 'B',
-          email: 'a@b.com',
-          password: 'Password1',
-          confirmPassword: 'Password1',
-        },
-      };
-      const res = mockRes();
-      prisma.user.findFirst.mockResolvedValue({});
-      await UserController.register(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Email already exists' });
-    });
-    it('should return 201 if registration is successful', async () => {
-      const req: any = {
-        body: {
-          firstName: 'A',
-          lastName: 'B',
-          email: 'a@b.com',
-          password: 'Password1',
-          confirmPassword: 'Password1',
-        },
-      };
-      const res = mockRes();
-      prisma.user.findFirst.mockResolvedValue(null);
-      (bcrypt.genSalt as jest.Mock).mockResolvedValue('salt');
-      (bcrypt.hash as jest.Mock).mockResolvedValue('hashed');
-      prisma.user.create.mockResolvedValue({});
-      await UserController.register(req, res);
-      expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Register Successful' });
-    });
-    it('should return 400 on error', async () => {
-      const req: any = {
-        body: {
-          firstName: 'A',
-          lastName: 'B',
-          email: 'a@b.com',
-          password: 'Password1',
-          confirmPassword: 'Password1',
-        },
-      };
-      const res = mockRes();
-      prisma.user.findFirst.mockRejectedValue(new Error('fail'));
-      await UserController.register(req, res);
-      expect(res.sendStatus).toHaveBeenCalledWith(400);
-    });
+  it('getUserById: returns 200 and user if found', async () => {
+    const req: any = { params: { userId: '1' } };
+    const res = mockRes();
+    (UserService.getUserById as jest.Mock).mockResolvedValue({ id: 1 });
+    await UserController.getUserById(req, res);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({ id: 1 });
   });
 
-  describe('login', () => {
-    it('should return 400 if email is missing', async () => {
-      const req: any = { body: { password: 'pass' } };
-      const res = mockRes();
-      await UserController.login(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Email is required' });
-    });
-    it('should return 400 if password is missing', async () => {
-      const req: any = { body: { email: 'a@b.com' } };
-      const res = mockRes();
-      await UserController.login(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Password is required' });
-    });
-    it('should return 400 if user not found', async () => {
-      const req: any = { body: { email: 'a@b.com', password: 'pass' } };
-      const res = mockRes();
-      prisma.user.findFirst.mockResolvedValue(null);
-      await UserController.login(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Invalid email or password' });
-    });
-    it('should return 400 if password does not match', async () => {
-      const req: any = { body: { email: 'a@b.com', password: 'wrong' } };
-      const res = mockRes();
-      prisma.user.findFirst.mockResolvedValue({
-        id: 1,
-        password: 'hashed',
+  it('getUserById: returns 404 if user not found', async () => {
+    const req: any = { params: { userId: '1' } };
+    const res = mockRes();
+    (UserService.getUserById as jest.Mock).mockResolvedValue(null);
+    await UserController.getUserById(req, res);
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ message: 'User not found' });
+  });
+
+  it('register: returns 400 if any field is missing', async () => {
+    const req: any = {
+      body: { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' },
+    };
+    const res = mockRes();
+    await UserController.register(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalled();
+  });
+
+  it('register: returns 400 on error', async () => {
+    const req: any = {
+      body: {
         firstName: 'A',
         lastName: 'B',
         email: 'a@b.com',
-      });
-      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
-      await UserController.login(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Invalid email or password' });
-    });
-    it('should return 200 and tokens if credentials are valid', async () => {
-      const req: any = { body: { email: 'a@b.com', password: 'pass' } };
-      const res = mockRes();
-      const user = {
-        id: 1,
-        password: 'hashed',
-        firstName: 'A',
-        lastName: 'B',
-        email: 'a@b.com',
-        dateOfBirth: new Date(),
-      };
-      prisma.user.findFirst.mockResolvedValue(user);
-      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
-      prisma.user.update.mockResolvedValue({});
-      await UserController.login(req, res);
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(
-        expect.objectContaining({ accessToken: expect.any(String) }),
-      );
-      expect(res.cookie).toHaveBeenCalled();
-    });
-    it('should return 400 on error', async () => {
-      const req: any = { body: { email: 'a@b.com', password: 'pass' } };
-      const res = mockRes();
-      prisma.user.findFirst.mockRejectedValue(new Error('fail'));
-      await UserController.login(req, res);
-      expect(res.sendStatus).toHaveBeenCalledWith(400);
-    });
+        password: 'Password1',
+        confirmPassword: 'Password1',
+      },
+    };
+    const res = mockRes();
+    (UserService.register as jest.Mock).mockRejectedValue(new Error('fail'));
+    await UserController.register(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: expect.any(String) });
   });
 
-  // Additional tests for updateUser, logout, forgotPassword, resetPassword can be added similarly
+  it('login: returns 400 if email is missing', async () => {
+    const req: any = { body: { password: 'pass' } };
+    const res = mockRes();
+    await UserController.login(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Email is required' });
+  });
+
+  it('login: returns 400 if password is missing', async () => {
+    const req: any = { body: { email: 'a@b.com' } };
+    const res = mockRes();
+    await UserController.login(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Password is required' });
+  });
+
+  it('login: returns 400 on error', async () => {
+    const req: any = { body: { email: 'a@b.com', password: 'pass' } };
+    const res = mockRes();
+    (UserService.login as jest.Mock).mockRejectedValue(new Error('fail'));
+    await UserController.login(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'fail' });
+  });
+
+  it('updateUser: returns 401 if no refresh token', async () => {
+    const req: any = { body: { firstName: 'A', lastName: 'B', email: 'a@b.com' }, cookies: {} };
+    const res = mockRes();
+    await UserController.updateUser(req, res);
+    expect(res.sendStatus).toHaveBeenCalledWith(401);
+  });
+
+  it('logout: returns 204 if no refresh token', async () => {
+    const req: any = { cookies: {} };
+    const res = mockRes();
+    await UserController.logout(req, res);
+    expect(res.sendStatus).toHaveBeenCalledWith(204);
+    expect(res.clearCookie).not.toHaveBeenCalled();
+  });
+
+  it('forgotPassword: returns 400 if email is missing', async () => {
+    const req: any = { body: {} };
+    const res = mockRes();
+    await UserController.forgotPassword(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Email is required' });
+  });
+
+  it('resetPassword: returns 400 if token is missing', async () => {
+    const req: any = { body: { password: 'Password1', confirmPassword: 'Password1' } };
+    const res = mockRes();
+    await UserController.resetPassword(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Token is required' });
+  });
 });

@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { adminLogin, listAllUsers, createAdminUser } from '@/controller/admin/UserController';
-import { adminRefreshToken } from '@/controller/admin/RefreshToken';
+import { adminLogin, listAllUsers, createAdminUser } from '@/controller/admin/AdminUserController';
+import { adminRefreshToken } from '@/controller/admin/AdminRefreshToken';
 
 const router = Router();
 
