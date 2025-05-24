@@ -6,101 +6,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  playwright-tests:
-    name: Playwright Tests
+  e2e:
     runs-on: ubuntu-latest
-
     services:
-      postgres:
-        image: postgres:17
-        env:
-          POSTGRES_USER: postgresuser
-          POSTGRES_PASSWORD: postgrespass
-          POSTGRES_DB: postgresdb
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-
-    env:
-      DATABASE_URL: postgresql://postgresuser:postgrespass@postgres:5432/postgresdb
-      ACCESS_TOKEN_SECRET: github_actions_test_secret
-      REFRESH_TOKEN_SECRET: github_actions_test_refresh_secret
-      VITE_API_URL: http://backend:3001
-      NODE_ENV: test
-      VITE_API_BASE: http://backend
-      VITE_API_PORT: 3001
-      VITE_PORT: 5173
-      VITE_HOST: 0.0.0.0
+      docker:
+        image: docker:24.0.2
+        options: --privileged
 
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Docker Compose
+        run: docker compose -f docker-compose.yml up --build -d
 
-      - name: Create backend .env
+      - name: Wait for services
         run: |
-          cat << EOF > ./backend/.env
-          DATABASE_URL=$DATABASE_URL
-          PORT=$VITE_API_PORT
-          ACCESS_TOKEN_SECRET=$ACCESS_TOKEN_SECRET
-          REFRESH_TOKEN_SECRET=$REFRESH_TOKEN_SECRET
-          EOF
-
-      - name: Install backend dependencies
-        run: npm ci
-        working-directory: ./backend
-
-      - name: Wait for Postgres
-        run: |
-          for i in {1..15}; do
-            pg_isready -h postgres -p 5432 -U postgresuser && break
-            echo "Waiting for Postgres..."
-            sleep 3
-          done
-
-      - name: Generate Prisma client and push schema
-        run: |
-          npx prisma generate
-          npx prisma db push
-        working-directory: ./backend
-
-      - name: Start backend service
-        run: npm run dev &
-        working-directory: ./backend
-
-      - name: Install frontend dependencies
-        run: npm ci
-        working-directory: ./frontend
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
-        working-directory: ./frontend
-
-      - name: Start frontend service
-        run: npm run dev &
-        working-directory: ./frontend
-
-      - name: Wait for services to be ready
-        run: |
-          echo "Waiting for backend service..."
-          timeout 60 bash -c 'until curl -s http://localhost:${VITE_API_PORT}/health; do sleep 2; done'
-          echo "Waiting for frontend service..."
-          timeout 60 bash -c 'until curl -s http://localhost:${VITE_PORT}; do sleep 2; done'
+          echo "Waiting for backend health check..."
+          timeout 60s bash -c 'until curl -s http://localhost:3001/health; do sleep 2; done'
 
       - name: Run Playwright tests
-        run: npm run test:e2e
-        working-directory: ./frontend
+        run: docker compose exec frontend npm run test:e2e
 
-      - name: Upload Playwright test results
+      - name: Shutdown Docker Compose
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: frontend/test-results/
-          retention-days: 7
+        run: docker compose down --volumes
