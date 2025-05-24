@@ -32,4 +32,20 @@ model AdminUser {
   reset_token_expires DateTime?
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
+  roles               Role[]    @relation("AdminRoles")
+}
+
+model Role {
+  id          String        @id @default(uuid())
+  name        String        @unique
+  description String?
+  admins      AdminUser[]   @relation("AdminRoles")
+  permissions Permission[]  @relation("RolePermissions")
+}
+
+model Permission {
+  id          String      @id @default(uuid())
+  name        String      @unique
+  description String?
+  roles       Role[]      @relation("RolePermissions")
 }
