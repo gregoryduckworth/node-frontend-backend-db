@@ -25,7 +25,7 @@ interface AuthState {
 interface AuthActions {
   setToken: (token: string) => void;
   clearAuth: () => void;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<boolean>;
   updateProfile: (
@@ -109,9 +109,9 @@ export const useAuthStore = create<AuthStore>()(
         };
         set(cleared);
       },
-      login: async (email: string, password: string) => {
+      login: async (email: string, password: string, rememberMe?: boolean) => {
         try {
-          const response = await loginApi(email, password);
+          const response = await loginApi(email, password, rememberMe);
           if (response.accessToken) {
             get().setToken(response.accessToken);
             return;
@@ -169,7 +169,31 @@ export const useAuthStore = create<AuthStore>()(
       },
     }),
     {
-      name: 'adminAuthState', // or another unique key for admin
+      name: 'adminAuthState',
+      storage: {
+        getItem: (name) => {
+          const remember =
+            typeof window !== 'undefined' && localStorage.getItem('adminRememberMe') === 'true';
+          const value = remember ? localStorage.getItem(name) : sessionStorage.getItem(name);
+          return value ? JSON.parse(value) : null;
+        },
+        setItem: (name, value) => {
+          const remember =
+            typeof window !== 'undefined' && localStorage.getItem('adminRememberMe') === 'true';
+          const strValue = JSON.stringify(value);
+          if (remember) {
+            localStorage.setItem(name, strValue);
+            sessionStorage.removeItem(name);
+          } else {
+            sessionStorage.setItem(name, strValue);
+            localStorage.removeItem(name);
+          }
+        },
+        removeItem: (name) => {
+          localStorage.removeItem(name);
+          sessionStorage.removeItem(name);
+        },
+      },
     },
   ),
 );

@@ -11,7 +11,7 @@ model User {
   id                  String    @id @default(uuid())
   firstName           String
   lastName            String
-  email               String
+  email               String    @unique
   password            String
   dateOfBirth         DateTime? 
   refresh_token       String?
@@ -25,7 +25,7 @@ model AdminUser {
   id                  String    @id @default(uuid())
   firstName           String
   lastName            String
-  email               String   @unique
+  email               String    @unique
   password            String
   refresh_token       String?
   reset_token         String?

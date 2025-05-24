@@ -15,31 +15,38 @@ async function main() {
   });
   console.log('Default admin user created: admin@example.com / password');
 
-  // Seed regular users
+  // Seed regular users (no duplicate emails allowed)
   const userPassword = await bcrypt.hash('password', 10);
-  await prisma.user.createMany({
-    data: [
-      {
-        email: 'user1@example.com',
-        password: userPassword,
-        firstName: 'User',
-        lastName: 'One',
-      },
-      {
-        email: 'user2@example.com',
-        password: userPassword,
-        firstName: 'User',
-        lastName: 'Two',
-      },
-      {
-        email: 'user3@example.com',
-        password: userPassword,
-        firstName: 'User',
-        lastName: 'Three',
-      },
-    ],
-    skipDuplicates: true,
-  });
+  const regularUsers = [
+    {
+      id: 'user1',
+      email: 'user1@example.com',
+      password: userPassword,
+      firstName: 'User',
+      lastName: 'One',
+    },
+    {
+      id: 'user2',
+      email: 'user2@example.com',
+      password: userPassword,
+      firstName: 'User',
+      lastName: 'Two',
+    },
+    {
+      id: 'user3',
+      email: 'user3@example.com',
+      password: userPassword,
+      firstName: 'User',
+      lastName: 'Three',
+    },
+  ];
+  for (const user of regularUsers) {
+    await prisma.user.upsert({
+      where: { id: user.id },
+      update: {},
+      create: user,
+    });
+  }
 
   // Seed permissions
   const permissions = [
@@ -98,7 +105,7 @@ async function main() {
     where: { email: 'admin@example.com' },
     data: {
       roles: {
-        connect: [{ name: 'SUPERADMIN' }],
+        connect: [{ name: superadminRole.name }],
       },
     },
   });

@@ -4,10 +4,14 @@ import { useAuthStore } from './useAuthStore';
 import type { AuthResponse, ApiMessageResponse, RefreshTokenResponse } from './types';
 import type { ApiErrorResponse } from '@/api/types';
 
-export const login = async (email: string, password: string): Promise<AuthResponse> => {
+export const login = async (
+  email: string,
+  password: string,
+  rememberMe?: boolean,
+): Promise<AuthResponse> => {
   return apiClient<AuthResponse>(API_ENDPOINTS.LOGIN, {
     method: 'POST',
-    body: { email, password },
+    body: { email, password, rememberMe },
     includeCredentials: true,
   });
 };

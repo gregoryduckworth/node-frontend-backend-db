@@ -6,6 +6,7 @@ export const ROUTES = {
   DASHBOARD: '/dashboard',
   PROFILE: '/profile',
   LIST_USERS: '/users-list',
+  ADMIN_USERS: '/admin-list',
 };
 
 // API endpoints
@@ -17,4 +18,5 @@ export const API_ENDPOINTS = {
   RESET_PASSWORD: '/api/auth/reset-password',
   UPDATE_PROFILE: '/api/users',
   LIST_USERS: '/api/admin/users',
+  ADMIN_USERS: '/api/admin/admin-users',
 };
