@@ -10,6 +10,7 @@ import { useAuthStore } from '@/features/auth/useAuthStore';
 import { ROUTES } from '@/config/auth';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import UsersListPage from '@/features/users/UsersListPage';
+import AdminUsersListPage from './features/users/AdminUsersListPage';
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -60,6 +61,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <UsersListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ADMIN_USERS}
+            element={
+              <ProtectedRoute>
+                <AdminUsersListPage />
               </ProtectedRoute>
             }
           />

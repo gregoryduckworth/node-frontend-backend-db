@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Command, SquareTerminal } from 'lucide-react';
+import { Command, Users, Shield } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { NavMain } from '@/components/nav-main';
@@ -40,7 +40,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {
           title: t('sidebar.userManagement'),
           url: ROUTES.LIST_USERS,
-          icon: SquareTerminal,
+          icon: Users,
+          isActive: false,
+          items: [],
+        },
+        {
+          title: t('sidebar.adminManagement'),
+          url: ROUTES.ADMIN_USERS,
+          icon: Shield,
           isActive: false,
           items: [],
         },

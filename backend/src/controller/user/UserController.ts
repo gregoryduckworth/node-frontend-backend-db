@@ -53,11 +53,11 @@ export const register = async (req: Request, res: Response): Promise<Response> =
 
 export const login = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
     if (!email) return res.status(400).json({ message: 'Email is required' });
     if (!password) return res.status(400).json({ message: 'Password is required' });
     const { accessToken, refreshToken } = await UserService.login(email, password);
-    setRefreshTokenCookie(res, refreshToken);
+    setRefreshTokenCookie(res, refreshToken, rememberMe);
     return res.status(200).json({ accessToken });
   } catch (error) {
     return handleError(res, error);

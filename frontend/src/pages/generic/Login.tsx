@@ -15,6 +15,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const { t } = useTranslation();
 
   const navigate = useNavigate();
@@ -27,7 +28,12 @@ const Login = () => {
     setIsSubmitting(true);
 
     try {
-      await login(email, password);
+      if (rememberMe) {
+        localStorage.setItem('rememberMe', 'true');
+      } else {
+        localStorage.removeItem('rememberMe');
+      }
+      await login(email, password, rememberMe);
       addNotification(t('login.loginSuccess'), NotificationType.SUCCESS);
       navigate('/dashboard');
     } catch (error: unknown) {
@@ -73,6 +79,18 @@ const Login = () => {
             </Link>
           </div>
         </div>
+
+        <div className="flex items-center space-x-2 mt-4">
+          <input
+            id="rememberMe"
+            type="checkbox"
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+            className="accent-primary"
+          />
+          <Label htmlFor="rememberMe">{t('login.rememberMe')}</Label>
+        </div>
+
         <Button
           type="submit"
           className="w-full mt-6"

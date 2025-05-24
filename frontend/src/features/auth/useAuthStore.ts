@@ -13,7 +13,10 @@ const AUTH_STORAGE_KEY = 'authState';
 
 function loadPersistedAuth() {
   try {
-    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
+    const remember = typeof window !== 'undefined' && localStorage.getItem('rememberMe') === 'true';
+    const raw = remember
+      ? localStorage.getItem(AUTH_STORAGE_KEY)
+      : sessionStorage.getItem(AUTH_STORAGE_KEY);
     if (!raw) return undefined;
     return JSON.parse(raw);
   } catch {
@@ -23,7 +26,15 @@ function loadPersistedAuth() {
 
 function persistAuthState(state: Partial<AuthState>) {
   try {
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(pickAuthState(state)));
+    const remember = typeof window !== 'undefined' && localStorage.getItem('rememberMe') === 'true';
+    const str = JSON.stringify(pickAuthState(state));
+    if (remember) {
+      localStorage.setItem(AUTH_STORAGE_KEY, str);
+      sessionStorage.removeItem(AUTH_STORAGE_KEY);
+    } else {
+      sessionStorage.setItem(AUTH_STORAGE_KEY, str);
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+    }
   } catch (error: unknown) {
     console.error('Failed to persist auth state:', error);
   }
@@ -116,9 +127,14 @@ export const useAuthStore = create<AuthState>((set, get) => {
       set(cleared);
       persistAuthState(cleared);
     },
-    login: async (email, password) => {
+    login: async (email: string, password: string, rememberMe?: boolean) => {
       try {
-        const response = await loginApi(email, password);
+        if (rememberMe) {
+          localStorage.setItem('rememberMe', 'true');
+        } else {
+          localStorage.removeItem('rememberMe');
+        }
+        const response = await loginApi(email, password, rememberMe);
         if (response.accessToken) {
           get().setToken(response.accessToken);
           return;

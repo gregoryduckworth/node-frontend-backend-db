@@ -55,6 +55,25 @@ export const AdminUserService = {
     });
   },
 
+  async listAllAdminUsersWithRoles() {
+    return prisma.adminUser.findMany({
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        createdAt: true,
+        roles: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+          },
+        },
+      },
+    });
+  },
+
   async createAdminUser(firstName: string, lastName: string, email: string, password: string) {
     if (!firstName || !lastName || !email || !password) {
       throw new Error('All fields are required');

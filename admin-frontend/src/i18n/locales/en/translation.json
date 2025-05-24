@@ -140,6 +140,7 @@
     "profile": "Profile",
     "platform": "Platform",
     "userManagement": "User Management",
+    "adminManagement": "Admin Management",
     "projects": {
       "designEngineering": "Design Engineering",
       "salesMarketing": "Sales & Marketing",

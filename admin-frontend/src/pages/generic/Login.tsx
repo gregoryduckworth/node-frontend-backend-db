@@ -14,6 +14,7 @@ import { getApiErrorMessage } from '@/api/handleApiError';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useTranslation();
 
@@ -27,6 +28,11 @@ const Login = () => {
     setIsSubmitting(true);
 
     try {
+      if (rememberMe) {
+        localStorage.setItem('adminRememberMe', 'true');
+      } else {
+        localStorage.removeItem('adminRememberMe');
+      }
       await login(email, password);
       addNotification(t('login.loginSuccess'), NotificationType.SUCCESS);
       navigate('/dashboard');
@@ -71,6 +77,16 @@ const Login = () => {
               {t('login.forgotPassword')}
             </Link>
           </div>
+        </div>
+        <div className="flex items-center space-x-2">
+          <input
+            id="rememberMe"
+            type="checkbox"
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+            className="accent-primary"
+          />
+          <Label htmlFor="rememberMe">{t('login.rememberMe', 'Remember me')}</Label>
         </div>
         <Button
           type="submit"

@@ -12,9 +12,9 @@ const handleError = (res: Response, error: any, status = 400) => {
 
 export const adminLogin = async (req: Request, res: Response): Promise<Response | void> => {
   try {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
     const { accessToken, refreshToken } = await AdminUserService.login(email, password);
-    setAdminRefreshTokenCookie(res, refreshToken);
+    setAdminRefreshTokenCookie(res, refreshToken, rememberMe);
     return res.status(200).json({ accessToken });
   } catch (error) {
     return handleError(res, error);
@@ -35,6 +35,15 @@ export const createAdminUser = async (req: Request, res: Response): Promise<Resp
     const { firstName, lastName, email, password } = req.body;
     const admin = await AdminUserService.createAdminUser(firstName, lastName, email, password);
     return res.status(201).json({ admin });
+  } catch (error) {
+    return handleError(res, error);
+  }
+};
+
+export const listAllAdminUsers = async (req: Request, res: Response): Promise<Response | void> => {
+  try {
+    const admins = await AdminUserService.listAllAdminUsersWithRoles();
+    return res.status(200).json({ admins });
   } catch (error) {
     return handleError(res, error);
   }
