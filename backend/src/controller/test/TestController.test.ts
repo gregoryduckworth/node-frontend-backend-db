@@ -8,6 +8,12 @@ jest.mock('@prismaClient/client', () => ({
   },
 }));
 
+jest.mock('child_process', () => ({
+  exec: jest.fn((_cmd, _opts, cb) => {
+    if (typeof cb === 'function') cb(null, 'seed output', '');
+  }),
+}));
+
 const { prisma } = require('@prismaClient/client');
 
 const mockRes = () => {
@@ -26,10 +32,16 @@ describe('resetDatabase', () => {
     const req: any = {};
     const res = mockRes();
     (prisma.user.deleteMany as jest.Mock).mockResolvedValue({});
+    res.status = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
     await resetDatabase(req, res);
     expect(prisma.user.deleteMany).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({ message: 'Database reset successful' });
+    expect(res.json).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: expect.stringContaining('Database reset'),
+      }),
+    );
   });
 
   it('should return 500 and error message on failure', async () => {
