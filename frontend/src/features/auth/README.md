@@ -6,8 +6,17 @@ This folder contains all authentication-related logic for the frontend applicati
 - **State management** for authentication status and user info
 - **Types** for authentication requests and responses
 - **Helpers** for handling authentication flows
+- **"Remember me" logic**: login form and auth store support persistent (localStorage) or session (sessionStorage) authentication based on user choice
+- **Secure, httpOnly refresh token cookies**: backend integration for robust session management
 
-Typical usage:
+## Usage
 
 - Import and use the exported hooks and API functions in your pages/components to manage user authentication.
 - Handles token storage, user session, and error handling.
+- When logging in, pass the `rememberMe` flag to control session persistence.
+
+## Recent Updates
+
+- "Remember me" support: persistent login across browser restarts if checked, session-only if not
+- Auth state is stored in localStorage or sessionStorage accordingly
+- Backend and frontend fully integrated for this feature
