@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { AdminTokenService } from '@/service/admin/AdminTokenService';
 import jwt from 'jsonwebtoken';
+import { logger } from '@/utils/logger';
 
 export const generateAdminAccessToken = (admin: any, secret: string) => {
   return jwt.sign(
@@ -25,7 +26,7 @@ export const adminRefreshToken = async (req: Request, res: Response): Promise<Re
     }
     return res.sendStatus(result.status);
   } catch (error) {
-    console.error('Error refreshing admin token:', error);
+    logger.error('Error refreshing admin token:', error);
     return res.sendStatus(500);
   }
 };
