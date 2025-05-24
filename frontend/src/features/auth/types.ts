@@ -33,7 +33,7 @@ export interface AuthState {
 
   setToken: (token: string) => void;
   clearAuth: () => void;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<boolean>;
   updateProfile: (
@@ -47,6 +47,7 @@ export interface AuthState {
 export interface LoginRequest {
   email: string;
   password: string;
+  rememberMe?: boolean;
 }
 
 export interface RegisterRequest {
