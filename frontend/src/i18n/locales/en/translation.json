@@ -32,7 +32,9 @@
     "invalidCredentials": "Invalid email or password.",
     "backToRegister": "Don't have an account?",
     "forgotPassword": "Forgot Password",
-    "rememberPassword": "Remember your password?"
+    "rememberPassword": "Remember your password?",
+    "genericError": "Login failed. Please try again.",
+    "rememberMe": "Remember me"
   },
   "register": {
     "title": "Register",
@@ -50,13 +52,25 @@
     "confirmPasswordPlaceholder": "Confirm your password",
     "alreadyHaveAccount": "Already have an account?",
     "signUpForAccount": "Sign up for your account",
-    "passwordRequirementsNotMet": "Password requirements have not been met"
+    "passwordRequirementsNotMet": "Password requirements have not been met",
+    "validation": {
+      "passwordMatch": "Passwords do not match."
+    },
+    "errors": {
+      "serverError": "An error occurred during registration. Please try again."
+    }
   },
   "forgotPassword": {
     "title": "Forgot Password",
     "email": "Email",
     "enterEmailReset": "Enter your email to reset your password",
-    "passwordResetRequest": "Password reset instructions sent to your email"
+    "passwordResetRequest": "Password reset instructions sent to your email",
+    "errors": {
+      "serverError": "An error occurred while requesting password reset. Please try again."
+    },
+    "successMessage": "Password reset instructions sent successfully.",
+    "checkEmailMessage": "Check your email for password reset instructions.",
+    "backToLogin": "Back to Login"
   },
   "resetPassword": {
     "title": "Reset Password",
@@ -169,11 +183,38 @@
     "firstName": "First Name",
     "lastName": "Last Name",
     "email": "Email",
-    "dateOfBirth": "Date of Birth"
+    "dateOfBirth": "Date of Birth",
+    "firstNamePlaceholder": "Enter your first name",
+    "lastNamePlaceholder": "Enter your last name",
+    "emailPlaceholder": "Enter your email",
+    "dateOfBirthPlaceholder": "Select your date of birth",
+    "validation": {
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required",
+      "emailRequired": "Email is required",
+      "invalidEmail": "Please enter a valid email address",
+      "invalidDate": "Please enter a valid date",
+      "emailExists": "Email address already exists. Please use a different email."
+    }
   },
   "errorBoundary": {
     "title": "Something went wrong",
     "description": "An unexpected error occurred. Please try reloading the page. {{error}}",
     "reload": "Reload Page"
+  },
+  "content-type": "Content-Type",
+  "token": "Token",
+  "auth": {
+    "logoutError": "Logout failed. Please try again."
+  },
+  "adminUsers": {
+    "title": "Admin Users",
+    "all": "All Admin Users",
+    "noResults": "No admin users found.",
+    "roles": "Roles",
+    "noRoles": "No roles assigned."
+  },
+  "users": {
+    "noResults": "No users found."
   }
 }

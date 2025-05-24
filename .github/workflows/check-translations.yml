@@ -1,0 +1,34 @@
+name: Check Translations
+
+on:
+  pull_request:
+
+jobs:
+  check-translations:
+    name: Check Translations
+    runs-on: ubuntu-latest
+    env:
+      LANGUAGES: "en es"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+
+      - name: Install ts-node globally
+        run: npm install -g ts-node typescript
+
+      - name: Check all translations
+        run: |
+          IFS=' ' read -r -a languages <<< "$LANGUAGES"
+          for app in frontend admin-frontend; do
+            for lang in "${languages[@]}"; do
+              node scripts/find-missing-translation-keys.js $app/src $app/src/i18n/locales/$lang/translation.json
+            done
+            lang_files=()
+            for lang in "${languages[@]}"; do
+              lang_files+=("$app/src/i18n/locales/$lang/translation.json")
+            done
+            node scripts/find-missing-translations.js "${lang_files[@]}"
+          done

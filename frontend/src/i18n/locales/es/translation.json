@@ -32,7 +32,9 @@
     "invalidCredentials": "Correo electrónico o contraseña inválidos.",
     "backToRegister": "¿No tienes una cuenta?",
     "forgotPassword": "¿Olvidaste tu contraseña?",
-    "rememberPassword": "¿Recuerdas tu contraseña?"
+    "rememberPassword": "¿Recuerdas tu contraseña?",
+    "genericError": "Error al iniciar sesión. Por favor, inténtalo de nuevo.",
+    "rememberMe": "Recuérdame"
   },
   "register": {
     "title": "Registrarse",
@@ -50,13 +52,25 @@
     "confirmPasswordPlaceholder": "Confirma tu contraseña",
     "alreadyHaveAccount": "¿Ya tienes una cuenta?",
     "signUpForAccount": "Regístrate para tu cuenta",
-    "passwordRequirementsNotMet": "No se han cumplido los requisitos de la contraseña"
+    "passwordRequirementsNotMet": "No se han cumplido los requisitos de la contraseña",
+    "validation": {
+      "passwordMatch": "Las contraseñas no coinciden."
+    },
+    "errors": {
+      "serverError": "Ocurrió un error durante el registro. Por favor, inténtalo de nuevo."
+    }
   },
   "forgotPassword": {
     "title": "Olvidé mi contraseña",
     "email": "Correo electrónico",
     "enterEmailReset": "Ingresa tu correo electrónico para restablecer tu contraseña",
-    "passwordResetRequest": "Las instrucciones para restablecer la contraseña se enviaron a tu correo electrónico"
+    "passwordResetRequest": "Las instrucciones para restablecer la contraseña se enviaron a tu correo electrónico",
+    "errors": {
+      "serverError": "Ocurrió un error al solicitar el restablecimiento de la contraseña. Por favor, inténtalo de nuevo."
+    },
+    "successMessage": "Las instrucciones para restablecer la contraseña se enviaron correctamente.",
+    "checkEmailMessage": "Revisa tu correo electrónico para las instrucciones de restablecimiento de contraseña.",
+    "backToLogin": "Volver al inicio de sesión"
   },
   "resetPassword": {
     "title": "Restablecer contraseña",
@@ -169,11 +183,38 @@
     "firstName": "Nombre",
     "lastName": "Apellido",
     "email": "Correo electrónico",
-    "dateOfBirth": "Fecha de nacimiento"
+    "dateOfBirth": "Fecha de nacimiento",
+    "firstNamePlaceholder": "Ingresa tu nombre",
+    "lastNamePlaceholder": "Ingresa tu apellido",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "dateOfBirthPlaceholder": "Selecciona tu fecha de nacimiento",
+    "validation": {
+      "firstNameRequired": "El nombre es obligatorio",
+      "lastNameRequired": "El apellido es obligatorio",
+      "emailRequired": "El correo electrónico es obligatorio",
+      "invalidEmail": "Por favor, introduce una dirección de correo electrónico válida",
+      "invalidDate": "Por favor, introduce una fecha válida",
+      "emailExists": "La dirección de correo electrónico ya existe. Por favor, utiliza otra."
+    }
   },
   "errorBoundary": {
     "title": "Algo salió mal",
     "description": "Ocurrió un error inesperado. Por favor, intenta recargar la página. {{error}}",
     "reload": "Recargar página"
+  },
+  "content-type": "Tipo de contenido",
+  "token": "Token",
+  "auth": {
+    "logoutError": "Error al cerrar sesión. Por favor, inténtalo de nuevo."
+  },
+  "adminUsers": {
+    "title": "Administradores",
+    "all": "Todos los administradores",
+    "noResults": "No se encontraron administradores.",
+    "roles": "Roles",
+    "noRoles": "Sin roles asignados."
+  },
+  "users": {
+    "noResults": "No se encontraron usuarios."
   }
 }
