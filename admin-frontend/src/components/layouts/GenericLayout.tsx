@@ -18,7 +18,7 @@ const GenericLayout: React.FC<GenericLayoutProps> = ({ children, title, subtitle
           <div className="mx-auto w-full max-w-md space-y-8 p-8 border rounded-lg shadow-lg bg-white dark:bg-zinc-900">
             <div className="flex flex-col items-center space-y-2">
               <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
-              <p className="text-sm text-muted-foreground text-center">{subtitle}</p>
+              {subtitle && <p className="text-sm text-muted-foreground text-center">{subtitle}</p>}
             </div>
             {children}
           </div>
