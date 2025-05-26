@@ -53,7 +53,7 @@ jobs:
           EOF
 
       - name: Install backend dependencies
-        run: npm ci
+        run: yarn install --immutable
         working-directory: ./backend
 
       - name: Wait for Postgres
@@ -71,11 +71,11 @@ jobs:
         working-directory: ./backend
 
       - name: Start backend service
-        run: npm run dev &
+        run: yarn dev &
         working-directory: ./backend
 
       - name: Install frontend dependencies
-        run: npm ci
+        run: yarn install --immutable
         working-directory: ./frontend
 
       - name: Install Playwright browsers
@@ -83,7 +83,7 @@ jobs:
         working-directory: ./frontend
 
       - name: Start frontend service
-        run: npm run dev &
+        run: yarn dev &
         working-directory: ./frontend
 
       - name: Wait for services to be ready
@@ -94,7 +94,7 @@ jobs:
           timeout 60 bash -c 'until curl -s http://localhost:${VITE_PORT}; do sleep 2; done'
 
       - name: Run Playwright tests
-        run: npm run test:e2e
+        run: yarn test:e2e
         working-directory: ./frontend
 
       - name: Upload Playwright test results
