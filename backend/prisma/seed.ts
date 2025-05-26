@@ -19,21 +19,18 @@ async function main() {
   const userPassword = await bcrypt.hash('password', 10);
   const regularUsers = [
     {
-      id: 'user1',
       email: 'user1@example.com',
       password: userPassword,
       firstName: 'User',
       lastName: 'One',
     },
     {
-      id: 'user2',
       email: 'user2@example.com',
       password: userPassword,
       firstName: 'User',
       lastName: 'Two',
     },
     {
-      id: 'user3',
       email: 'user3@example.com',
       password: userPassword,
       firstName: 'User',
@@ -42,7 +39,7 @@ async function main() {
   ];
   for (const user of regularUsers) {
     await prisma.user.upsert({
-      where: { id: user.id },
+      where: { email: user.email },
       update: {},
       create: user,
     });
