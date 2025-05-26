@@ -16,6 +16,15 @@ dist-ssr
 playwright-report
 test-results
 
+# Yarn v2+ (Berry) specific
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+.pnp.*
+
+# Lockfiles from other package managers
+package-lock.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

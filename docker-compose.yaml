@@ -28,7 +28,7 @@ services:
       - ./backend/.env
     ports:
       - "${PORT:-3001}:${PORT:-3001}"
-    command: sh -c "npm install && npx prisma generate && npx prisma db push && npx ts-node prisma/seed.ts && npm run dev"
+    command: sh -c "yarn install && npx prisma generate && npx prisma db push && npx ts-node prisma/seed.ts && yarn run dev"
     depends_on:
       db:
         condition: service_healthy
@@ -48,7 +48,7 @@ services:
       - /app/node_modules
     ports:
       - "${VITE_PORT:-5173}:${VITE_PORT:-5173}"
-    command: sh -c "npm install && npm run dev"
+    command: sh -c "yarn install && yarn run dev"
     env_file:
       - ./frontend/.env
     depends_on:
@@ -63,7 +63,7 @@ services:
       - /app/node_modules
     ports:
       - "${VITE_PORT:-5174}:${VITE_PORT:-5174}"
-    command: sh -c "npm install && npm run dev"
+    command: sh -c "yarn install && yarn run dev"
     env_file:
       - ./admin-frontend/.env
     depends_on:
