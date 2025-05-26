@@ -52,6 +52,8 @@ jobs:
           REFRESH_TOKEN_SECRET=$REFRESH_TOKEN_SECRET
           EOF
 
+      - name: Enable Corepack
+        run: corepack enable
       - name: Install backend dependencies
         run: yarn install --immutable
         working-directory: ./backend
