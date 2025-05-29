@@ -32,7 +32,7 @@ export const apiClient = async <T>(url: string, options: RequestOptions = {}): P
     method = 'GET',
     headers = {},
     body,
-    includeCredentials = false,
+    includeCredentials = true,
     timeout = 30000,
     skipCache = false,
     cacheTime = 5 * 60 * 1000,

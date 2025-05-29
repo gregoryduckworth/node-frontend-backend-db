@@ -29,7 +29,7 @@ const UsersListPage = () => {
   useTitle('users.title');
 
   useEffect(() => {
-    apiClient<{ users: User[] }>(API_ENDPOINTS.LIST_USERS, { includeCredentials: true })
+    apiClient<{ users: User[] }>(API_ENDPOINTS.LIST_USERS)
       .then((data) => {
         setUsers(data.users);
         setLoading(false);

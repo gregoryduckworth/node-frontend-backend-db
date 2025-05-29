@@ -7,6 +7,7 @@ export const ROUTES = {
   PROFILE: '/profile',
   LIST_USERS: '/users-list',
   ADMIN_USERS: '/admin-list',
+  ROLES: '/roles',
 };
 
 // API endpoints
@@ -19,4 +20,7 @@ export const API_ENDPOINTS = {
   UPDATE_PROFILE: '/api/users',
   LIST_USERS: '/api/admin/users',
   ADMIN_USERS: '/api/admin/admin-users',
+  ROLES: '/api/admin/roles',
+  PERMISSIONS: '/api/admin/permissions',
+  PATCH_ROLE_PERMISSIONS: '/api/admin/roles',
 };

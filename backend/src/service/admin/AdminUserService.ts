@@ -101,4 +101,26 @@ export const AdminUserService = {
       },
     });
   },
+
+  async updateAdminUserRoles(adminUserId: string, roleNames: string[]) {
+    return prisma.adminUser.update({
+      where: { id: adminUserId },
+      data: {
+        roles: {
+          set: [],
+          connect: roleNames.map((name) => ({ name })),
+        },
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        createdAt: true,
+        roles: {
+          select: { id: true, name: true, description: true },
+        },
+      },
+    });
+  },
 };

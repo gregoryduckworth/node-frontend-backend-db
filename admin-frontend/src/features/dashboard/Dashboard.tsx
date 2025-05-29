@@ -19,7 +19,7 @@ const Dashboard = () => {
   const [userCountError, setUserCountError] = useState<string | null>(null);
 
   useEffect(() => {
-    apiClient<{ users: { id: string }[] }>(API_ENDPOINTS.LIST_USERS, { includeCredentials: true })
+    apiClient<{ users: { id: string }[] }>(API_ENDPOINTS.LIST_USERS)
       .then((data) => {
         setUserCount(Array.isArray(data.users) ? data.users.length : 0);
         setUserCountLoading(false);
