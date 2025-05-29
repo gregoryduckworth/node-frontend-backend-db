@@ -51,6 +51,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           isActive: false,
           items: [],
         },
+        {
+          title: t('sidebar.roleManagement', 'Role Management'),
+          url: '/roles',
+          icon: Shield,
+          isActive: false,
+          items: [],
+        },
       ],
       navSecondary: [],
       projects: [],

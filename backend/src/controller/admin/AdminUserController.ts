@@ -48,3 +48,20 @@ export const listAllAdminUsers = async (req: Request, res: Response): Promise<Re
     return handleError(res, error);
   }
 };
+
+export const updateAdminUserRoles = async (
+  req: Request,
+  res: Response,
+): Promise<Response | void> => {
+  try {
+    const { id } = req.params;
+    const { roles } = req.body;
+    if (!Array.isArray(roles)) {
+      return res.status(400).json({ message: 'Roles must be an array of role names' });
+    }
+    const updated = await AdminUserService.updateAdminUserRoles(id, roles);
+    return res.status(200).json({ admin: updated });
+  } catch (error) {
+    return handleError(res, error);
+  }
+};
