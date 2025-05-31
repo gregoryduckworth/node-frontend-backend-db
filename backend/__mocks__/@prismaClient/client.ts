@@ -1,3 +1,5 @@
+import { jest } from '@jest/globals';
+
 export const prisma = {
   user: {
     findMany: jest.fn(),
