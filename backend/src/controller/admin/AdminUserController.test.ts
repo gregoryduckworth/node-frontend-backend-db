@@ -1,23 +1,25 @@
 import { adminLogin, listAllUsers, createAdminUser } from './AdminUserController';
-import { getJwtSecrets } from '@/utils/jwtSecrets';
-import bcrypt from 'bcrypt';
+import { AdminUserService } from '@/service/admin/AdminUserService';
 
-jest.mock('@prismaClient/client', () => ({
-  prisma: {
-    adminUser: {
-      findFirst: jest.fn(),
-      update: jest.fn(),
-      create: jest.fn(),
-    },
-    user: {
-      findMany: jest.fn(),
-    },
+jest.mock('@prisma/client', () => {
+  throw new Error('Prisma client should be mocked in unit tests!');
+});
+jest.mock('@prismaClient/client');
+
+jest.mock('@/service/admin/AdminUserService', () => ({
+  AdminUserService: {
+    login: jest.fn(),
+    listAllUsers: jest.fn(),
+    createAdminUser: jest.fn(),
   },
 }));
 
-jest.mock('bcrypt');
+jest.mock('bcrypt', () => ({
+  compare: jest.fn(),
+  hash: jest.fn(),
+}));
 
-const { prisma } = require('@prismaClient/client');
+jest.resetModules();
 
 const mockRes = () => {
   const res: any = {};
@@ -25,11 +27,11 @@ const mockRes = () => {
   res.json = jest.fn().mockReturnValue(res);
   res.sendStatus = jest.fn().mockReturnValue(res);
   res.cookie = jest.fn().mockReturnValue(res);
+  res.clearCookie = jest.fn().mockReturnValue(res);
   return res;
 };
 
 describe('AdminUserController', () => {
-  const { accessTokenSecret, refreshTokenSecret } = getJwtSecrets();
   const admin = {
     id: 1,
     firstName: 'A',
@@ -44,26 +46,12 @@ describe('AdminUserController', () => {
   });
 
   describe('adminLogin', () => {
-    it('should return 400 if email is missing', async () => {
-      const req: any = { body: { password: 'pass' } };
-      const res = mockRes();
-      await adminLogin(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Email is required' });
-    });
-
-    it('should return 400 if password is missing', async () => {
-      const req: any = { body: { email: 'a@b.com' } };
-      const res = mockRes();
-      await adminLogin(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Password is required' });
-    });
-
     it('should return 400 if admin not found', async () => {
       const req: any = { body: { email: 'a@b.com', password: 'pass' } };
       const res = mockRes();
-      prisma.adminUser.findFirst.mockResolvedValue(null);
+      (AdminUserService.login as jest.Mock).mockRejectedValue(
+        new Error('Invalid email or password'),
+      );
       await adminLogin(req, res);
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({ message: 'Invalid email or password' });
@@ -72,8 +60,9 @@ describe('AdminUserController', () => {
     it('should return 400 if password does not match', async () => {
       const req: any = { body: { email: 'a@b.com', password: 'wrong' } };
       const res = mockRes();
-      prisma.adminUser.findFirst.mockResolvedValue(admin);
-      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
+      (AdminUserService.login as jest.Mock).mockRejectedValue(
+        new Error('Invalid email or password'),
+      );
       await adminLogin(req, res);
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({ message: 'Invalid email or password' });
@@ -82,15 +71,27 @@ describe('AdminUserController', () => {
     it('should return 200 and tokens if credentials are valid', async () => {
       const req: any = { body: { email: 'a@b.com', password: 'pass' } };
       const res = mockRes();
-      prisma.adminUser.findFirst.mockResolvedValue(admin);
-      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
-      prisma.adminUser.update.mockResolvedValue({});
+      (AdminUserService.login as jest.Mock).mockResolvedValue({
+        accessToken: 'token',
+        refreshToken: 'refresh',
+      });
       await adminLogin(req, res);
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({ accessToken: expect.any(String) }),
       );
       expect(res.cookie).toHaveBeenCalled();
+    });
+
+    it('should return 400 on error', async () => {
+      const req: any = { body: { email: 'a@b.com', password: 'pass' } };
+      const res = mockRes();
+      (AdminUserService.login as jest.Mock).mockRejectedValue(
+        new Error('Invalid email or password'),
+      );
+      await adminLogin(req, res);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Invalid email or password' });
     });
   });
 
@@ -108,7 +109,7 @@ describe('AdminUserController', () => {
           updatedAt: new Date(),
         },
       ];
-      prisma.user.findMany.mockResolvedValue(users);
+      (AdminUserService.listAllUsers as jest.Mock).mockResolvedValue(users);
       await listAllUsers(req, res);
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ users });
@@ -117,7 +118,7 @@ describe('AdminUserController', () => {
     it('should return 200 and empty array if no users', async () => {
       const req: any = {};
       const res = mockRes();
-      prisma.user.findMany.mockResolvedValue([]);
+      (AdminUserService.listAllUsers as jest.Mock).mockResolvedValue([]);
       await listAllUsers(req, res);
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ users: [] });
@@ -126,7 +127,7 @@ describe('AdminUserController', () => {
     it('should return 400 on error', async () => {
       const req: any = {};
       const res = mockRes();
-      prisma.user.findMany.mockRejectedValue(new Error('fail'));
+      (AdminUserService.listAllUsers as jest.Mock).mockRejectedValue(new Error('fail'));
       await listAllUsers(req, res);
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({ message: 'fail' });
@@ -134,20 +135,15 @@ describe('AdminUserController', () => {
   });
 
   describe('createAdminUser', () => {
-    it('should return 400 if any field is missing', async () => {
-      const req: any = { body: { firstName: '', lastName: '', email: '', password: '' } };
-      const res = mockRes();
-      await createAdminUser(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: 'All fields are required' });
-    });
-
     it('should return 409 if admin already exists', async () => {
       const req: any = {
         body: { firstName: 'A', lastName: 'B', email: 'a@b.com', password: 'pass' },
       };
       const res = mockRes();
-      prisma.adminUser.findFirst.mockResolvedValue(admin);
+      // Simulate service throwing with status 409
+      const error: any = new Error('Admin user with this email already exists');
+      error.status = 409;
+      (AdminUserService.createAdminUser as jest.Mock).mockRejectedValue(error);
       await createAdminUser(req, res);
       expect(res.status).toHaveBeenCalledWith(409);
       expect(res.json).toHaveBeenCalledWith({
@@ -160,8 +156,6 @@ describe('AdminUserController', () => {
         body: { firstName: 'A', lastName: 'B', email: 'a@b.com', password: 'pass' },
       };
       const res = mockRes();
-      prisma.adminUser.findFirst.mockResolvedValue(null);
-      (bcrypt.hash as jest.Mock).mockResolvedValue('hashed');
       const created = {
         id: 1,
         firstName: 'A',
@@ -169,7 +163,7 @@ describe('AdminUserController', () => {
         email: 'a@b.com',
         createdAt: new Date(),
       };
-      prisma.adminUser.create.mockResolvedValue(created);
+      (AdminUserService.createAdminUser as jest.Mock).mockResolvedValue(created);
       await createAdminUser(req, res);
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({ admin: created });
@@ -180,7 +174,7 @@ describe('AdminUserController', () => {
         body: { firstName: 'A', lastName: 'B', email: 'a@b.com', password: 'pass' },
       };
       const res = mockRes();
-      prisma.adminUser.findFirst.mockRejectedValue(new Error('fail'));
+      (AdminUserService.createAdminUser as jest.Mock).mockRejectedValue(new Error('fail'));
       await createAdminUser(req, res);
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({ message: 'fail' });

@@ -1,7 +1,19 @@
 import * as UserController from './UserController';
-import { UserService } from '@/service/user/UserService';
+import { UserService } from '../../service/user/UserService';
 
-jest.mock('@/service/user/UserService');
+jest.mock('../../service/user/UserService', () => ({
+  UserService: {
+    getAllUsers: jest.fn(),
+    getUserById: jest.fn(),
+    register: jest.fn(),
+    login: jest.fn(),
+    validatePassword: jest.fn(),
+    updateUser: jest.fn(),
+    logout: jest.fn(),
+    forgotPassword: jest.fn(),
+    resetPassword: jest.fn(),
+  },
+}));
 
 const mockRes = () => {
   const res: any = {};
@@ -15,6 +27,15 @@ const mockRes = () => {
 describe('UserController', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (UserService.getAllUsers as jest.Mock).mockReset();
+    (UserService.getUserById as jest.Mock).mockReset();
+    (UserService.register as jest.Mock).mockReset();
+    (UserService.login as jest.Mock).mockReset();
+    (UserService.validatePassword as jest.Mock).mockReset();
+    (UserService.updateUser as jest.Mock).mockReset();
+    (UserService.logout as jest.Mock).mockReset();
+    (UserService.forgotPassword as jest.Mock).mockReset();
+    (UserService.resetPassword as jest.Mock).mockReset();
   });
 
   it('getAllUsers: returns 200 and users', async () => {

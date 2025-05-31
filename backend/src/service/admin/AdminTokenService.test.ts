@@ -9,7 +9,11 @@ jest.mock('@prismaClient/client', () => ({
   },
 }));
 
-jest.mock('jsonwebtoken');
+jest.mock('jsonwebtoken', () => ({
+  sign: jest.fn(),
+  verify: jest.fn(),
+  decode: jest.fn(),
+}));
 
 const { prisma } = require('@prismaClient/client');
 
@@ -25,6 +29,9 @@ const admin = {
 describe('AdminTokenService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (jwt.sign as jest.Mock).mockReset();
+    (jwt.verify as jest.Mock).mockReset();
+    (jwt.decode as jest.Mock).mockReset();
   });
 
   describe('generateAdminAccessToken', () => {
