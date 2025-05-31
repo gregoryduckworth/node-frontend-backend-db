@@ -1,23 +1,24 @@
 # System Architecture Overview
 
-```
-+-------------------+         +-------------------+         +-------------------+
-|                   |  HTTPS  |                   |  SQL    |                   |
-|   Frontend (User) +-------->+                   +-------->+                   |
-|  (React + Vite)   |         |    Backend API    |         |    Database       |
-|                   |         | (Node/Express)    |         | (Postgres/MySQL)  |
-+-------------------+         +-------------------+         +-------------------+
-        |                           ^   ^
-        |                           |   |
-        v                           |   |
-+-------------------+               |   |
-|                   |  HTTPS        |   |
-| Admin Frontend    +---------------+   |
-| (React + Vite)    |                   |
-+-------------------+                   |
-                                        |
-        <--------------------------------+
-         (WebSockets/REST for real-time updates)
+```mermaid
+flowchart TD
+  subgraph Frontends
+    UserFE[User Frontend]
+    AdminFE[Admin Frontend]
+  end
+
+  subgraph Backend
+    API[Backend API]
+  end
+
+  subgraph Database
+    DB[Database]
+  end
+
+  UserFE -- "HTTPS Request" --> API
+  AdminFE -- "HTTPS Request" --> API
+  API -- "SQL Query" --> DB
+  AdminFE <-->|"WebSockets/REST<br/>for real-time updates"| API
 ```
 
 ## Components

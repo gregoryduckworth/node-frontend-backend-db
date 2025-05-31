@@ -52,7 +52,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           items: [],
         },
         {
-          title: t('sidebar.roleManagement', 'Role Management'),
+          title: t('sidebar.roleManagement'),
           url: '/roles',
           icon: Shield,
           isActive: false,
