@@ -11,6 +11,11 @@ jest.mock('@prismaClient/client', () => ({
   },
 }));
 
+jest.mock('jsonwebtoken');
+
+(jwt.sign as jest.Mock) = jest.fn();
+(jwt.verify as jest.Mock) = jest.fn();
+
 const { accessTokenSecret } = getJwtSecrets();
 
 function createApp() {
@@ -42,6 +47,8 @@ describe('requireRoleOrPermission middleware', () => {
   beforeEach(() => {
     app = createApp();
     (prisma.adminUser.findUnique as jest.Mock).mockReset();
+    (jwt.sign as jest.Mock).mockReset();
+    (jwt.verify as jest.Mock).mockReset();
   });
 
   afterEach(() => {
@@ -49,6 +56,7 @@ describe('requireRoleOrPermission middleware', () => {
   });
 
   it('allows access for admin with required role', async () => {
+    (jwt.verify as jest.Mock).mockReturnValue({ id: 'admin1' });
     const token = getToken({ id: 'admin1' });
     (prisma.adminUser.findUnique as jest.Mock).mockResolvedValue({
       id: 'admin1',
@@ -60,6 +68,7 @@ describe('requireRoleOrPermission middleware', () => {
   });
 
   it('allows access for admin with required permission', async () => {
+    (jwt.verify as jest.Mock).mockReturnValue({ id: 'admin2' });
     const token = getToken({ id: 'admin2' });
     (prisma.adminUser.findUnique as jest.Mock).mockResolvedValue({
       id: 'admin2',
@@ -71,12 +80,16 @@ describe('requireRoleOrPermission middleware', () => {
   });
 
   it('denies access if not authenticated', async () => {
+    (jwt.verify as jest.Mock).mockImplementation(() => {
+      throw new Error('Invalid token');
+    });
     const res = await request(app).get('/protected');
     expect(res.status).toBe(401);
     expect(res.body.message).toMatch(/Not authenticated/);
   });
 
   it('denies access if admin not found', async () => {
+    (jwt.verify as jest.Mock).mockReturnValue({ id: 'admin4' });
     const token = getToken({ id: 'admin4' });
     (prisma.adminUser.findUnique as jest.Mock).mockResolvedValue(null);
     const res = await request(app).get('/protected').set('Authorization', `Bearer ${token}`);

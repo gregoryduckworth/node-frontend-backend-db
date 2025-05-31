@@ -15,7 +15,18 @@ jest.mock('@prismaClient/client', () => ({
 }));
 
 jest.mock('jsonwebtoken');
-jest.mock('bcrypt');
+jest.mock('bcrypt', () => ({
+  genSalt: jest.fn(),
+  hash: jest.fn(),
+  compare: jest.fn(),
+}));
+
+// Ensure jwt and bcrypt methods are always Jest mock functions
+(jwt as any).sign = jest.fn();
+(jwt as any).verify = jest.fn();
+(bcrypt as any).genSalt = jest.fn();
+(bcrypt as any).hash = jest.fn();
+(bcrypt as any).compare = jest.fn();
 
 const { prisma } = require('@prismaClient/client');
 
@@ -32,6 +43,11 @@ const user = {
 describe('UserService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (bcrypt.genSalt as jest.Mock).mockReset();
+    (bcrypt.hash as jest.Mock).mockReset();
+    (bcrypt.compare as jest.Mock).mockReset();
+    (jwt.sign as jest.Mock).mockReset();
+    (jwt.verify as jest.Mock).mockReset();
   });
 
   describe('getAllUsers', () => {

@@ -1,7 +1,11 @@
 import { adminRefreshToken } from './AdminRefreshToken';
-import { AdminTokenService } from '@/service/admin/AdminTokenService';
+import { AdminTokenService } from '../../service/admin/AdminTokenService';
 
-jest.mock('@/service/admin/AdminTokenService');
+jest.mock('../../service/admin/AdminTokenService', () => ({
+  AdminTokenService: {
+    refreshAdminToken: jest.fn(),
+  },
+}));
 
 const mockRes = () => {
   const res: any = {};
@@ -14,6 +18,7 @@ const mockRes = () => {
 describe('adminRefreshToken (controller)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (AdminTokenService.refreshAdminToken as jest.Mock).mockReset();
   });
 
   it('should return 204 if no refresh token cookie', async () => {

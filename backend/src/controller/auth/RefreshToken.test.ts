@@ -1,7 +1,11 @@
 import { refreshToken } from './RefreshToken';
-import { UserTokenService } from '@/service/auth/UserTokenService';
+import { UserTokenService } from '../../service/auth/UserTokenService';
 
-jest.mock('@/service/auth/UserTokenService');
+jest.mock('../../service/auth/UserTokenService', () => ({
+  UserTokenService: {
+    refreshToken: jest.fn(),
+  },
+}));
 
 const mockRes = () => {
   const res: any = {};
@@ -14,6 +18,7 @@ const mockRes = () => {
 describe('refreshToken (controller)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (UserTokenService.refreshToken as jest.Mock).mockReset();
   });
 
   it('should return 204 if no refresh token cookie', async () => {

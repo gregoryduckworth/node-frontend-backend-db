@@ -15,7 +15,11 @@ jest.mock('@prismaClient/client', () => ({
   },
 }));
 
-jest.mock('bcrypt');
+jest.mock('bcrypt', () => ({
+  genSalt: jest.fn(),
+  hash: jest.fn(),
+  compare: jest.fn(),
+}));
 
 const { prisma } = require('@prismaClient/client');
 
@@ -32,6 +36,10 @@ describe('AdminUserService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    // Ensure all bcrypt methods are reset as Jest mocks
+    (bcrypt.genSalt as jest.Mock).mockReset();
+    (bcrypt.hash as jest.Mock).mockReset();
+    (bcrypt.compare as jest.Mock).mockReset();
   });
 
   describe('login', () => {
