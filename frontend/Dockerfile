@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:lts AS base
+FROM node:lts-slim AS base
 
 WORKDIR /app
 

@@ -21,7 +21,8 @@
     "and": "and",
     "more": "More",
     "toggle": "Toggle",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "confirm": "Confirm"
   },
   "login": {
     "title": "Login",
@@ -155,6 +156,7 @@
     "platform": "Platform",
     "userManagement": "User Management",
     "adminManagement": "Admin Management",
+    "roleManagement": "Role Management",
     "projects": {
       "designEngineering": "Design Engineering",
       "salesMarketing": "Sales & Marketing",
@@ -226,5 +228,23 @@
     "noResults": "No admin users found.",
     "roles": "Roles",
     "noRoles": "No roles assigned."
+  },
+  "roles": {
+    "title": "Roles",
+    "name": "Name",
+    "description": "Description",
+    "permissions": "Permissions",
+    "permissionCount": "Permission Count",
+    "admins": "Admins",
+    "critical": "Critical",
+    "noPermissions": "No permissions assigned",
+    "noAdmins": "No admins assigned",
+    "criticalRole": "Critical role",
+    "notCriticalRole": "Not critical role",
+    "superadminEditDisabled": "SUPERADMIN role cannot be edited",
+    "editPermissions": "Edit Permissions for",
+    "criticalRoleWarning": "Warning: This is a critical role. Changes may affect system access.",
+    "confirmCriticalSave": "Confirm Critical Role Changes",
+    "confirmCriticalSaveDescription": "You are about to modify permissions for a critical role. This could affect system access. Are you sure you want to continue?"
   }
 }

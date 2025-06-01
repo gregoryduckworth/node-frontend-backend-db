@@ -17,6 +17,7 @@ playwright-report
 test-results
 
 # Yarn v2+ (Berry) specific
+.yarn
 .yarn/*
 !.yarn/releases
 !.yarn/plugins

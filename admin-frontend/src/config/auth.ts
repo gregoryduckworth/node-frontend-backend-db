@@ -20,7 +20,7 @@ export const API_ENDPOINTS = {
   UPDATE_PROFILE: '/api/users',
   LIST_USERS: '/api/admin/users',
   ADMIN_USERS: '/api/admin/admin-users',
+  ADMIN_USER_ROLES: '/api/admin/admin-users',
   ROLES: '/api/admin/roles',
   PERMISSIONS: '/api/admin/permissions',
-  PATCH_ROLE_PERMISSIONS: '/api/admin/roles',
 };
