@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:lts AS base
+FROM node:lts-slim AS base
 RUN apt-get update -y && apt-get install -y openssl
 
 WORKDIR /app

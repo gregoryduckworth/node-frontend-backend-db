@@ -109,7 +109,48 @@ async function main() {
       },
     },
   });
-  console.log('Default roles and permissions seeded, SUPERADMIN assigned to admin@example.com');
+
+  // Create additional admin users for each role
+  const adminUsers = [
+    {
+      email: 'admin.regular@example.com',
+      password: await bcrypt.hash('password', 10),
+      firstName: 'Regular',
+      lastName: 'Admin',
+      roleName: 'ADMIN',
+    },
+    {
+      email: 'admin.editor@example.com',
+      password: await bcrypt.hash('password', 10),
+      firstName: 'Editor',
+      lastName: 'Admin',
+      roleName: 'EDITOR',
+    },
+  ];
+
+  for (const adminUser of adminUsers) {
+    const { roleName, ...userData } = adminUser;
+    const createdAdmin = await prisma.adminUser.upsert({
+      where: { email: adminUser.email },
+      update: {},
+      create: userData,
+    });
+
+    // Assign role to the admin user
+    await prisma.adminUser.update({
+      where: { id: createdAdmin.id },
+      data: {
+        roles: {
+          connect: [{ name: roleName }],
+        },
+      },
+    });
+  }
+
+  console.log('Default roles and permissions seeded, admin users created:');
+  console.log('- admin@example.com (SUPERADMIN) / password');
+  console.log('- admin.regular@example.com (ADMIN) / password');
+  console.log('- admin.editor@example.com (EDITOR) / password');
 }
 
 main()

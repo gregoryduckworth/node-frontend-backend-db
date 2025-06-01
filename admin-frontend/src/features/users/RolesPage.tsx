@@ -10,6 +10,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { useNotificationStore } from '@/features/notification/useNotificationStore';
 import { NotificationType } from '@/features/notification/types';
 import { API_ENDPOINTS } from '@/config/auth';
@@ -78,13 +87,10 @@ const RolesPage = () => {
   const savePermissions = async (roleId: string) => {
     setSaving(true);
     try {
-      const res = await apiClient<{ role: Role }>(
-        `${API_ENDPOINTS.PATCH_ROLE_PERMISSIONS}/${roleId}/permissions`,
-        {
-          method: 'PATCH',
-          body: { permissions: editPermissions },
-        },
-      );
+      const res = await apiClient<{ role: Role }>(`${API_ENDPOINTS.ROLES}/${roleId}/permissions`, {
+        method: 'PATCH',
+        body: { permissions: editPermissions },
+      });
       setRoles((prev) =>
         prev.map((r) =>
           r.id === roleId
@@ -168,7 +174,7 @@ const RolesPage = () => {
                 <TableHead>{t('roles.permissionCount')}</TableHead>
                 <TableHead>{t('roles.admins')}</TableHead>
                 <TableHead>{t('roles.critical')}</TableHead>
-                <TableHead></TableHead>
+                <TableHead>{t('roles.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -212,90 +218,111 @@ const RolesPage = () => {
                         className="text-gray-400 text-lg"
                         aria-label={t('roles.notCriticalRole')}
                       >
-                        –
+                        -
                       </span>
                     )}
                   </TableCell>
                   <TableCell>
-                    <button
-                      className="px-2 py-1 bg-primary text-white rounded disabled:opacity-50"
+                    <Button
                       onClick={() => openEdit(role)}
                       disabled={isSuperadminRole(role)}
+                      size="sm"
                       title={isSuperadminRole(role) ? t('roles.superadminEditDisabled') : ''}
                     >
                       {t('common.edit')}
-                    </button>
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-          {editRoleId && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-              <div className="bg-white rounded shadow-lg p-6 min-w-[320px]">
-                <h2 className="text-lg font-bold mb-4">
+
+          {/* Edit Permissions Dialog */}
+          <Dialog open={!!editRoleId} onOpenChange={(open) => !open && closeEdit()}>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>
                   {t('roles.editPermissions')} {roles.find((r) => r.id === editRoleId)?.name}
-                </h2>
-                {isCriticalRole(roles.find((r) => r.id === editRoleId) as Role) && (
-                  <div className="mb-4 p-2 bg-yellow-100 text-yellow-800 rounded text-sm">
-                    {t('roles.criticalRoleWarning')}
-                  </div>
-                )}
-                <div className="mb-4 max-h-48 overflow-y-auto">
-                  {permissions.map((perm) => (
-                    <label key={perm.name} className="block mb-2">
+                </DialogTitle>
+                {(() => {
+                  const editRole = roles.find((r) => r.id === editRoleId);
+                  return (
+                    editRole &&
+                    isCriticalRole(editRole) && (
+                      <DialogDescription className="p-3 bg-yellow-50 text-yellow-800 rounded-md border border-yellow-200">
+                        {t('roles.criticalRoleWarning')}
+                      </DialogDescription>
+                    )
+                  );
+                })()}
+              </DialogHeader>
+
+              <div className="max-h-48 overflow-y-auto space-y-3">
+                {permissions.map((perm) => {
+                  const editRole = roles.find((r) => r.id === editRoleId);
+                  return (
+                    <label key={perm.name} className="flex items-start gap-2 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={editPermissions.includes(perm.name)}
                         onChange={() => handlePermissionChange(perm.name)}
-                        className="mr-2"
-                        disabled={isSuperadminRole(roles.find((r) => r.id === editRoleId) as Role)}
+                        className="mt-1"
+                        disabled={editRole ? isSuperadminRole(editRole) : false}
                       />
-                      {perm.name}{' '}
-                      <span className="text-xs text-muted-foreground">{perm.description}</span>
+                      <div className="flex-1">
+                        <div className="font-medium">{perm.name}</div>
+                        {perm.description && (
+                          <div className="text-xs text-muted-foreground">{perm.description}</div>
+                        )}
+                      </div>
                     </label>
-                  ))}
-                </div>
-                <div className="flex gap-2 justify-end">
-                  <button className="px-3 py-1 rounded bg-muted" onClick={closeEdit}>
-                    {t('common.cancel')}
-                  </button>
-                  <button
-                    className="px-3 py-1 rounded bg-primary text-white disabled:opacity-50 flex items-center gap-2"
-                    onClick={() => handleSaveClick(editRoleId)}
-                    disabled={
+                  );
+                })}
+              </div>
+
+              <DialogFooter className="gap-2">
+                <Button variant="outline" onClick={closeEdit}>
+                  {t('common.cancel')}
+                </Button>
+                <Button
+                  onClick={() => editRoleId && handleSaveClick(editRoleId)}
+                  disabled={(() => {
+                    const editRole = roles.find((r) => r.id === editRoleId);
+                    return (
                       saving ||
-                      isSuperadminRole(roles.find((r) => r.id === editRoleId) as Role) ||
+                      (editRole ? isSuperadminRole(editRole) : false) ||
                       editPermissions.length === 0
-                    }
-                  >
-                    {saving && (
-                      <span className="loader border-white border-t-transparent mr-2 inline-block w-4 h-4 rounded-full animate-spin"></span>
-                    )}
-                    {t('common.save')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-          {showConfirm && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-              <div className="bg-white rounded shadow-lg p-6 min-w-[320px]">
-                <h2 className="text-lg font-bold mb-4">{t('roles.confirmCriticalSave')}</h2>
-                <div className="flex gap-2 justify-end">
-                  <button className="px-3 py-1 rounded bg-muted" onClick={cancelSave}>
-                    {t('common.cancel')}
-                  </button>
-                  <button
-                    className="px-3 py-1 rounded bg-destructive text-white"
-                    onClick={confirmSave}
-                  >
-                    {t('common.confirm')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+                    );
+                  })()}
+                  className="min-w-20"
+                >
+                  {saving && (
+                    <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
+                  )}
+                  {t('common.save')}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          {/* Confirmation Dialog */}
+          <Dialog open={showConfirm} onOpenChange={(open) => !open && cancelSave()}>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle>{t('roles.confirmCriticalSave')}</DialogTitle>
+                <DialogDescription>{t('roles.confirmCriticalSaveDescription')}</DialogDescription>
+              </DialogHeader>
+
+              <DialogFooter className="gap-2">
+                <Button variant="outline" onClick={cancelSave}>
+                  {t('common.cancel')}
+                </Button>
+                <Button variant="destructive" onClick={confirmSave}>
+                  {t('common.confirm')}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </CardContent>
       </Card>
     </AuthenticatedLayout>

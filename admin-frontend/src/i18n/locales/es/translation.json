@@ -21,7 +21,8 @@
     "and": "y",
     "more": "Más",
     "toggle": "Alternar",
-    "saving": "Guardando..."
+    "saving": "Guardando...",
+    "confirm": "Confirmar"
   },
   "login": {
     "title": "Iniciar sesión",
@@ -155,6 +156,7 @@
     "platform": "Plataforma",
     "userManagement": "Gestión de usuarios",
     "adminManagement": "Gestión de administradores",
+    "roleManagement": "Gestión de Roles",
     "projects": {
       "designEngineering": "Ingeniería de diseño",
       "salesMarketing": "Ventas y marketing",
@@ -226,5 +228,23 @@
     "noResults": "No se encontraron administradores.",
     "roles": "Roles",
     "noRoles": "Sin roles asignados."
+  },
+  "roles": {
+    "title": "Roles",
+    "name": "Nombre",
+    "description": "Descripción",
+    "permissions": "Permisos",
+    "permissionCount": "Cantidad de Permisos",
+    "admins": "Administradores",
+    "critical": "Crítico",
+    "noPermissions": "Sin permisos asignados",
+    "noAdmins": "Sin administradores asignados",
+    "criticalRole": "Rol crítico",
+    "notCriticalRole": "Rol no crítico",
+    "superadminEditDisabled": "El rol SUPERADMIN no puede ser editado",
+    "editPermissions": "Editar Permisos para",
+    "criticalRoleWarning": "Advertencia: Este es un rol crítico. Los cambios pueden afectar el acceso al sistema.",
+    "confirmCriticalSave": "Confirmar Cambios en Rol Crítico",
+    "confirmCriticalSaveDescription": "Está a punto de modificar permisos para un rol crítico. Esto podría afectar el acceso al sistema. ¿Está seguro de que desea continuar?"
   }
 }

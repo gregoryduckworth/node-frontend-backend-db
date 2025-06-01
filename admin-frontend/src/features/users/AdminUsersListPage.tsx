@@ -9,6 +9,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { API_ENDPOINTS } from '@/config/auth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslation } from 'react-i18next';
@@ -75,7 +84,7 @@ const AdminUsersListPage = () => {
   const saveRoles = async () => {
     if (!selectedAdmin) return;
     try {
-      await apiClient(`/api/admin/admin-users/${selectedAdmin.id}/roles`, {
+      await apiClient(`${API_ENDPOINTS.ADMIN_USER_ROLES}/${selectedAdmin.id}/roles`, {
         method: 'PATCH',
         body: { roles: selectedRoles },
         includeCredentials: true,
@@ -128,7 +137,8 @@ const AdminUsersListPage = () => {
                   <TableHead>{t('users.lastName')}</TableHead>
                   <TableHead>{t('users.email')}</TableHead>
                   <TableHead>{t('users.createdAt')}</TableHead>
-                  <TableHead>{t('adminUsers.roles', 'Roles')}</TableHead>
+                  <TableHead>{t('adminUsers.roles')}</TableHead>
+                  <TableHead>{t('adminUsers.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -145,52 +155,61 @@ const AdminUsersListPage = () => {
                       {admin.roles && admin.roles.length > 0
                         ? admin.roles.map((role) => role.name).join(', ')
                         : t('adminUsers.noRoles', 'No roles')}
-                      <button
-                        className="ml-2 px-2 py-1 text-xs bg-primary text-white rounded"
-                        onClick={() => openRoleModal(admin)}
-                      >
+                    </TableCell>
+                    <TableCell>
+                      <Button size="sm" onClick={() => openRoleModal(admin)}>
                         Edit Roles
-                      </button>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           )}
+
           {/* Modal Dialog for Editing Roles */}
-          {modalOpen && selectedAdmin && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-              <div className="bg-white rounded shadow-lg p-6 min-w-[320px]">
-                <h2 className="text-lg font-bold mb-4">Edit Roles for {selectedAdmin.email}</h2>
-                <div className="mb-4">
-                  {allRoles.map((role) => (
-                    <label key={role.name} className="block mb-2">
-                      <input
-                        type="checkbox"
-                        checked={selectedRoles.includes(role.name)}
-                        onChange={() => handleRoleChange(role.name)}
-                        className="mr-2"
-                      />
-                      {role.name}{' '}
-                      <span className="text-xs text-muted-foreground">{role.description}</span>
-                    </label>
-                  ))}
-                </div>
-                <div className="flex gap-2 justify-end">
-                  <button className="px-3 py-1 rounded bg-muted" onClick={closeRoleModal}>
-                    Cancel
-                  </button>
-                  <button
-                    className="px-3 py-1 rounded bg-primary text-white"
-                    onClick={saveRoles}
-                    disabled={selectedRoles.length === 0}
-                  >
-                    Save
-                  </button>
-                </div>
+          <Dialog open={modalOpen} onOpenChange={(open) => !open && closeRoleModal()}>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>Edit Roles for {selectedAdmin?.email}</DialogTitle>
+                <DialogDescription>
+                  Select the roles you want to assign to this admin user.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="max-h-48 overflow-y-auto space-y-3">
+                {allRoles.map((role) => (
+                  <label key={role.name} className="flex items-start gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selectedRoles.includes(role.name)}
+                      onChange={() => handleRoleChange(role.name)}
+                      className="mt-1"
+                    />
+                    <div className="flex-1">
+                      <div className="font-medium">{role.name}</div>
+                      {role.description && (
+                        <div className="text-xs text-muted-foreground">{role.description}</div>
+                      )}
+                    </div>
+                  </label>
+                ))}
               </div>
-            </div>
-          )}
+
+              <DialogFooter className="gap-2">
+                <Button variant="outline" onClick={closeRoleModal}>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={saveRoles}
+                  disabled={selectedRoles.length === 0}
+                  className="min-w-20"
+                >
+                  Save
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </CardContent>
       </Card>
     </AuthenticatedLayout>
