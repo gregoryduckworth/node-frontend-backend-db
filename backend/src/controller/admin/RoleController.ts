@@ -5,6 +5,7 @@ const roleSelect = {
   id: true,
   name: true,
   description: true,
+  critical: true, // <-- Add this line
   permissions: true,
   admins: {
     select: {
@@ -33,6 +34,7 @@ interface Role {
   id: string;
   name: string;
   description?: string;
+  critical: boolean; // <-- Add this line
   permissions: Permission[];
   admins: AdminUser[];
 }
@@ -72,10 +74,13 @@ export const listAllRoles = async (
     ).map((role) => ({
       ...role,
       description: role.description ?? undefined,
-      permissions: role.permissions.map((p: any) => ({
-        ...p,
-        description: p.description ?? undefined,
-      })),
+      critical: role.critical, // <-- Ensure this is included
+      permissions: role.permissions
+        .map((p: any) => ({
+          ...p,
+          description: p.description ?? undefined,
+        }))
+        .sort((a: any, b: any) => a.name.localeCompare(b.name)),
     }));
     return res.status(200).json({ roles });
   } catch (error) {
@@ -97,6 +102,7 @@ export const updateRolePermissions = async (
     const role: Role = {
       ...updated,
       description: updated.description ?? undefined,
+      critical: updated.critical, // <-- Ensure this is included
       permissions: updated.permissions.map((p: any) => ({
         ...p,
         description: p.description ?? undefined,

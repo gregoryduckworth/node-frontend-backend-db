@@ -1,4 +1,3 @@
-// Mock Prisma client to prevent real DB connection
 jest.mock('@prisma/client', () => {
   throw new Error('Prisma client should be mocked in unit tests!');
 });
@@ -45,6 +44,7 @@ describe('RoleController', () => {
         id: 'role-test',
         name: 'role-test',
         description: 'desc',
+        critical: true,
         permissions: [{ id: 'perm-test', name: 'perm-test', description: 'desc' }],
         admins: [
           {
@@ -64,6 +64,7 @@ describe('RoleController', () => {
           id: 'role-test',
           name: 'role-test',
           description: 'desc',
+          critical: true,
           permissions: expect.arrayContaining([
             expect.objectContaining({ id: 'perm-test', name: 'perm-test', description: 'desc' }),
           ]),
@@ -99,6 +100,7 @@ describe('RoleController', () => {
       id: 'role-test',
       name: 'role-test',
       description: 'desc',
+      critical: false,
       permissions: [{ id: 'perm-test', name: 'perm-test', description: 'desc' }],
       admins: [],
     });
@@ -107,6 +109,7 @@ describe('RoleController', () => {
     expect(res.json).toHaveBeenCalledWith({
       role: expect.objectContaining({
         id: 'role-test',
+        critical: false,
         permissions: expect.arrayContaining([
           expect.objectContaining({ id: 'perm-test', name: 'perm-test', description: 'desc' }),
         ]),
