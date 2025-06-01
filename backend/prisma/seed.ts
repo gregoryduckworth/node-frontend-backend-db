@@ -62,10 +62,11 @@ async function main() {
   // Seed roles with permissions
   const superadminRole = await prisma.role.upsert({
     where: { name: 'SUPERADMIN' },
-    update: {},
+    update: { critical: true },
     create: {
       name: 'SUPERADMIN',
       description: 'Super administrator',
+      critical: true,
       permissions: {
         connect: permissions.map((p) => ({ name: p.name })),
       },
@@ -75,10 +76,11 @@ async function main() {
 
   const adminRole = await prisma.role.upsert({
     where: { name: 'ADMIN' },
-    update: {},
+    update: { critical: true },
     create: {
       name: 'ADMIN',
       description: 'Administrator',
+      critical: true,
       permissions: {
         connect: [{ name: 'MANAGE_USERS' }, { name: 'VIEW_REPORTS' }],
       },
@@ -87,10 +89,11 @@ async function main() {
 
   const editorRole = await prisma.role.upsert({
     where: { name: 'EDITOR' },
-    update: {},
+    update: { critical: false },
     create: {
       name: 'EDITOR',
       description: 'Editor',
+      critical: false,
       permissions: {
         connect: [{ name: 'VIEW_REPORTS' }],
       },

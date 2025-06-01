@@ -41,6 +41,7 @@ model Role {
   description String?
   admins      AdminUser[]   @relation("AdminRoles")
   permissions Permission[]  @relation("RolePermissions")
+  critical    Boolean       @default(false)
 }
 
 model Permission {
