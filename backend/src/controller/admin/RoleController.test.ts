@@ -1,28 +1,17 @@
-jest.mock('@prisma/client', () => {
-  throw new Error('Prisma client should be mocked in unit tests!');
-});
-jest.mock('@prismaClient/client', () => ({
-  prisma: {
-    role: {
-      findMany: jest.fn(),
-      update: jest.fn(),
-      create: jest.fn(),
-      deleteMany: jest.fn(),
-    },
-    permission: {
-      create: jest.fn(),
-      deleteMany: jest.fn(),
-    },
-    adminUser: {
-      create: jest.fn(),
-      deleteMany: jest.fn(),
-    },
-    $disconnect: jest.fn(),
-  },
+jest.mock('@/service/admin/RoleService', () => ({
+  listAllRolesService: jest.fn(),
+  updateRolePermissionsService: jest.fn(),
 }));
 
-const { listAllRoles, updateRolePermissions } = require('./RoleController');
-const { prisma } = require('@prismaClient/client');
+import { listAllRoles, updateRolePermissions } from './RoleController';
+import { listAllRolesService, updateRolePermissionsService } from '@/service/admin/RoleService';
+
+const mockListAllRolesService = listAllRolesService as jest.MockedFunction<
+  typeof listAllRolesService
+>;
+const mockUpdateRolePermissionsService = updateRolePermissionsService as jest.MockedFunction<
+  typeof updateRolePermissionsService
+>;
 
 const mockRes = () => {
   const res: any = {};
@@ -37,9 +26,10 @@ describe('RoleController', () => {
   });
 
   it('should list all roles with permissions and admins', async () => {
-    const req = {};
+    const req: any = {};
     const res = mockRes();
-    prisma.role.findMany.mockResolvedValue([
+
+    const mockRoles = [
       {
         id: 'role-test',
         name: 'role-test',
@@ -55,73 +45,62 @@ describe('RoleController', () => {
           },
         ],
       },
-    ]);
+    ];
+
+    mockListAllRolesService.mockResolvedValue(mockRoles);
+
     await listAllRoles(req, res);
+
+    expect(mockListAllRolesService).toHaveBeenCalledWith();
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({
-      roles: expect.arrayContaining([
-        expect.objectContaining({
-          id: 'role-test',
-          name: 'role-test',
-          description: 'desc',
-          critical: true,
-          permissions: expect.arrayContaining([
-            expect.objectContaining({ id: 'perm-test', name: 'perm-test', description: 'desc' }),
-          ]),
-          admins: expect.arrayContaining([
-            expect.objectContaining({
-              id: 'admin-test',
-              firstName: 'Test',
-              lastName: 'Admin',
-              email: 'testadmin@example.com',
-            }),
-          ]),
-        }),
-      ]),
-    });
+    expect(res.json).toHaveBeenCalledWith({ roles: mockRoles });
   });
 
   it('should handle errors in listAllRoles', async () => {
-    const req = {};
+    const req: any = {};
     const res = mockRes();
-    prisma.role.findMany.mockRejectedValue(new Error('fail'));
+
+    mockListAllRolesService.mockRejectedValue(new Error('Service error'));
+
     await listAllRoles(req, res);
+
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ message: 'Failed to fetch roles' });
   });
 
   it('should update role permissions', async () => {
-    const req = {
+    const req: any = {
       params: { id: 'role-test' },
       body: { permissions: ['perm-test'] },
     };
     const res = mockRes();
-    prisma.role.update.mockResolvedValue({
+
+    const mockUpdatedRole = {
       id: 'role-test',
       name: 'role-test',
       description: 'desc',
       critical: false,
       permissions: [{ id: 'perm-test', name: 'perm-test', description: 'desc' }],
       admins: [],
-    });
+    };
+
+    mockUpdateRolePermissionsService.mockResolvedValue(mockUpdatedRole);
+
     await updateRolePermissions(req, res);
+
+    expect(mockUpdateRolePermissionsService).toHaveBeenCalledWith('role-test', ['perm-test']);
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({
-      role: expect.objectContaining({
-        id: 'role-test',
-        critical: false,
-        permissions: expect.arrayContaining([
-          expect.objectContaining({ id: 'perm-test', name: 'perm-test', description: 'desc' }),
-        ]),
-      }),
-    });
+    expect(res.json).toHaveBeenCalledWith({ role: mockUpdatedRole });
   });
 
   it('should handle errors in updateRolePermissions', async () => {
-    const req = { params: { id: 'role-test' }, body: { permissions: ['perm-test'] } };
+    const req: any = { params: { id: 'role-test' }, body: { permissions: ['perm-test'] } };
     const res = mockRes();
-    prisma.role.update.mockRejectedValue(new Error('fail'));
+
+    mockUpdateRolePermissionsService.mockRejectedValue(new Error('Service error'));
+
     await updateRolePermissions(req, res);
+
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ message: 'Failed to update role permissions' });
   });

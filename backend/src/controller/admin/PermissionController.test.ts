@@ -1,12 +1,13 @@
-import { listAllPermissions } from './PermissionController';
-jest.mock('@prismaClient/client', () => ({
-  prisma: {
-    permission: {
-      findMany: jest.fn(),
-    },
-  },
+jest.mock('@/service/admin/PermissionService', () => ({
+  listAllPermissionsService: jest.fn(),
 }));
-const { prisma } = require('@prismaClient/client');
+
+import { listAllPermissions } from './PermissionController';
+import { listAllPermissionsService } from '@/service/admin/PermissionService';
+
+const mockListAllPermissionsService = listAllPermissionsService as jest.MockedFunction<
+  typeof listAllPermissionsService
+>;
 
 describe('PermissionController (unit)', () => {
   const mockRes = () => {
@@ -25,19 +26,27 @@ describe('PermissionController (unit)', () => {
       { id: 'perm1', name: 'perm1', description: 'desc1' },
       { id: 'perm2', name: 'perm2', description: undefined },
     ];
-    prisma.permission.findMany.mockResolvedValue(permissions);
+
+    mockListAllPermissionsService.mockResolvedValue(permissions);
+
     const req: any = {};
     const res = mockRes();
+
     await listAllPermissions(req, res);
+
+    expect(mockListAllPermissionsService).toHaveBeenCalledWith();
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ permissions });
   });
 
   it('should handle errors', async () => {
-    prisma.permission.findMany.mockRejectedValue(new Error('fail'));
+    mockListAllPermissionsService.mockRejectedValue(new Error('Service error'));
+
     const req: any = {};
     const res = mockRes();
+
     await listAllPermissions(req, res);
+
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ message: 'Failed to fetch permissions' });
   });
