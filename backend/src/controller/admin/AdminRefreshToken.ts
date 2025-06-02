@@ -1,21 +1,6 @@
 import { Request, Response } from 'express';
 import { AdminTokenService } from '@/service/admin/AdminTokenService';
-import jwt from 'jsonwebtoken';
 import { logger } from '@/utils/logger';
-
-export const generateAdminAccessToken = (admin: any, secret: string) => {
-  return jwt.sign(
-    {
-      id: admin.id,
-      firstName: admin.firstName,
-      lastName: admin.lastName,
-      email: admin.email,
-      isAdmin: true,
-    },
-    secret,
-    { expiresIn: '30m' },
-  );
-};
 
 export const adminRefreshToken = async (req: Request, res: Response): Promise<Response> => {
   try {

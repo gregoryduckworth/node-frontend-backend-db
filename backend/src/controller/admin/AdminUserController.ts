@@ -59,7 +59,14 @@ export const updateAdminUserRoles = async (
     if (!Array.isArray(roles)) {
       return res.status(400).json({ message: 'Roles must be an array of role names' });
     }
-    const updated = await AdminUserService.updateAdminUserRoles(id, roles);
+
+    // Get current user ID from JWT token (set by requireAdmin middleware)
+    const currentUserId = req.user?.id;
+    if (!currentUserId) {
+      return res.status(401).json({ message: 'Current user ID not found in token' });
+    }
+
+    const updated = await AdminUserService.updateAdminUserRoles(id, roles, currentUserId);
     return res.status(200).json({ admin: updated });
   } catch (error) {
     return handleError(res, error);

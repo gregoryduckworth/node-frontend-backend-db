@@ -36,7 +36,7 @@ const AdminUsersListPage = () => {
   const debouncedSearch = useDebounce(search, 300);
   const { t } = useTranslation();
   const { addNotification } = useNotificationStore();
-  const { id: currentUserId } = useAuthStore();
+  const { id: currentUserId, roles: currentUserRoles } = useAuthStore();
   useTitle('adminUsers.title');
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -85,6 +85,10 @@ const AdminUsersListPage = () => {
       prev.includes(roleName) ? prev.filter((r) => r !== roleName) : [...prev, roleName],
     );
   };
+
+  const isCurrentUserSuperadmin = currentUserRoles.includes('SUPERADMIN');
+
+  const isSuperadminRole = (roleName: string) => roleName === 'SUPERADMIN';
 
   const saveRoles = async () => {
     if (!selectedAdmin) return;
@@ -204,22 +208,39 @@ const AdminUsersListPage = () => {
               </DialogHeader>
 
               <div className="max-h-48 overflow-y-auto space-y-3">
-                {allRoles.map((role) => (
-                  <label key={role.name} className="flex items-start gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={selectedRoles.includes(role.name)}
-                      onChange={() => handleRoleChange(role.name)}
-                      className="mt-1"
-                    />
-                    <div className="flex-1">
-                      <div className="font-medium">{role.name}</div>
-                      {role.description && (
-                        <div className="text-xs text-muted-foreground">{role.description}</div>
-                      )}
-                    </div>
-                  </label>
-                ))}
+                {allRoles.map((role) => {
+                  const isDisabled = isSuperadminRole(role.name) && !isCurrentUserSuperadmin;
+
+                  return (
+                    <label key={role.name} className="flex items-start gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedRoles.includes(role.name)}
+                        onChange={() => handleRoleChange(role.name)}
+                        disabled={isDisabled}
+                        className="mt-1"
+                        title={isDisabled ? t('adminUsers.cannotAssignSuperadmin') : undefined}
+                      />
+                      <div className="flex-1">
+                        <div className={`font-medium ${isDisabled ? 'text-gray-400' : ''}`}>
+                          {role.name}
+                        </div>
+                        {role.description && (
+                          <div
+                            className={`text-xs ${isDisabled ? 'text-gray-300' : 'text-muted-foreground'}`}
+                          >
+                            {role.description}
+                          </div>
+                        )}
+                        {isDisabled && (
+                          <div className="text-xs text-orange-600 mt-1">
+                            {t('adminUsers.cannotAssignSuperadmin')}
+                          </div>
+                        )}
+                      </div>
+                    </label>
+                  );
+                })}
               </div>
 
               <DialogFooter className="gap-2">

@@ -230,7 +230,8 @@
     "noRoles": "Sin roles asignados.",
     "actions": "Acciones",
     "search": "Buscar administradores...",
-    "cannotEditSelf": "No puedes editar tus propios roles"
+    "cannotEditSelf": "No puedes editar tus propios roles",
+    "cannotAssignSuperadmin": "Solo los superadministradores pueden asignar roles de superadministrador"
   },
   "roles": {
     "title": "Roles",

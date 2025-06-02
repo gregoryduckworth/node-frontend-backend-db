@@ -16,6 +16,7 @@ export interface JwtPayload {
   lastName: string;
   email: string;
   dateOfBirth?: string | null;
+  roles: string[];
   exp: number;
   [key: string]: unknown;
 }

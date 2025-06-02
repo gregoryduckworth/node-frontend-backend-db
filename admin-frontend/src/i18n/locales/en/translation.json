@@ -230,7 +230,8 @@
     "noRoles": "No roles assigned.",
     "actions": "Actions",
     "search": "Search admin users...",
-    "cannotEditSelf": "You cannot edit your own roles"
+    "cannotEditSelf": "You cannot edit your own roles",
+    "cannotAssignSuperadmin": "Only superadmin users can assign superadmin roles"
   },
   "roles": {
     "title": "Roles",
