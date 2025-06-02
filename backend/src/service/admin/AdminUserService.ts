@@ -15,6 +15,9 @@ export const AdminUserService = {
         roles: {
           select: {
             name: true,
+            permissions: {
+              select: { name: true },
+            },
           },
         },
       },
@@ -23,6 +26,12 @@ export const AdminUserService = {
     if (!admin || !isMatched) throw new Error('Invalid email or password.');
 
     const roles = admin.roles.map((role) => role.name);
+    // Flatten permissions from all roles
+    const permissionsSet = new Set<string>();
+    admin.roles.forEach((role) => {
+      role.permissions.forEach((perm) => permissionsSet.add(perm.name));
+    });
+    const permissions = Array.from(permissionsSet);
 
     const accessToken = jwt.sign(
       {
@@ -32,6 +41,7 @@ export const AdminUserService = {
         email: admin.email,
         isAdmin: true,
         roles,
+        permissions,
       },
       accessTokenSecret,
       { expiresIn: '30m' },
@@ -44,6 +54,7 @@ export const AdminUserService = {
         email: admin.email,
         isAdmin: true,
         roles,
+        permissions,
       },
       refreshTokenSecret,
       { expiresIn: '1d' },
@@ -116,7 +127,6 @@ export const AdminUserService = {
   },
 
   async updateAdminUserRoles(adminUserId: string, roleNames: string[], currentUserId: string) {
-    // First, get the current user to check their roles
     const currentUser = await prisma.adminUser.findUnique({
       where: { id: currentUserId },
       include: {
@@ -130,7 +140,6 @@ export const AdminUserService = {
       throw new Error('Current user not found');
     }
 
-    // Get the target user to check if they have ADMIN role
     const targetUser = await prisma.adminUser.findUnique({
       where: { id: adminUserId },
       include: {

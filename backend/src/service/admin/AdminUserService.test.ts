@@ -32,7 +32,10 @@ describe('AdminUserService', () => {
     email: 'a@b.com',
     password: 'hashed',
     refresh_token: 'refresh',
-    roles: [{ name: 'ADMIN' }], // Added roles property for compatibility
+    roles: [
+      { name: 'ADMIN', permissions: [{ name: 'MANAGE_USERS' }, { name: 'EDIT_CONTENT' }] },
+      { name: 'EDITOR', permissions: [{ name: 'EDIT_CONTENT' }] },
+    ],
   };
 
   beforeEach(() => {
@@ -63,7 +66,7 @@ describe('AdminUserService', () => {
       prisma.adminUser.findFirst.mockResolvedValue(admin);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
       await expect(AdminUserService.login('a@b.com', 'wrong')).rejects.toThrow(
-        'Invalid email or password',
+        'Invalid email or password.',
       );
     });
 
@@ -75,6 +78,12 @@ describe('AdminUserService', () => {
       expect(result).toHaveProperty('accessToken');
       expect(result).toHaveProperty('refreshToken');
       expect(result).toHaveProperty('admin');
+      // Decode the token to check permissions are present
+      const jwt = require('jsonwebtoken');
+      const decoded = jwt.decode(result.accessToken);
+      expect(decoded.roles).toContain('ADMIN');
+      expect(decoded.permissions).toContain('MANAGE_USERS');
+      expect(decoded.permissions).toContain('EDIT_CONTENT');
     });
   });
 

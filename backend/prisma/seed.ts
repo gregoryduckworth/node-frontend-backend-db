@@ -50,6 +50,9 @@ async function main() {
     { name: 'MANAGE_USERS', description: 'Can manage users' },
     { name: 'VIEW_REPORTS', description: 'Can view reports' },
     { name: 'EDIT_SETTINGS', description: 'Can edit settings' },
+    { name: 'VIEW_USERS', description: 'Can view users' },
+    { name: 'MANAGE_ADMINS', description: 'Can manage admin users' },
+    { name: 'MANAGE_ROLES', description: 'Can manage roles' },
   ];
   for (const perm of permissions) {
     await prisma.permission.upsert({
@@ -62,26 +65,52 @@ async function main() {
   // Seed roles with permissions
   const adminRole = await prisma.role.upsert({
     where: { name: 'ADMIN' },
-    update: { system: true },
+    update: {
+      description: 'Administrator',
+      permissions: {
+        set: [],
+        connect: [
+          { name: 'MANAGE_USERS' },
+          { name: 'VIEW_REPORTS' },
+          { name: 'EDIT_SETTINGS' },
+          { name: 'VIEW_USERS' },
+          { name: 'MANAGE_ADMINS' },
+          { name: 'MANAGE_ROLES' },
+        ],
+      },
+    },
     create: {
       name: 'ADMIN',
       description: 'Administrator',
       system: true,
       permissions: {
-        connect: [{ name: 'MANAGE_USERS' }, { name: 'VIEW_REPORTS' }],
+        connect: [
+          { name: 'MANAGE_USERS' },
+          { name: 'VIEW_REPORTS' },
+          { name: 'EDIT_SETTINGS' },
+          { name: 'VIEW_USERS' },
+          { name: 'MANAGE_ADMINS' },
+          { name: 'MANAGE_ROLES' },
+        ],
       },
     },
   });
 
   const editorRole = await prisma.role.upsert({
     where: { name: 'EDITOR' },
-    update: { system: false },
+    update: {
+      description: 'Editor',
+      permissions: {
+        set: [],
+        connect: [{ name: 'VIEW_REPORTS' }, { name: 'VIEW_USERS' }],
+      },
+    },
     create: {
       name: 'EDITOR',
       description: 'Editor',
       system: false,
       permissions: {
-        connect: [{ name: 'VIEW_REPORTS' }],
+        connect: [{ name: 'VIEW_REPORTS' }, { name: 'VIEW_USERS' }],
       },
     },
   });
