@@ -227,7 +227,10 @@
     "all": "Todos los administradores",
     "noResults": "No se encontraron administradores.",
     "roles": "Roles",
-    "noRoles": "Sin roles asignados."
+    "noRoles": "Sin roles asignados.",
+    "actions": "Acciones",
+    "search": "Buscar administradores...",
+    "cannotEditSelf": "No puedes editar tus propios roles"
   },
   "roles": {
     "title": "Roles",

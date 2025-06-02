@@ -227,7 +227,10 @@
     "all": "All Admin Users",
     "noResults": "No admin users found.",
     "roles": "Roles",
-    "noRoles": "No roles assigned."
+    "noRoles": "No roles assigned.",
+    "actions": "Actions",
+    "search": "Search admin users...",
+    "cannotEditSelf": "You cannot edit your own roles"
   },
   "roles": {
     "title": "Roles",

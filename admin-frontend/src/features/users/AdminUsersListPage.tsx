@@ -23,15 +23,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslation } from 'react-i18next';
 import useTitle from '@/hooks/use-title';
 import { AdminUserWithRoles, AdminRole } from './adminTypes';
+import { useDebounce } from '@/hooks/use-debounce';
 import { useNotificationStore } from '@/features/notification/useNotificationStore';
 import { NotificationType } from '@/features/notification/types';
+import { useAuthStore } from '@/features/auth/useAuthStore';
 
 const AdminUsersListPage = () => {
   const [admins, setAdmins] = useState<AdminUserWithRoles[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const { t } = useTranslation();
   const { addNotification } = useNotificationStore();
+  const { id: currentUserId } = useAuthStore();
   useTitle('adminUsers.title');
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -103,6 +108,14 @@ const AdminUsersListPage = () => {
     }
   };
 
+  const filteredAdmins = admins.filter(
+    (admin) =>
+      admin.firstName.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      admin.lastName.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      admin.email.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      admin.roles.some((role) => role.name.toLowerCase().includes(debouncedSearch.toLowerCase())),
+  );
+
   if (loading)
     return (
       <div className="flex justify-center items-center h-40">
@@ -118,15 +131,22 @@ const AdminUsersListPage = () => {
       ]}
     >
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between gap-4">
           <CardTitle data-testid="admin-users-title">
             {t('adminUsers.all', 'All Admin Users')}
           </CardTitle>
+          <input
+            type="text"
+            placeholder={t('adminUsers.search')}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="px-2 py-1 border rounded w-48 text-sm"
+          />
         </CardHeader>
         <CardContent>
-          {admins.length === 0 ? (
+          {filteredAdmins.length === 0 ? (
             <div className="text-center text-muted-foreground py-8">
-              {t('adminUsers.noResults', 'No admin users found.')}
+              {t('adminUsers.noResults')}
             </div>
           ) : (
             <Table>
@@ -142,7 +162,7 @@ const AdminUsersListPage = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {admins.map((admin) => (
+                {filteredAdmins.map((admin) => (
                   <TableRow key={admin.id}>
                     <TableCell>{admin.id}</TableCell>
                     <TableCell>{admin.firstName}</TableCell>
@@ -157,7 +177,14 @@ const AdminUsersListPage = () => {
                         : t('adminUsers.noRoles', 'No roles')}
                     </TableCell>
                     <TableCell>
-                      <Button size="sm" onClick={() => openRoleModal(admin)}>
+                      <Button
+                        size="sm"
+                        onClick={() => openRoleModal(admin)}
+                        disabled={admin.id === currentUserId}
+                        title={
+                          admin.id === currentUserId ? t('adminUsers.cannotEditSelf') : undefined
+                        }
+                      >
                         Edit Roles
                       </Button>
                     </TableCell>
@@ -167,7 +194,6 @@ const AdminUsersListPage = () => {
             </Table>
           )}
 
-          {/* Modal Dialog for Editing Roles */}
           <Dialog open={modalOpen} onOpenChange={(open) => !open && closeRoleModal()}>
             <DialogContent className="max-w-md">
               <DialogHeader>
