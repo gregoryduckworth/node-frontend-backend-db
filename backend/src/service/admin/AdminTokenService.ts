@@ -5,6 +5,15 @@ import { getJwtSecrets } from '@/utils/jwtSecrets';
 export const AdminTokenService = {
   generateAdminAccessToken(admin: any, secret: string) {
     const roles = admin.roles ? admin.roles.map((role: any) => role.name) : [];
+    // Fetch permissions from roles (if present)
+    let permissions: string[] = [];
+    if (admin.roles && admin.roles.length > 0 && admin.roles[0].permissions) {
+      const permissionsSet = new Set<string>();
+      admin.roles.forEach((role: any) => {
+        (role.permissions || []).forEach((perm: any) => permissionsSet.add(perm.name));
+      });
+      permissions = Array.from(permissionsSet);
+    }
     return jwt.sign(
       {
         id: admin.id,
@@ -13,6 +22,7 @@ export const AdminTokenService = {
         email: admin.email,
         isAdmin: true,
         roles,
+        permissions,
       },
       secret,
       { expiresIn: '30m' },
@@ -29,6 +39,9 @@ export const AdminTokenService = {
         roles: {
           select: {
             name: true,
+            permissions: {
+              select: { name: true },
+            },
           },
         },
       },
