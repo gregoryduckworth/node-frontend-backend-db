@@ -31,7 +31,7 @@ function createApp() {
     }
     next();
   });
-  app.get('/protected', requireRoleOrPermission(['SUPERADMIN', 'MANAGE_USERS']), (req, res) =>
+  app.get('/protected', requireRoleOrPermission(['ADMIN', 'MANAGE_USERS']), (req, res) =>
     res.status(200).json({ message: 'OK' }),
   );
   return app;
@@ -60,7 +60,7 @@ describe('requireRoleOrPermission middleware', () => {
     const token = getToken({ id: 'admin1' });
     (prisma.adminUser.findUnique as jest.Mock).mockResolvedValue({
       id: 'admin1',
-      roles: [{ name: 'SUPERADMIN', permissions: [] }],
+      roles: [{ name: 'ADMIN', permissions: [] }],
     });
     const res = await request(app).get('/protected').set('Authorization', `Bearer ${token}`);
     expect(res.status).toBe(200);

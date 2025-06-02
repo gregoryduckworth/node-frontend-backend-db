@@ -5,7 +5,7 @@ const roleSelect = {
   id: true,
   name: true,
   description: true,
-  critical: true,
+  system: true,
   permissions: true,
   admins: {
     select: {
@@ -32,7 +32,7 @@ export async function listAllRolesService(): Promise<Role[]> {
   return roles.map((role) => ({
     ...role,
     description: role.description ?? undefined,
-    critical: role.critical,
+    system: role.system,
     permissions: (role.permissions as Permission[])
       .map(normalizePermission)
       .sort((a, b) => a.name.localeCompare(b.name)),
@@ -57,7 +57,7 @@ export async function updateRolePermissionsService(
   return {
     ...updated,
     description: updated.description ?? undefined,
-    critical: updated.critical,
+    system: updated.system,
     permissions: (updated.permissions as Permission[]).map(normalizePermission),
     admins: updated.admins as AdminUser[],
   };

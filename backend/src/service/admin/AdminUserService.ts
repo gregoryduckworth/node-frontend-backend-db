@@ -20,7 +20,7 @@ export const AdminUserService = {
       },
     });
     const isMatched = admin ? await bcrypt.compare(password, admin.password) : false;
-    if (!admin || !isMatched) throw new Error('Invalid email or password');
+    if (!admin || !isMatched) throw new Error('Invalid email or password.');
 
     const roles = admin.roles.map((role) => role.name);
 
@@ -130,7 +130,7 @@ export const AdminUserService = {
       throw new Error('Current user not found');
     }
 
-    // Get the target user to check if they have SUPERADMIN role
+    // Get the target user to check if they have ADMIN role
     const targetUser = await prisma.adminUser.findUnique({
       where: { id: adminUserId },
       include: {
@@ -144,19 +144,19 @@ export const AdminUserService = {
       throw new Error('Target user not found');
     }
 
-    const currentUserIsSuperadmin = currentUser.roles.some((role) => role.name === 'SUPERADMIN');
-    const targetUserIsSuperadmin = targetUser.roles.some((role) => role.name === 'SUPERADMIN');
-    const assigningSuperadminRole = roleNames.includes('SUPERADMIN');
+    const currentUserIsAdmin = currentUser.roles.some((role) => role.name === 'ADMIN');
+    const targetUserIsAdmin = targetUser.roles.some((role) => role.name === 'ADMIN');
+    const assigningAdminRole = roleNames.includes('ADMIN');
 
     // Check restrictions:
-    // 1. Only super admin users can edit other super admin users
-    // 2. Only super admin users can assign the SUPERADMIN role
-    if (targetUserIsSuperadmin && !currentUserIsSuperadmin) {
-      throw new Error('Only super admin users can edit other super admin users');
+    // 1. Only admin users can edit other admin users
+    // 2. Only admin users can assign the ADMIN role
+    if (targetUserIsAdmin && !currentUserIsAdmin) {
+      throw new Error('Only admin users can edit other admin users');
     }
 
-    if (assigningSuperadminRole && !currentUserIsSuperadmin) {
-      throw new Error('Only super admin users can assign the SUPERADMIN role');
+    if (assigningAdminRole && !currentUserIsAdmin) {
+      throw new Error('Only admin users can assign the ADMIN role');
     }
 
     return prisma.adminUser.update({

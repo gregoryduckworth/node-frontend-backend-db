@@ -26,12 +26,13 @@ const { prisma } = require('@prismaClient/client');
 describe('AdminUserService', () => {
   const { accessTokenSecret, refreshTokenSecret } = getJwtSecrets();
   const admin = {
-    id: 1,
+    id: '1',
     firstName: 'A',
     lastName: 'B',
     email: 'a@b.com',
     password: 'hashed',
     refresh_token: 'refresh',
+    roles: [{ name: 'ADMIN' }], // Added roles property for compatibility
   };
 
   beforeEach(() => {

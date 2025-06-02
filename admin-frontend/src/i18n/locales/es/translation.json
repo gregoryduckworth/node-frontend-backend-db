@@ -246,15 +246,15 @@
     "permissions": "Permisos",
     "permissionCount": "Cantidad de Permisos",
     "admins": "Administradores",
-    "critical": "Crítico",
+    "system": "Sistema",
     "noPermissions": "Sin permisos asignados",
     "noAdmins": "Sin administradores asignados",
-    "criticalRole": "Rol crítico",
-    "notCriticalRole": "Rol no crítico",
-    "superadminEditDisabled": "El rol SUPERADMIN no puede ser editado",
+    "systemRole": "Rol del sistema",
+    "notSystemRole": "Rol no del sistema",
+    "systemEditDisabled": "Los roles del sistema no pueden ser editados",
     "editPermissions": "Editar Permisos para",
-    "criticalRoleWarning": "Advertencia: Este es un rol crítico. Los cambios pueden afectar el acceso al sistema.",
-    "confirmCriticalSave": "Confirmar Cambios en Rol Crítico",
-    "confirmCriticalSaveDescription": "Está a punto de modificar permisos para un rol crítico. Esto podría afectar el acceso al sistema. ¿Está seguro de que desea continuar?"
+    "systemRoleWarning": "Advertencia: Este es un rol del sistema. Los cambios pueden afectar el acceso al sistema.",
+    "confirmSystemSave": "Confirmar Cambios en Rol del Sistema",
+    "confirmSystemSaveDescription": "Está a punto de modificar permisos para un rol del sistema. Esto podría afectar el acceso al sistema. ¿Está seguro de que desea continuar?"
   }
 }

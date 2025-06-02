@@ -60,27 +60,13 @@ async function main() {
   }
 
   // Seed roles with permissions
-  const superadminRole = await prisma.role.upsert({
-    where: { name: 'SUPERADMIN' },
-    update: { critical: true },
-    create: {
-      name: 'SUPERADMIN',
-      description: 'Super administrator',
-      critical: true,
-      permissions: {
-        connect: permissions.map((p) => ({ name: p.name })),
-      },
-    },
-    include: { permissions: true },
-  });
-
   const adminRole = await prisma.role.upsert({
     where: { name: 'ADMIN' },
-    update: { critical: true },
+    update: { system: true },
     create: {
       name: 'ADMIN',
       description: 'Administrator',
-      critical: true,
+      system: true,
       permissions: {
         connect: [{ name: 'MANAGE_USERS' }, { name: 'VIEW_REPORTS' }],
       },
@@ -89,23 +75,23 @@ async function main() {
 
   const editorRole = await prisma.role.upsert({
     where: { name: 'EDITOR' },
-    update: { critical: false },
+    update: { system: false },
     create: {
       name: 'EDITOR',
       description: 'Editor',
-      critical: false,
+      system: false,
       permissions: {
         connect: [{ name: 'VIEW_REPORTS' }],
       },
     },
   });
 
-  // Assign SUPERADMIN role to default admin user
+  // Assign ADMIN role to default admin user
   await prisma.adminUser.update({
     where: { email: 'admin@example.com' },
     data: {
       roles: {
-        connect: [{ name: superadminRole.name }],
+        connect: [{ name: 'ADMIN' }],
       },
     },
   });
@@ -148,7 +134,7 @@ async function main() {
   }
 
   console.log('Default roles and permissions seeded, admin users created:');
-  console.log('- admin@example.com (SUPERADMIN) / password');
+  console.log('- admin@example.com (ADMIN) / password');
   console.log('- admin.regular@example.com (ADMIN) / password');
   console.log('- admin.editor@example.com (EDITOR) / password');
 }

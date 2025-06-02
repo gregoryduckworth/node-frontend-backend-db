@@ -231,7 +231,7 @@
     "actions": "Actions",
     "search": "Search admin users...",
     "cannotEditSelf": "You cannot edit your own roles",
-    "cannotAssignSuperadmin": "Only superadmin users can assign superadmin roles",
+    "cannotAssignAdmin": "Only admin users can assign admin roles",
     "editRoles": "Edit Roles",
     "loadError": "Failed to load admin users",
     "rolesUpdated": "Roles updated",
@@ -246,15 +246,15 @@
     "permissions": "Permissions",
     "permissionCount": "Permission Count",
     "admins": "Admins",
-    "critical": "Critical",
+    "system": "System",
     "noPermissions": "No permissions assigned",
     "noAdmins": "No admins assigned",
-    "criticalRole": "Critical role",
-    "notCriticalRole": "Not critical role",
-    "superadminEditDisabled": "SUPERADMIN role cannot be edited",
+    "systemRole": "System role",
+    "notSystemRole": "Not system role",
+    "systemEditDisabled": "System roles cannot be edited",
     "editPermissions": "Edit Permissions for",
-    "criticalRoleWarning": "Warning: This is a critical role. Changes may affect system access.",
-    "confirmCriticalSave": "Confirm Critical Role Changes",
-    "confirmCriticalSaveDescription": "You are about to modify permissions for a critical role. This could affect system access. Are you sure you want to continue?"
+    "systemRoleWarning": "Warning: This is a system role. Changes may affect system access.",
+    "confirmSystemSave": "Confirm System Role Changes",
+    "confirmSystemSaveDescription": "You are about to modify permissions for a system role. This could affect system access. Are you sure you want to continue?"
   }
 }

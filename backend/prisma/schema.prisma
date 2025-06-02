@@ -39,9 +39,9 @@ model Role {
   id          String        @id @default(uuid())
   name        String        @unique
   description String?
+  system      Boolean       @default(false)
   admins      AdminUser[]   @relation("AdminRoles")
   permissions Permission[]  @relation("RolePermissions")
-  critical    Boolean       @default(false)
 }
 
 model Permission {
