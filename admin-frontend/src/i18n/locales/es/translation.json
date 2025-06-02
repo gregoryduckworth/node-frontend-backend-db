@@ -231,7 +231,7 @@
     "actions": "Acciones",
     "search": "Buscar administradores...",
     "cannotEditSelf": "No puedes editar tus propios roles",
-    "cannotAssignSuperadmin": "Solo los superadministradores pueden asignar roles de superadministrador",
+    "cannotAssignAdmin": "Solo los administradores pueden asignar roles de administrador",
     "editRoles": "Editar Roles",
     "loadError": "Error al cargar administradores",
     "rolesUpdated": "Roles actualizados",
