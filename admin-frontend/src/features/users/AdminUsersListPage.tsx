@@ -51,10 +51,10 @@ const AdminUsersListPage = () => {
         setLoading(false);
       })
       .catch(() => {
-        setError('Failed to load admin users');
+        setError(t('adminUsers.loadError'));
         setLoading(false);
       });
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     if (error) {
@@ -98,7 +98,7 @@ const AdminUsersListPage = () => {
         body: { roles: selectedRoles },
         includeCredentials: true,
       });
-      addNotification('Roles updated', NotificationType.SUCCESS);
+      addNotification(t('adminUsers.rolesUpdated'), NotificationType.SUCCESS);
       setAdmins((prev) =>
         prev.map((a) =>
           a.id === selectedAdmin.id
@@ -108,7 +108,7 @@ const AdminUsersListPage = () => {
       );
       closeRoleModal();
     } catch {
-      addNotification('Failed to update roles', NotificationType.ERROR);
+      addNotification(t('adminUsers.updateError'), NotificationType.ERROR);
     }
   };
 
@@ -178,7 +178,7 @@ const AdminUsersListPage = () => {
                     <TableCell>
                       {admin.roles && admin.roles.length > 0
                         ? admin.roles.map((role) => role.name).join(', ')
-                        : t('adminUsers.noRoles', 'No roles')}
+                        : t('adminUsers.noRoles')}
                     </TableCell>
                     <TableCell>
                       <Button
@@ -189,7 +189,7 @@ const AdminUsersListPage = () => {
                           admin.id === currentUserId ? t('adminUsers.cannotEditSelf') : undefined
                         }
                       >
-                        Edit Roles
+                        {t('adminUsers.editRoles')}
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -201,10 +201,10 @@ const AdminUsersListPage = () => {
           <Dialog open={modalOpen} onOpenChange={(open) => !open && closeRoleModal()}>
             <DialogContent className="max-w-md">
               <DialogHeader>
-                <DialogTitle>Edit Roles for {selectedAdmin?.email}</DialogTitle>
-                <DialogDescription>
-                  Select the roles you want to assign to this admin user.
-                </DialogDescription>
+                <DialogTitle>
+                  {t('adminUsers.editRolesFor', { email: selectedAdmin?.email })}
+                </DialogTitle>
+                <DialogDescription>{t('adminUsers.editRolesDescription')}</DialogDescription>
               </DialogHeader>
 
               <div className="max-h-48 overflow-y-auto space-y-3">
@@ -245,14 +245,14 @@ const AdminUsersListPage = () => {
 
               <DialogFooter className="gap-2">
                 <Button variant="outline" onClick={closeRoleModal}>
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
                 <Button
                   onClick={saveRoles}
                   disabled={selectedRoles.length === 0}
                   className="min-w-20"
                 >
-                  Save
+                  {t('common.save')}
                 </Button>
               </DialogFooter>
             </DialogContent>

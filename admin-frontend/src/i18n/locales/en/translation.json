@@ -231,7 +231,13 @@
     "actions": "Actions",
     "search": "Search admin users...",
     "cannotEditSelf": "You cannot edit your own roles",
-    "cannotAssignSuperadmin": "Only superadmin users can assign superadmin roles"
+    "cannotAssignSuperadmin": "Only superadmin users can assign superadmin roles",
+    "editRoles": "Edit Roles",
+    "loadError": "Failed to load admin users",
+    "rolesUpdated": "Roles updated",
+    "updateError": "Failed to update roles",
+    "editRolesFor": "Edit Roles for {{email}}",
+    "editRolesDescription": "Select the roles you want to assign to this admin user."
   },
   "roles": {
     "title": "Roles",

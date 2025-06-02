@@ -231,7 +231,13 @@
     "actions": "Acciones",
     "search": "Buscar administradores...",
     "cannotEditSelf": "No puedes editar tus propios roles",
-    "cannotAssignSuperadmin": "Solo los superadministradores pueden asignar roles de superadministrador"
+    "cannotAssignSuperadmin": "Solo los superadministradores pueden asignar roles de superadministrador",
+    "editRoles": "Editar Roles",
+    "loadError": "Error al cargar administradores",
+    "rolesUpdated": "Roles actualizados",
+    "updateError": "Error al actualizar roles",
+    "editRolesFor": "Editar Roles para {{email}}",
+    "editRolesDescription": "Selecciona los roles que quieres asignar a este administrador."
   },
   "roles": {
     "title": "Roles",
