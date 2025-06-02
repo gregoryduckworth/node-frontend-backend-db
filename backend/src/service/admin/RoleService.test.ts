@@ -22,7 +22,7 @@ describe('RoleService', () => {
           id: 'role1',
           name: 'Admin',
           description: 'Administrator role',
-          critical: true,
+          system: true,
           permissions: [
             { id: 'perm1', name: 'manage_users', description: 'Manage users' },
             { id: 'perm2', name: 'manage_roles', description: null },
@@ -40,7 +40,7 @@ describe('RoleService', () => {
           id: 'role2',
           name: 'Editor',
           description: null,
-          critical: false,
+          system: false,
           permissions: [{ id: 'perm3', name: 'edit_content', description: 'Edit content' }],
           admins: [],
         },
@@ -55,7 +55,7 @@ describe('RoleService', () => {
           id: true,
           name: true,
           description: true,
-          critical: true,
+          system: true,
           permissions: true,
           admins: {
             select: {
@@ -74,7 +74,7 @@ describe('RoleService', () => {
           id: 'role1',
           name: 'Admin',
           description: 'Administrator role',
-          critical: true,
+          system: true,
           permissions: [
             { id: 'perm2', name: 'manage_roles', description: undefined },
             { id: 'perm1', name: 'manage_users', description: 'Manage users' },
@@ -92,7 +92,7 @@ describe('RoleService', () => {
           id: 'role2',
           name: 'Editor',
           description: undefined,
-          critical: false,
+          system: false,
           permissions: [{ id: 'perm3', name: 'edit_content', description: 'Edit content' }],
           admins: [],
         },
@@ -111,7 +111,7 @@ describe('RoleService', () => {
           id: 'role1',
           name: 'TestRole',
           description: 'Test role',
-          critical: false,
+          system: false,
           permissions: [
             { id: 'perm2', name: 'z_permission', description: 'Z permission' },
             { id: 'perm1', name: 'a_permission', description: 'A permission' },
@@ -142,7 +142,7 @@ describe('RoleService', () => {
         id: 'role1',
         name: 'Admin',
         description: 'Administrator role',
-        critical: true,
+        system: true,
         permissions: [
           { id: 'perm1', name: 'perm1', description: 'Permission 1' },
           { id: 'perm2', name: 'perm2', description: null },
@@ -166,7 +166,7 @@ describe('RoleService', () => {
           id: true,
           name: true,
           description: true,
-          critical: true,
+          system: true,
           permissions: true,
           admins: {
             select: {
@@ -183,7 +183,7 @@ describe('RoleService', () => {
         id: 'role1',
         name: 'Admin',
         description: 'Administrator role',
-        critical: true,
+        system: true,
         permissions: [
           { id: 'perm1', name: 'perm1', description: 'Permission 1' },
           { id: 'perm2', name: 'perm2', description: undefined },
@@ -211,7 +211,7 @@ describe('RoleService', () => {
         id: 'role1',
         name: 'TestRole',
         description: null,
-        critical: false,
+        system: false,
         permissions: [{ id: 'perm1', name: 'perm1', description: null }],
         admins: [],
       };

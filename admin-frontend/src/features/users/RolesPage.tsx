@@ -127,7 +127,7 @@ const RolesPage = () => {
 
   const handleSaveClick = (roleId: string) => {
     const role = roles.find((r) => r.id === roleId);
-    if (role && isCriticalRole(role)) {
+    if (role && role.system) {
       setPendingSaveRoleId(roleId);
       setShowConfirm(true);
     } else {
@@ -147,10 +147,6 @@ const RolesPage = () => {
     setShowConfirm(false);
     setPendingSaveRoleId(null);
   };
-
-  const isCriticalRole = (role: Role) => ['SUPERADMIN', 'ADMIN'].includes(role.name);
-
-  const isSuperadminRole = (role: Role) => role.name === 'SUPERADMIN';
 
   const filteredRoles = roles.filter((role) => {
     if (!debouncedSearch) return true;
@@ -198,7 +194,7 @@ const RolesPage = () => {
                 <TableHead>{t('roles.permissions')}</TableHead>
                 <TableHead>{t('roles.permissionCount')}</TableHead>
                 <TableHead>{t('roles.admins')}</TableHead>
-                <TableHead>{t('roles.critical')}</TableHead>
+                <TableHead>{t('roles.system')}</TableHead>
                 <TableHead>{t('roles.actions')}</TableHead>
               </TableRow>
             </TableHeader>
@@ -230,19 +226,19 @@ const RolesPage = () => {
                       )}
                     </TableCell>
                     <TableCell className="text-center">
-                      {role.critical === true ? (
+                      {role.system ? (
                         <span
-                          title={t('roles.criticalRole')}
+                          title={t('roles.systemRole')}
                           className="text-green-600 font-bold text-lg"
-                          aria-label={t('roles.criticalRole')}
+                          aria-label={t('roles.systemRole')}
                         >
                           ✓
                         </span>
                       ) : (
                         <span
-                          title={t('roles.notCriticalRole')}
+                          title={t('roles.notSystemRole')}
                           className="text-gray-400 text-lg"
-                          aria-label={t('roles.notCriticalRole')}
+                          aria-label={t('roles.notSystemRole')}
                         >
                           -
                         </span>
@@ -251,9 +247,9 @@ const RolesPage = () => {
                     <TableCell>
                       <Button
                         onClick={() => openEdit(role)}
-                        disabled={isSuperadminRole(role)}
+                        disabled={role.system}
                         size="sm"
-                        title={isSuperadminRole(role) ? t('roles.superadminEditDisabled') : ''}
+                        title={role.system ? t('roles.systemEditDisabled') : ''}
                       >
                         {t('common.edit')}
                       </Button>
@@ -282,9 +278,9 @@ const RolesPage = () => {
                   const editRole = roles.find((r) => r.id === editRoleId);
                   return (
                     editRole &&
-                    isCriticalRole(editRole) && (
+                    editRole.system && (
                       <DialogDescription className="p-3 bg-yellow-50 text-yellow-800 rounded-md border border-yellow-200">
-                        {t('roles.criticalRoleWarning')}
+                        {t('roles.systemRoleWarning')}
                       </DialogDescription>
                     )
                   );
@@ -301,7 +297,7 @@ const RolesPage = () => {
                         checked={editPermissions.includes(perm.name)}
                         onChange={() => handlePermissionChange(perm.name)}
                         className="mt-1"
-                        disabled={editRole ? isSuperadminRole(editRole) : false}
+                        disabled={editRole ? editRole.system : false}
                       />
                       <div className="flex-1">
                         <div className="font-medium">{perm.name}</div>
@@ -323,9 +319,7 @@ const RolesPage = () => {
                   disabled={(() => {
                     const editRole = roles.find((r) => r.id === editRoleId);
                     return (
-                      saving ||
-                      (editRole ? isSuperadminRole(editRole) : false) ||
-                      editPermissions.length === 0
+                      saving || (editRole ? editRole.system : false) || editPermissions.length === 0
                     );
                   })()}
                   className="min-w-20"
@@ -342,8 +336,8 @@ const RolesPage = () => {
           <Dialog open={showConfirm} onOpenChange={(open) => !open && cancelSave()}>
             <DialogContent className="max-w-sm">
               <DialogHeader>
-                <DialogTitle>{t('roles.confirmCriticalSave')}</DialogTitle>
-                <DialogDescription>{t('roles.confirmCriticalSaveDescription')}</DialogDescription>
+                <DialogTitle>{t('roles.confirmSystemSave')}</DialogTitle>
+                <DialogDescription>{t('roles.confirmSystemSaveDescription')}</DialogDescription>
               </DialogHeader>
 
               <DialogFooter className="gap-2">

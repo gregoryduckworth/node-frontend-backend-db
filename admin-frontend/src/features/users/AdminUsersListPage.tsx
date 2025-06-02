@@ -86,9 +86,7 @@ const AdminUsersListPage = () => {
     );
   };
 
-  const isCurrentUserSuperadmin = currentUserRoles.includes('SUPERADMIN');
-
-  const isSuperadminRole = (roleName: string) => roleName === 'SUPERADMIN';
+  const isCurrentUserAdmin = currentUserRoles.includes('ADMIN');
 
   const saveRoles = async () => {
     if (!selectedAdmin) return;
@@ -209,7 +207,7 @@ const AdminUsersListPage = () => {
 
               <div className="max-h-48 overflow-y-auto space-y-3">
                 {allRoles.map((role) => {
-                  const isDisabled = isSuperadminRole(role.name) && !isCurrentUserSuperadmin;
+                  const isDisabled = role.system && !isCurrentUserAdmin;
 
                   return (
                     <label key={role.name} className="flex items-start gap-2 cursor-pointer">
@@ -219,7 +217,7 @@ const AdminUsersListPage = () => {
                         onChange={() => handleRoleChange(role.name)}
                         disabled={isDisabled}
                         className="mt-1"
-                        title={isDisabled ? t('adminUsers.cannotAssignSuperadmin') : undefined}
+                        title={isDisabled ? t('adminUsers.cannotAssignAdmin') : undefined}
                       />
                       <div className="flex-1">
                         <div className={`font-medium ${isDisabled ? 'text-gray-400' : ''}`}>
@@ -234,7 +232,7 @@ const AdminUsersListPage = () => {
                         )}
                         {isDisabled && (
                           <div className="text-xs text-orange-600 mt-1">
-                            {t('adminUsers.cannotAssignSuperadmin')}
+                            {t('adminUsers.cannotAssignAdmin')}
                           </div>
                         )}
                       </div>

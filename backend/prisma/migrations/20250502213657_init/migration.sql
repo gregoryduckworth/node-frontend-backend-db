@@ -36,7 +36,7 @@ CREATE TABLE "Role" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
-    "critical" BOOLEAN NOT NULL DEFAULT false,
+    "system" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Role_pkey" PRIMARY KEY ("id")
 );

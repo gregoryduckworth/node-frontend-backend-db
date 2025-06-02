@@ -2,8 +2,8 @@ import { hasRequiredRoleOrPermission } from './AdminAuthService';
 
 describe('hasRequiredRoleOrPermission', () => {
   it('returns true if admin has required role', () => {
-    const admin = { roles: [{ name: 'SUPERADMIN', permissions: [] }] };
-    expect(hasRequiredRoleOrPermission(admin, ['SUPERADMIN'])).toBe(true);
+    const admin = { roles: [{ name: 'ADMIN', permissions: [] }] };
+    expect(hasRequiredRoleOrPermission(admin, ['ADMIN'])).toBe(true);
   });
 
   it('returns true if admin has required permission', () => {
@@ -13,6 +13,6 @@ describe('hasRequiredRoleOrPermission', () => {
 
   it('returns false if admin has neither', () => {
     const admin = { roles: [{ name: 'EDITOR', permissions: [{ name: 'VIEW_REPORTS' }] }] };
-    expect(hasRequiredRoleOrPermission(admin, ['SUPERADMIN', 'MANAGE_USERS'])).toBe(false);
+    expect(hasRequiredRoleOrPermission(admin, ['ADMIN', 'MANAGE_USERS'])).toBe(false);
   });
 });

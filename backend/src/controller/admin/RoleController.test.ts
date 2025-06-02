@@ -34,7 +34,7 @@ describe('RoleController', () => {
         id: 'role-test',
         name: 'role-test',
         description: 'desc',
-        critical: true,
+        system: true,
         permissions: [{ id: 'perm-test', name: 'perm-test', description: 'desc' }],
         admins: [
           {
@@ -79,7 +79,7 @@ describe('RoleController', () => {
       id: 'role-test',
       name: 'role-test',
       description: 'desc',
-      critical: false,
+      system: false,
       permissions: [{ id: 'perm-test', name: 'perm-test', description: 'desc' }],
       admins: [],
     };

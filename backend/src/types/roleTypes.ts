@@ -15,7 +15,7 @@ export interface Role {
   id: string;
   name: string;
   description?: string;
-  critical: boolean;
+  system: boolean;
   permissions: Permission[];
   admins: AdminUser[];
 }

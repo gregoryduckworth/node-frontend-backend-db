@@ -6,7 +6,7 @@ import {
 
 /**
  * Middleware to check if the admin user has at least one of the required roles or permissions.
- * Usage: requireRoleOrPermission(['SUPERADMIN', 'MANAGE_USERS'])
+ * Usage: requireRoleOrPermission(['ADMIN', 'MANAGE_USERS'])
  */
 export function requireRoleOrPermission(required: string[]) {
   return async (req: Request, res: Response, next: NextFunction) => {
