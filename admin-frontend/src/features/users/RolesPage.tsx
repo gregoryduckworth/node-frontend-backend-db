@@ -260,7 +260,7 @@ const RolesPage = () => {
                 <TableRow>
                   <TableCell colSpan={7} className="text-center py-8">
                     <span className="text-muted-foreground">
-                      {debouncedSearch ? t('roles.noResultsFound') : t('roles.noRoles')}
+                      {debouncedSearch ?? t('roles.noRoles')}
                     </span>
                   </TableCell>
                 </TableRow>
