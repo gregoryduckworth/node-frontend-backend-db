@@ -19,10 +19,12 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useNotificationStore } from '@/features/notification/useNotificationStore';
 import { NotificationType } from '@/features/notification/types';
 import { API_ENDPOINTS } from '@/config/auth';
 import { useTranslation } from 'react-i18next';
+import { useDebounce } from '@/hooks/use-debounce';
 import { Role, Permission } from './types';
 
 const RolesPage = () => {
@@ -35,6 +37,8 @@ const RolesPage = () => {
   const [saving, setSaving] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [pendingSaveRoleId, setPendingSaveRoleId] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const { addNotification } = useNotificationStore();
   const { t } = useTranslation();
 
@@ -144,11 +148,26 @@ const RolesPage = () => {
     setPendingSaveRoleId(null);
   };
 
-  // Helper to check if a role is critical (SUPERADMIN or ADMIN)
   const isCriticalRole = (role: Role) => ['SUPERADMIN', 'ADMIN'].includes(role.name);
 
-  // Helper to check if a role is SUPERADMIN
   const isSuperadminRole = (role: Role) => role.name === 'SUPERADMIN';
+
+  const filteredRoles = roles.filter((role) => {
+    if (!debouncedSearch) return true;
+
+    const searchLower = debouncedSearch.toLowerCase();
+
+    const nameMatch = role.name.toLowerCase().includes(searchLower);
+    const descriptionMatch = role.description?.toLowerCase().includes(searchLower);
+
+    const permissionMatch = role.permissions?.some(
+      (permission) =>
+        permission.name.toLowerCase().includes(searchLower) ||
+        permission.description?.toLowerCase().includes(searchLower),
+    );
+
+    return nameMatch || descriptionMatch || permissionMatch;
+  });
 
   if (loading)
     return (
@@ -161,8 +180,14 @@ const RolesPage = () => {
   return (
     <AuthenticatedLayout breadcrumbs={[{ label: t('roles.title'), href: '/roles', current: true }]}>
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between gap-4">
           <CardTitle>{t('roles.title')}</CardTitle>
+          <Input
+            placeholder={t('roles.search')}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="px-2 py-1 border rounded w-48 text-sm"
+          />
         </CardHeader>
         <CardContent>
           <Table>
@@ -178,66 +203,75 @@ const RolesPage = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {roles.map((role) => (
-                <TableRow key={role.id}>
-                  <TableCell>{role.name}</TableCell>
-                  <TableCell>{role.description}</TableCell>
-                  <TableCell>
-                    {role.permissions && role.permissions.length > 0
-                      ? role.permissions
-                          .map((p) => `${p.name}${p.description ? ` (${p.description})` : ''}`)
-                          .join(', ')
-                      : t('roles.noPermissions')}
-                  </TableCell>
-                  <TableCell>{role.permissions ? role.permissions.length : 0}</TableCell>
-                  <TableCell>
-                    {role.admins && role.admins.length > 0 ? (
-                      <ul className="list-disc list-inside text-xs">
-                        {role.admins.map((admin) => (
-                          <li key={admin.id}>
-                            {admin.firstName} {admin.lastName}
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <span className="text-muted-foreground text-xs">{t('roles.noAdmins')}</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    {role.critical === true ? (
-                      <span
-                        title={t('roles.criticalRole')}
-                        className="text-green-600 font-bold text-lg"
-                        aria-label={t('roles.criticalRole')}
+              {filteredRoles.length > 0 ? (
+                filteredRoles.map((role) => (
+                  <TableRow key={role.id}>
+                    <TableCell>{role.name}</TableCell>
+                    <TableCell>{role.description}</TableCell>
+                    <TableCell>
+                      {role.permissions && role.permissions.length > 0
+                        ? role.permissions
+                            .map((p) => `${p.name}${p.description ? ` (${p.description})` : ''}`)
+                            .join(', ')
+                        : t('roles.noPermissions')}
+                    </TableCell>
+                    <TableCell>{role.permissions ? role.permissions.length : 0}</TableCell>
+                    <TableCell>
+                      {role.admins && role.admins.length > 0 ? (
+                        <ul className="list-disc list-inside text-xs">
+                          {role.admins.map((admin) => (
+                            <li key={admin.id}>
+                              {admin.firstName} {admin.lastName}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <span className="text-muted-foreground text-xs">{t('roles.noAdmins')}</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {role.critical === true ? (
+                        <span
+                          title={t('roles.criticalRole')}
+                          className="text-green-600 font-bold text-lg"
+                          aria-label={t('roles.criticalRole')}
+                        >
+                          ✓
+                        </span>
+                      ) : (
+                        <span
+                          title={t('roles.notCriticalRole')}
+                          className="text-gray-400 text-lg"
+                          aria-label={t('roles.notCriticalRole')}
+                        >
+                          -
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        onClick={() => openEdit(role)}
+                        disabled={isSuperadminRole(role)}
+                        size="sm"
+                        title={isSuperadminRole(role) ? t('roles.superadminEditDisabled') : ''}
                       >
-                        ✓
-                      </span>
-                    ) : (
-                      <span
-                        title={t('roles.notCriticalRole')}
-                        className="text-gray-400 text-lg"
-                        aria-label={t('roles.notCriticalRole')}
-                      >
-                        -
-                      </span>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      onClick={() => openEdit(role)}
-                      disabled={isSuperadminRole(role)}
-                      size="sm"
-                      title={isSuperadminRole(role) ? t('roles.superadminEditDisabled') : ''}
-                    >
-                      {t('common.edit')}
-                    </Button>
+                        {t('common.edit')}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center py-8">
+                    <span className="text-muted-foreground">
+                      {debouncedSearch ? t('roles.noResultsFound') : t('roles.noRoles')}
+                    </span>
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
 
-          {/* Edit Permissions Dialog */}
           <Dialog open={!!editRoleId} onOpenChange={(open) => !open && closeEdit()}>
             <DialogContent className="max-w-md">
               <DialogHeader>
@@ -305,7 +339,6 @@ const RolesPage = () => {
             </DialogContent>
           </Dialog>
 
-          {/* Confirmation Dialog */}
           <Dialog open={showConfirm} onOpenChange={(open) => !open && cancelSave()}>
             <DialogContent className="max-w-sm">
               <DialogHeader>
