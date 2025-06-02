@@ -18,6 +18,7 @@ interface AuthState {
   id: string;
   email: string;
   dateOfBirth: string | null;
+  roles: string[];
   isAuthenticated: boolean;
   expiresAt: number | null;
 }
@@ -48,6 +49,7 @@ export const useAuthStore = create<AuthStore>()(
       id: '',
       email: '',
       dateOfBirth: null,
+      roles: [],
       isAuthenticated: false,
       expiresAt: null,
       setToken: (token: string) => {
@@ -59,6 +61,7 @@ export const useAuthStore = create<AuthStore>()(
             id: '',
             email: '',
             dateOfBirth: null,
+            roles: [],
             isAuthenticated: false,
             expiresAt: null,
             isLoading: false,
@@ -75,6 +78,7 @@ export const useAuthStore = create<AuthStore>()(
             id: decoded.id || '',
             email: decoded.email || '',
             dateOfBirth: decoded.dateOfBirth || null,
+            roles: decoded.roles || [],
             isAuthenticated: true,
             expiresAt: decoded.exp * 1000,
             isLoading: false,
@@ -88,6 +92,7 @@ export const useAuthStore = create<AuthStore>()(
             id: '',
             email: '',
             dateOfBirth: null,
+            roles: [],
             isAuthenticated: false,
             expiresAt: null,
             isLoading: false,
@@ -103,6 +108,7 @@ export const useAuthStore = create<AuthStore>()(
           id: '',
           email: '',
           dateOfBirth: null,
+          roles: [],
           isAuthenticated: false,
           expiresAt: null,
           isLoading: false,

@@ -4,6 +4,7 @@ import { getJwtSecrets } from '@/utils/jwtSecrets';
 
 export const AdminTokenService = {
   generateAdminAccessToken(admin: any, secret: string) {
+    const roles = admin.roles ? admin.roles.map((role: any) => role.name) : [];
     return jwt.sign(
       {
         id: admin.id,
@@ -11,6 +12,7 @@ export const AdminTokenService = {
         lastName: admin.lastName,
         email: admin.email,
         isAdmin: true,
+        roles,
       },
       secret,
       { expiresIn: '30m' },
@@ -23,6 +25,13 @@ export const AdminTokenService = {
     }
     const admin = await prisma.adminUser.findFirst({
       where: { refresh_token: refreshToken },
+      include: {
+        roles: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
     if (!admin) {
       return { status: 403 };

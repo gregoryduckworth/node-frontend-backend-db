@@ -11,6 +11,7 @@ jest.mock('@/service/admin/AdminUserService', () => ({
     login: jest.fn(),
     listAllUsers: jest.fn(),
     createAdminUser: jest.fn(),
+    updateAdminUserRoles: jest.fn(),
   },
 }));
 
