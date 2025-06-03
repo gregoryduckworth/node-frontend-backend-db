@@ -55,7 +55,7 @@ export interface RegisterRequest {
   lastName: string;
   email: string;
   password: string;
-  dateOfBirth?: string | null;
+  dateOfBirth: string;
 }
 
 export interface UpdateProfileRequest {

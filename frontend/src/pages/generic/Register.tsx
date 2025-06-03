@@ -17,6 +17,9 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [dateOfBirthTouched, setDateOfBirthTouched] = useState(false);
+  const [dateOfBirthError, setDateOfBirthError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [passwordTouched, setPasswordTouched] = useState(false);
@@ -47,11 +50,54 @@ const Register = () => {
     [t],
   );
 
+  const validateDateOfBirth = useCallback(
+    (dateString: string): boolean => {
+      if (!dateString) {
+        setDateOfBirthError(t('validation.required', { field: t('register.dateOfBirth') }));
+        return false;
+      }
+
+      const date = new Date(dateString);
+      const today = new Date();
+
+      // Check if it's a valid date
+      if (isNaN(date.getTime())) {
+        setDateOfBirthError(t('validation.invalidDate'));
+        return false;
+      }
+
+      // Check if date is not in the future
+      if (date > today) {
+        setDateOfBirthError(t('validation.dateNotFuture'));
+        return false;
+      }
+
+      // Check minimum age (13 years old)
+      const minDate = new Date();
+      minDate.setFullYear(today.getFullYear() - 13);
+
+      if (date > minDate) {
+        setDateOfBirthError(t('validation.minimumAge', { age: 13 }));
+        return false;
+      }
+
+      setDateOfBirthError('');
+      return true;
+    },
+    [t],
+  );
+
   useEffect(() => {
     if (passwordTouched) {
       validatePassword(password);
     }
   }, [password, passwordTouched, validatePassword]);
+
+  useEffect(() => {
+    if (dateOfBirthTouched) {
+      validateDateOfBirth(dateOfBirth);
+    }
+  }, [dateOfBirth, dateOfBirthTouched, validateDateOfBirth]);
 
   useEffect(() => {
     if (password || confirmPassword) {
@@ -63,9 +109,12 @@ const Register = () => {
     e.preventDefault();
     setFormSubmitted(true);
     const isPasswordValid = validatePassword(password);
+    const isDateOfBirthValid = validateDateOfBirth(dateOfBirth);
     setPasswordTouched(true);
     setConfirmPasswordTouched(true);
-    if (!isPasswordValid) {
+    setDateOfBirthTouched(true);
+
+    if (!isPasswordValid || !isDateOfBirthValid) {
       return;
     }
     if (password !== confirmPassword) {
@@ -76,7 +125,7 @@ const Register = () => {
     setIsSubmitting(true);
 
     try {
-      await registerApi(firstName, lastName, email, password, confirmPassword);
+      await registerApi(firstName, lastName, email, password, confirmPassword, dateOfBirth);
       addNotification(t('register.registerSuccess'), NotificationType.SUCCESS);
       navigate('/login');
     } catch (error: unknown) {
@@ -125,6 +174,28 @@ const Register = () => {
           />
         </div>
         <div className="grid gap-3 mt-6">
+          <Label htmlFor="dateOfBirth">{t('register.dateOfBirth')}</Label>
+          <Input
+            id="dateOfBirth"
+            type="date"
+            placeholder={t('register.dateOfBirthPlaceholder')}
+            required
+            value={dateOfBirth}
+            onChange={(e) => {
+              setDateOfBirth(e.target.value);
+              if (!dateOfBirthTouched) setDateOfBirthTouched(true);
+            }}
+            onBlur={() => setDateOfBirthTouched(true)}
+            className={dateOfBirthTouched && dateOfBirthError ? 'border-red-500' : ''}
+            data-testid="date-of-birth-input"
+          />
+          {dateOfBirthTouched && dateOfBirthError && (
+            <div className="text-xs text-red-500 mt-1" data-testid="date-of-birth-error">
+              {dateOfBirthError}
+            </div>
+          )}
+        </div>
+        <div className="grid gap-3 mt-6">
           <Label htmlFor="password">{t('register.password')}</Label>
           <Input
             id="password"
@@ -165,12 +236,17 @@ const Register = () => {
         <Button
           type="submit"
           className="w-full mt-6 whitespace-normal text-center"
-          disabled={isSubmitting || passwordErrors.length > 0 || passwordMatchError}
+          disabled={
+            isSubmitting ||
+            passwordErrors.length > 0 ||
+            passwordMatchError ||
+            dateOfBirthError !== ''
+          }
           data-testid="register-button"
         >
           {isSubmitting
             ? t('common.loading')
-            : passwordErrors.length > 0 || passwordMatchError
+            : passwordErrors.length > 0 || passwordMatchError || dateOfBirthError !== ''
               ? t('register.passwordRequirementsNotMet')
               : t('register.register')}
         </Button>

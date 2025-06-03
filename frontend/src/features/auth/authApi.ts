@@ -10,10 +10,11 @@ export const register = async (
   email: string,
   password: string,
   confirmPassword: string,
+  dateOfBirth: string,
 ): Promise<AuthResponse> => {
   return apiClient<AuthResponse>(API_ENDPOINTS.REGISTER, {
     method: 'POST',
-    body: { firstName, lastName, email, password, confirmPassword },
+    body: { firstName, lastName, email, password, confirmPassword, dateOfBirth },
   });
 };
 
