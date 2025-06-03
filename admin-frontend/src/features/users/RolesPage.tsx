@@ -1,31 +1,85 @@
 import { useEffect, useState } from 'react';
+import { ColumnDef } from '@tanstack/react-table';
 import { apiClient } from '@/api/apiClient';
 import AuthenticatedLayout from '@/components/layouts/AuthenticatedLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { DataTable } from '@/components/ui/data-table';
+import { CheckboxListDialog, CheckboxListItem } from '@/components/custom/checkbox-list-dialog';
+import { ConfirmationDialog } from '@/components/custom/confirmation-dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { useNotificationStore } from '@/features/notification/useNotificationStore';
 import { NotificationType } from '@/features/notification/types';
 import { API_ENDPOINTS } from '@/config/auth';
 import { useTranslation } from 'react-i18next';
-import { useDebounce } from '@/hooks/use-debounce';
 import { Role, Permission } from './types';
+import useTitle from '@/hooks/use-title';
+
+const SystemStatus = ({ isSystem, t }: { isSystem: boolean; t: (key: string) => string }) => {
+  const label = isSystem ? 'roles.systemRole' : 'roles.notSystemRole';
+  return (
+    <div className="text-center">
+      <span
+        title={t(label)}
+        className={`text-lg ${isSystem ? 'text-green-600 font-bold' : 'text-gray-400'}`}
+        aria-label={t(label)}
+      >
+        {isSystem ? '✓' : '-'}
+      </span>
+    </div>
+  );
+};
+
+const PermissionBadge = ({ permission }: { permission: Permission }) => (
+  <li
+    key={permission.name}
+    className="flex flex-col items-start min-w-0"
+    aria-label={`${permission.name}${permission.description ? ': ' + permission.description : ''}`}
+  >
+    <span className="bg-muted px-1.5 py-0.5 rounded font-mono text-xs">{permission.name}</span>
+    {permission.description && (
+      <span className="text-muted-foreground text-xs break-words max-w-[12rem]">
+        {permission.description}
+      </span>
+    )}
+  </li>
+);
+
+const AdminsList = ({ admins, t }: { admins: Role['admins']; t: (key: string) => string }) => {
+  if (!admins || admins.length === 0) {
+    return <span className="text-muted-foreground text-xs">{t('roles.noAdmins')}</span>;
+  }
+
+  return (
+    <div className="max-w-xs">
+      <div className="text-xs space-y-1">
+        {admins.slice(0, 3).map((admin) => (
+          <div key={admin.id}>
+            {admin.firstName} {admin.lastName}
+          </div>
+        ))}
+        {admins.length > 3 && (
+          <div className="text-muted-foreground">
+            +{admins.length - 3} {t('roles.more')}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const getErrorMessage = (err: unknown, fallback: string): string => {
+  if (err && typeof err === 'object') {
+    if ('response' in err && err.response && typeof err.response === 'object') {
+      const resp = err.response as { data?: { message?: string } };
+      if (resp.data && typeof resp.data.message === 'string') {
+        return resp.data.message;
+      }
+    } else if ('message' in err && typeof (err as Record<string, unknown>).message === 'string') {
+      return (err as Record<string, string>).message;
+    }
+  }
+  return fallback;
+};
 
 const RolesPage = () => {
   const [roles, setRoles] = useState<Role[]>([]);
@@ -37,10 +91,9 @@ const RolesPage = () => {
   const [saving, setSaving] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [pendingSaveRoleId, setPendingSaveRoleId] = useState<string | null>(null);
-  const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search, 300);
   const { addNotification } = useNotificationStore();
   const { t } = useTranslation();
+  useTitle('roles.title');
 
   useEffect(() => {
     Promise.all([
@@ -53,21 +106,7 @@ const RolesPage = () => {
         setLoading(false);
       })
       .catch((err) => {
-        let message = 'Failed to load roles or permissions';
-        if (err && typeof err === 'object') {
-          if ('response' in err && err.response && typeof err.response === 'object') {
-            const resp = err.response as { data?: { message?: string } };
-            if (resp.data && typeof resp.data.message === 'string') {
-              message = resp.data.message;
-            }
-          } else if (
-            'message' in err &&
-            typeof (err as Record<string, unknown>).message === 'string'
-          ) {
-            message = (err as Record<string, string>).message;
-          }
-        }
-        setError(message);
+        setError(getErrorMessage(err, 'Failed to load roles or permissions'));
         setLoading(false);
       });
   }, []);
@@ -105,21 +144,7 @@ const RolesPage = () => {
       addNotification('Permissions updated', NotificationType.SUCCESS);
       closeEdit();
     } catch (err: unknown) {
-      let message = 'Failed to update permissions';
-      if (err && typeof err === 'object') {
-        if ('response' in err && err.response && typeof err.response === 'object') {
-          const resp = err.response as { data?: { message?: string } };
-          if (resp.data && typeof resp.data.message === 'string') {
-            message = resp.data.message;
-          }
-        } else if (
-          'message' in err &&
-          typeof (err as Record<string, unknown>).message === 'string'
-        ) {
-          message = (err as Record<string, string>).message;
-        }
-      }
-      addNotification(message, NotificationType.ERROR);
+      addNotification(getErrorMessage(err, 'Failed to update permissions'), NotificationType.ERROR);
     } finally {
       setSaving(false);
     }
@@ -127,7 +152,7 @@ const RolesPage = () => {
 
   const handleSaveClick = (roleId: string) => {
     const role = roles.find((r) => r.id === roleId);
-    if (role && role.system) {
+    if (role?.system) {
       setPendingSaveRoleId(roleId);
       setShowConfirm(true);
     } else {
@@ -148,208 +173,129 @@ const RolesPage = () => {
     setPendingSaveRoleId(null);
   };
 
-  const filteredRoles = roles.filter((role) => {
-    if (!debouncedSearch) return true;
+  const columns: ColumnDef<Role>[] = [
+    {
+      accessorKey: 'name',
+      header: t('roles.name'),
+    },
+    {
+      accessorKey: 'description',
+      header: t('roles.description'),
+    },
+    {
+      accessorKey: 'permissions',
+      header: t('roles.permissions'),
+      cell: ({ row }) => {
+        const { permissions } = row.original;
+        return (
+          <div className="flex items-center min-h-[32px]">
+            {permissions?.length ? (
+              <ul className="flex flex-wrap gap-2" aria-label={t('roles.permissionsList')}>
+                {permissions.map((permission) => (
+                  <PermissionBadge key={permission.name} permission={permission} />
+                ))}
+              </ul>
+            ) : (
+              <span className="text-muted-foreground text-xs">{t('roles.noPermissions')}</span>
+            )}
+          </div>
+        );
+      },
+      meta: { className: 'hidden lg:table-cell w-80 min-w-[20rem] pr-4' },
+    },
+    {
+      accessorKey: 'admins',
+      header: t('roles.admins'),
+      cell: ({ row }) => <AdminsList admins={row.original.admins} t={t} />,
+      meta: { className: 'hidden xl:table-cell' },
+    },
+    {
+      accessorKey: 'system',
+      header: t('roles.system'),
+      cell: ({ row }) => <SystemStatus isSystem={row.original.system} t={t} />,
+      meta: { className: 'hidden lg:table-cell' },
+    },
+    {
+      id: 'actions',
+      header: t('roles.actions'),
+      cell: ({ row }) => (
+        <Button
+          onClick={() => openEdit(row.original)}
+          disabled={row.original.system}
+          size="sm"
+          title={row.original.system ? t('roles.systemEditDisabled') : ''}
+          className="w-full sm:w-auto"
+        >
+          {t('common.edit')}
+        </Button>
+      ),
+    },
+  ];
 
-    const searchLower = debouncedSearch.toLowerCase();
+  const editRole = roles.find((r) => r.id === editRoleId);
+  const dialogItems = permissions.map(
+    (perm): CheckboxListItem => ({
+      id: perm.name,
+      name: perm.name,
+      description: perm.description,
+      disabled: !!editRole?.system,
+    }),
+  );
+  const isSaveDisabled = saving || !!editRole?.system || editPermissions.length === 0;
 
-    const nameMatch = role.name.toLowerCase().includes(searchLower);
-    const descriptionMatch = role.description?.toLowerCase().includes(searchLower);
-
-    const permissionMatch = role.permissions?.some(
-      (permission) =>
-        permission.name.toLowerCase().includes(searchLower) ||
-        permission.description?.toLowerCase().includes(searchLower),
-    );
-
-    return nameMatch || descriptionMatch || permissionMatch;
-  });
-
-  if (loading)
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-40">
         <span className="text-muted-foreground">{t('common.loading')}</span>
       </div>
     );
-  if (error) return <div className="text-red-500 p-4">{error}</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500 p-4">{error}</div>;
+  }
 
   return (
     <AuthenticatedLayout breadcrumbs={[{ label: t('roles.title'), href: '/roles', current: true }]}>
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between gap-4">
+        <CardHeader>
           <CardTitle>{t('roles.title')}</CardTitle>
-          <Input
-            placeholder={t('roles.search')}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="px-2 py-1 border rounded w-48 text-sm"
-          />
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('roles.name')}</TableHead>
-                <TableHead>{t('roles.description')}</TableHead>
-                <TableHead>{t('roles.permissions')}</TableHead>
-                <TableHead>{t('roles.permissionCount')}</TableHead>
-                <TableHead>{t('roles.admins')}</TableHead>
-                <TableHead>{t('roles.system')}</TableHead>
-                <TableHead>{t('roles.actions')}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredRoles.length > 0 ? (
-                filteredRoles.map((role) => (
-                  <TableRow key={role.id}>
-                    <TableCell>{role.name}</TableCell>
-                    <TableCell>{role.description}</TableCell>
-                    <TableCell>
-                      {role.permissions && role.permissions.length > 0
-                        ? role.permissions
-                            .map((p) => `${p.name}${p.description ? ` (${p.description})` : ''}`)
-                            .join(', ')
-                        : t('roles.noPermissions')}
-                    </TableCell>
-                    <TableCell>{role.permissions ? role.permissions.length : 0}</TableCell>
-                    <TableCell>
-                      {role.admins && role.admins.length > 0 ? (
-                        <ul className="list-disc list-inside text-xs">
-                          {role.admins.map((admin) => (
-                            <li key={admin.id}>
-                              {admin.firstName} {admin.lastName}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <span className="text-muted-foreground text-xs">{t('roles.noAdmins')}</span>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {role.system ? (
-                        <span
-                          title={t('roles.systemRole')}
-                          className="text-green-600 font-bold text-lg"
-                          aria-label={t('roles.systemRole')}
-                        >
-                          ✓
-                        </span>
-                      ) : (
-                        <span
-                          title={t('roles.notSystemRole')}
-                          className="text-gray-400 text-lg"
-                          aria-label={t('roles.notSystemRole')}
-                        >
-                          -
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        onClick={() => openEdit(role)}
-                        disabled={role.system}
-                        size="sm"
-                        title={role.system ? t('roles.systemEditDisabled') : ''}
-                      >
-                        {t('common.edit')}
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8">
-                    <span className="text-muted-foreground">
-                      {debouncedSearch ?? t('roles.noRoles')}
-                    </span>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+          <DataTable
+            columns={columns}
+            data={roles}
+            searchKeys={['name', 'description']}
+            searchPlaceholder={t('roles.searchMultiple')}
+          />
 
-          <Dialog open={!!editRoleId} onOpenChange={(open) => !open && closeEdit()}>
-            <DialogContent className="max-w-md">
-              <DialogHeader>
-                <DialogTitle>
-                  {t('roles.editPermissions')} {roles.find((r) => r.id === editRoleId)?.name}
-                </DialogTitle>
-                {(() => {
-                  const editRole = roles.find((r) => r.id === editRoleId);
-                  return (
-                    editRole &&
-                    editRole.system && (
-                      <DialogDescription className="p-3 bg-yellow-50 text-yellow-800 rounded-md border border-yellow-200">
-                        {t('roles.systemRoleWarning')}
-                      </DialogDescription>
-                    )
-                  );
-                })()}
-              </DialogHeader>
+          <CheckboxListDialog
+            open={!!editRoleId}
+            onOpenChange={(open) => !open && closeEdit()}
+            title={`${t('roles.editPermissions')} ${editRole?.name || ''}`}
+            warningMessage={editRole?.system ? t('roles.systemRoleWarning') : undefined}
+            items={dialogItems}
+            selectedItems={editPermissions}
+            onItemChange={handlePermissionChange}
+            onSave={() => editRoleId && handleSaveClick(editRoleId)}
+            onCancel={closeEdit}
+            saveDisabled={isSaveDisabled}
+            saving={saving}
+            saveButtonText={t('common.save')}
+            cancelButtonText={t('common.cancel')}
+          />
 
-              <div className="max-h-48 overflow-y-auto space-y-3">
-                {permissions.map((perm) => {
-                  const editRole = roles.find((r) => r.id === editRoleId);
-                  return (
-                    <label key={perm.name} className="flex items-start gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={editPermissions.includes(perm.name)}
-                        onChange={() => handlePermissionChange(perm.name)}
-                        className="mt-1"
-                        disabled={editRole ? editRole.system : false}
-                      />
-                      <div className="flex-1">
-                        <div className="font-medium">{perm.name}</div>
-                        {perm.description && (
-                          <div className="text-xs text-muted-foreground">{perm.description}</div>
-                        )}
-                      </div>
-                    </label>
-                  );
-                })}
-              </div>
-
-              <DialogFooter className="gap-2">
-                <Button variant="outline" onClick={closeEdit}>
-                  {t('common.cancel')}
-                </Button>
-                <Button
-                  onClick={() => editRoleId && handleSaveClick(editRoleId)}
-                  disabled={(() => {
-                    const editRole = roles.find((r) => r.id === editRoleId);
-                    return (
-                      saving || (editRole ? editRole.system : false) || editPermissions.length === 0
-                    );
-                  })()}
-                  className="min-w-20"
-                >
-                  {saving && (
-                    <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
-                  )}
-                  {t('common.save')}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-
-          <Dialog open={showConfirm} onOpenChange={(open) => !open && cancelSave()}>
-            <DialogContent className="max-w-sm">
-              <DialogHeader>
-                <DialogTitle>{t('roles.confirmSystemSave')}</DialogTitle>
-                <DialogDescription>{t('roles.confirmSystemSaveDescription')}</DialogDescription>
-              </DialogHeader>
-
-              <DialogFooter className="gap-2">
-                <Button variant="outline" onClick={cancelSave}>
-                  {t('common.cancel')}
-                </Button>
-                <Button variant="destructive" onClick={confirmSave}>
-                  {t('common.confirm')}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <ConfirmationDialog
+            open={showConfirm}
+            onOpenChange={(open) => !open && cancelSave()}
+            title={t('roles.confirmSystemSave')}
+            description={t('roles.confirmSystemSaveDescription')}
+            onConfirm={confirmSave}
+            onCancel={cancelSave}
+            confirmButtonText={t('common.confirm')}
+            cancelButtonText={t('common.cancel')}
+            confirmButtonVariant="destructive"
+          />
         </CardContent>
       </Card>
     </AuthenticatedLayout>

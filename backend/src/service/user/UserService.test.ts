@@ -105,6 +105,7 @@ describe('UserService', () => {
           lastName: 'B',
           email: 'a@b.com',
           password: 'Password1',
+          dateOfBirth: '1990-01-01',
         }),
       ).rejects.toThrow('Email already exists');
     });
@@ -118,8 +119,18 @@ describe('UserService', () => {
         lastName: 'B',
         email: 'a@b.com',
         password: 'Password1',
+        dateOfBirth: '1990-01-01',
       });
       expect(result).toEqual({ message: 'Register Successful' });
+      expect(prisma.user.create).toHaveBeenCalledWith({
+        data: {
+          firstName: 'A',
+          lastName: 'B',
+          email: 'a@b.com',
+          password: 'hashed',
+          dateOfBirth: new Date('1990-01-01'),
+        },
+      });
     });
   });
 

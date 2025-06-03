@@ -23,18 +23,21 @@ async function main() {
       password: userPassword,
       firstName: 'User',
       lastName: 'One',
+      dateOfBirth: new Date('1990-01-01'),
     },
     {
       email: 'user2@example.com',
       password: userPassword,
       firstName: 'User',
       lastName: 'Two',
+      dateOfBirth: new Date('1990-01-01'),
     },
     {
       email: 'user3@example.com',
       password: userPassword,
       firstName: 'User',
       lastName: 'Three',
+      dateOfBirth: new Date('1990-01-01'),
     },
   ];
   for (const user of regularUsers) {

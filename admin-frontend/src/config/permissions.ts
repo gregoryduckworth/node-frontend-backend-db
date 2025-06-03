@@ -1,3 +1,8 @@
+export const ROLES = {
+  ADMIN: 'ADMIN',
+  EDITOR: 'EDITOR',
+};
+
 export const PERMISSIONS = {
   MANAGE_USERS: 'MANAGE_USERS',
   VIEW_REPORTS: 'VIEW_REPORTS',

@@ -32,19 +32,39 @@ export const getUserById = async (req: Request, res: Response): Promise<Response
 
 export const register = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { firstName, lastName, email, password, confirmPassword } = req.body;
+    const { firstName, lastName, email, password, confirmPassword, dateOfBirth } = req.body;
     if (!firstName) return res.status(400).json({ message: 'First name is required' });
     if (!lastName) return res.status(400).json({ message: 'Last name is required' });
     if (!email) return res.status(400).json({ message: 'Email is required' });
     if (!password) return res.status(400).json({ message: 'Password is required' });
     if (!confirmPassword) return res.status(400).json({ message: 'Confirm Password is required' });
+    if (!dateOfBirth) return res.status(400).json({ message: 'Date of birth is required' });
+
+    // Validate date of birth
+    const birthDate = new Date(dateOfBirth);
+    if (isNaN(birthDate.getTime())) {
+      return res.status(400).json({ message: 'Invalid date format for date of birth' });
+    }
+
+    const today = new Date();
+    if (birthDate > today) {
+      return res.status(400).json({ message: 'Date of birth cannot be in the future' });
+    }
+
+    // Check minimum age (13 years old)
+    const minDate = new Date();
+    minDate.setFullYear(today.getFullYear() - 13);
+    if (birthDate > minDate) {
+      return res.status(400).json({ message: 'You must be at least 13 years old to register' });
+    }
+
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Password doesn't match" });
     const validation = UserService.validatePassword(password);
     if (!validation.isValid) {
       return res.status(400).json({ message: validation.message });
     }
-    await UserService.register({ firstName, lastName, email, password });
+    await UserService.register({ firstName, lastName, email, password, dateOfBirth });
     return res.status(201).json({ message: 'Register Successful' });
   } catch (error) {
     return handleError(res, error);

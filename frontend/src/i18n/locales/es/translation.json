@@ -50,6 +50,8 @@
     "emailPlaceholder": "Ingresa tu correo electrónico",
     "passwordPlaceholder": "Ingresa tu contraseña",
     "confirmPasswordPlaceholder": "Confirma tu contraseña",
+    "dateOfBirth": "Fecha de nacimiento",
+    "dateOfBirthPlaceholder": "Selecciona tu fecha de nacimiento",
     "alreadyHaveAccount": "¿Ya tienes una cuenta?",
     "signUpForAccount": "Regístrate para tu cuenta",
     "passwordRequirementsNotMet": "No se han cumplido los requisitos de la contraseña",
@@ -124,7 +126,9 @@
     "emailRequired": "El correo electrónico es obligatorio",
     "invalidEmail": "Por favor, introduce una dirección de correo electrónico válida",
     "emailExists": "La dirección de correo electrónico ya existe. Por favor, utiliza otra.",
-    "invalidDate": "Por favor, introduce una fecha válida"
+    "invalidDate": "Por favor, introduce una fecha válida",
+    "dateNotFuture": "La fecha no puede ser en el futuro",
+    "minimumAge": "Debes tener al menos {{age}} años para registrarte"
   },
   "sidebar": {
     "playground": "Playground",

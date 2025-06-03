@@ -45,11 +45,13 @@
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm Password",
+    "dateOfBirth": "Date of Birth",
     "firstNamePlaceholder": "Enter your first name",
     "lastNamePlaceholder": "Enter your last name",
     "emailPlaceholder": "Enter your email",
     "passwordPlaceholder": "Enter your password",
     "confirmPasswordPlaceholder": "Confirm your password",
+    "dateOfBirthPlaceholder": "Select your date of birth",
     "alreadyHaveAccount": "Already have an account?",
     "signUpForAccount": "Sign up for your account",
     "passwordRequirementsNotMet": "Password requirements have not been met",
@@ -124,7 +126,9 @@
     "emailRequired": "Email is required",
     "invalidEmail": "Please enter a valid email address",
     "emailExists": "Email address already exists. Please use a different email.",
-    "invalidDate": "Please enter a valid date"
+    "invalidDate": "Please enter a valid date",
+    "dateNotFuture": "Date cannot be in the future",
+    "minimumAge": "You must be at least {{age}} years old to register"
   },
   "sidebar": {
     "playground": "Playground",

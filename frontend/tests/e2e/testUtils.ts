@@ -44,6 +44,7 @@ export async function createTestUser(
       firstName: user?.firstName ?? 'Test',
       lastName: user?.lastName ?? 'User',
       email: user?.email ?? `testuser_${Date.now()}@example.com`,
+      dateOfBirth: user?.dateOfBirth ?? '2000-01-01',
       password: user?.password ?? 'Password1',
       confirmPassword: user?.password ?? 'Password1',
       ...(user?.dateOfBirth ? { dateOfBirth: user.dateOfBirth } : {}),

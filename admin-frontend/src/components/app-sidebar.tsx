@@ -16,18 +16,16 @@ import {
 } from '@/components/ui/sidebar';
 import { COMPANY } from '@/config/settings';
 import { useAuthStore } from '@/features/auth/useAuthStore';
+import { usePermissions } from '@/hooks/use-permissions';
 import { ROUTES } from '@/config/auth';
 import { PERMISSIONS } from '@/config/permissions';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { t } = useTranslation();
-  const { firstName, lastName, email, permissions } = useAuthStore();
+  const { firstName, lastName, email } = useAuthStore();
+  const { hasPermission } = usePermissions();
 
   const data = React.useMemo(() => {
-    const hasPermission = (required?: string[]) => {
-      if (!required || required.length === 0) return true;
-      return required.some((perm) => permissions.includes(perm));
-    };
     return {
       user: {
         firstName,
@@ -71,7 +69,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       navSecondary: [],
       projects: [],
     };
-  }, [t, firstName, lastName, email, permissions]);
+  }, [t, firstName, lastName, email, hasPermission]);
 
   return (
     <Sidebar variant="inset" {...props}>

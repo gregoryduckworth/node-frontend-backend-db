@@ -37,18 +37,26 @@ export const UserService = {
     lastName,
     email,
     password,
+    dateOfBirth,
   }: {
     firstName: string;
     lastName: string;
     email: string;
     password: string;
+    dateOfBirth: string;
   }) {
     const isUserExist = await prisma.user.findFirst({ where: { email } });
     if (isUserExist) throw new Error('Email already exists');
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
     await prisma.user.create({
-      data: { firstName, lastName, email, password: hashedPassword },
+      data: {
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+        dateOfBirth: new Date(dateOfBirth),
+      },
     });
     return { message: 'Register Successful' };
   },

@@ -58,7 +58,9 @@ export async function updateRolePermissionsService(
     ...updated,
     description: updated.description ?? undefined,
     system: updated.system,
-    permissions: (updated.permissions as Permission[]).map(normalizePermission),
+    permissions: (updated.permissions as Permission[])
+      .map(normalizePermission)
+      .sort((a, b) => a.name.localeCompare(b.name)),
     admins: updated.admins as AdminUser[],
   };
 }
