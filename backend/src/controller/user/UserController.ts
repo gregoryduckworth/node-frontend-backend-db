@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { UserService } from '@/service/user/UserService';
 import { setRefreshTokenCookie, clearRefreshTokenCookie } from '@/service/user/UserCookieService';
 import { logger } from '@/utils/logger';
+import { MINIMUM_REGISTRATION_AGE } from '@/config';
 
 const handleError = (res: Response, error: any, status = 400) => {
   logger.error(error);
@@ -40,7 +41,6 @@ export const register = async (req: Request, res: Response): Promise<Response> =
     if (!confirmPassword) return res.status(400).json({ message: 'Confirm Password is required' });
     if (!dateOfBirth) return res.status(400).json({ message: 'Date of birth is required' });
 
-    // Validate date of birth
     const birthDate = new Date(dateOfBirth);
     if (isNaN(birthDate.getTime())) {
       return res.status(400).json({ message: 'Invalid date format for date of birth' });
@@ -51,11 +51,12 @@ export const register = async (req: Request, res: Response): Promise<Response> =
       return res.status(400).json({ message: 'Date of birth cannot be in the future' });
     }
 
-    // Check minimum age (13 years old)
     const minDate = new Date();
-    minDate.setFullYear(today.getFullYear() - 13);
+    minDate.setFullYear(today.getFullYear() - MINIMUM_REGISTRATION_AGE);
     if (birthDate > minDate) {
-      return res.status(400).json({ message: 'You must be at least 13 years old to register' });
+      return res.status(400).json({
+        message: `You must be at least ${MINIMUM_REGISTRATION_AGE} years old to register`,
+      });
     }
 
     if (password !== confirmPassword)
