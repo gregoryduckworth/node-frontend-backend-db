@@ -23,7 +23,7 @@ import { PERMISSIONS } from '@/config/permissions';
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { t } = useTranslation();
   const { firstName, lastName, email } = useAuthStore();
-  const { hasPermission } = usePermissions();
+  const { hasPermission, permissions } = usePermissions();
 
   const data = React.useMemo(() => {
     return {
@@ -69,7 +69,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       navSecondary: [],
       projects: [],
     };
-  }, [t, firstName, lastName, email, hasPermission]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [t, firstName, lastName, email, permissions]);
 
   return (
     <Sidebar variant="inset" {...props}>
